@@ -64,6 +64,7 @@ public class Robot_Navigation
     private Robot_OmniDrive     myRobot;        // Access to the Robot hardware
     // private VuforiaTrackables   targets;        // List of active targets
 
+    public VuforiaLocalizer     vuforia;        // Vuforia Object
     public List<Recognition>    targets;
     public TFObjectDetector     tfod;           // Tensor Flow Object Detector
 
@@ -192,7 +193,7 @@ public class Robot_Navigation
         parameters.useExtendedTracking = false;
 
         //  Instantiate the Vuforia engine
-        VuforiaLocalizer vuforia = ClassFactory.getInstance().createVuforia(parameters);
+        vuforia = ClassFactory.getInstance().createVuforia(parameters);
 
         /**
          * Load the data sets that for the trackable objects we wish to track.
