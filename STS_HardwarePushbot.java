@@ -53,13 +53,18 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class STS_HardwarePushbot
 {
     /* Public OpMode members. */
+
     public DcMotor  leftFrontDrive   = null;
     public DcMotor  leftBackDrive   = null;
     public DcMotor  rightFrontDrive  = null;
     public DcMotor  rightBackDrive  = null;
-    public DcMotor  leftArm     = null;
-    public Servo    leftClaw    = null;
-    public Servo    rightClaw   = null;
+    public DcMotor  intakeWheel     = null;
+    public DcMotor  shooterWheel     = null;
+
+    public Servo    wobbleArm    = null;
+    public Servo    wobbleClaw   = null;
+    public Servo    shooterAngler = null;
+
 
     public static final double MID_SERVO       =  0.5 ;
     public static final double ARM_UP_POWER    =  0.45 ;
@@ -80,22 +85,27 @@ public class STS_HardwarePushbot
         hwMap = ahwMap;
 
         // Define and Initialize Motors
+
         leftFrontDrive  = hwMap.get(DcMotor.class, "left_front_drive");
         leftBackDrive  = hwMap.get(DcMotor.class, "left_back_drive");
         rightFrontDrive = hwMap.get(DcMotor.class, "right_front_drive");
         rightBackDrive = hwMap.get(DcMotor.class, "right_back_drive");
-        leftArm    = hwMap.get(DcMotor.class, "left_arm");
+
+        intakeWheel    = hwMap.get(DcMotor.class, "intake_wheel");
+        shooterWheel = hwMap.get(DcMotor.class, "shooter_wheel");
+
         leftFrontDrive.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
         leftBackDrive.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
         rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);// Set to FORWARD if using AndyMark motors
         rightBackDrive.setDirection(DcMotor.Direction.FORWARD);// Set to FORWARD if using AndyMark motors
 
+        intakeWheel.setDirection(DcMotor.Direction.FORWARD);
+        shooterWheel.setDirection(DcMotor.Direction.FORWARD);
+
         // Set all motors to zero power
-        leftFrontDrive.setPower(0);
-        leftBackDrive.setPower(0);
-        rightFrontDrive.setPower(0);
-        rightBackDrive.setPower(0);
-        leftArm.setPower(0);
+
+        intakeWheel.setPower(0);
+        shooterWheel.setPower(0);
 
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
@@ -103,13 +113,20 @@ public class STS_HardwarePushbot
         leftBackDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightFrontDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightBackDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        leftArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+        intakeWheel.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        shooterWheel.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+
 
         // Define and initialize ALL installed servos.
-        leftClaw  = hwMap.get(Servo.class, "left_hand");
-        rightClaw = hwMap.get(Servo.class, "right_hand");
-        leftClaw.setPosition(MID_SERVO);
-        rightClaw.setPosition(MID_SERVO);
+        wobbleArm  = hwMap.get(Servo.class, "wobble_arm");
+        wobbleClaw = hwMap.get(Servo.class, "wobble_claw");
+        shooterAngler = hwMap.get(Servo.class,"shooter_angler");
+
+        wobbleArm.setPosition(MID_SERVO);
+        wobbleClaw.setPosition(MID_SERVO);
+        shooterAngler.setPosition(MID_SERVO);
     }
  }
 
