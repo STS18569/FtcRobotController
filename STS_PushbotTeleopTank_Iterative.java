@@ -36,6 +36,8 @@ import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
 
+import static java.lang.Thread.sleep;
+
 /**
  * This file provides basic Telop driving for a Pushbot robot.
  * The code is structured as an Iterative OpMode
@@ -51,7 +53,7 @@ import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="Pushbot: Teleop Tank", group="Pushbot")
+@TeleOp(name="Driver Controlled Mode", group="Pushbot")
 // @Disabled
 public class STS_PushbotTeleopTank_Iterative extends OpMode{
 
@@ -63,6 +65,7 @@ public class STS_PushbotTeleopTank_Iterative extends OpMode{
     final double    WOBBLE_ARM_ANGLE  = 0.02;                 // sets rate to move servo
     final double    WOBBLE_CLAW_ANGLE  = 0.02;
     final double    SHOOTER_ANGLER_ANGLE  = 0.02;
+    final double    WHEEL_SPEED_MULTIPLYER = 0.8;
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -99,36 +102,67 @@ public class STS_PushbotTeleopTank_Iterative extends OpMode{
     public void loop() {
         double left;
         double right;
+        double turnleft;
+        double turnright;
 
         // Run wheels in tank mode (note: The joystick goes negative when pushed forwards, so negate it)
         left = -gamepad1.left_stick_y;
         right = -gamepad1.right_stick_y;
 
-        robot.leftFrontDrive.setPower(left);
-        robot.rightFrontDrive.setPower(right);
-        robot.leftBackDrive.setPower(left);
-        robot.rightBackDrive.setPower(right);
+        robot.leftFrontDrive.setPower(WHEEL_SPEED_MULTIPLYER*left);
+        robot.rightFrontDrive.setPower(WHEEL_SPEED_MULTIPLYER*right);
+        robot.leftBackDrive.setPower(WHEEL_SPEED_MULTIPLYER*right);
+        robot.rightBackDrive.setPower(WHEEL_SPEED_MULTIPLYER*left);
 
-        if (gamepad1.right_trigger != 0)
+        turnright = gamepad1.left_trigger;
+        turnleft = gamepad1.right_trigger;
+
+        robot.leftFrontDrive.setPower(turnleft);
+        robot.rightFrontDrive.setPower(turnright);
+        robot.leftBackDrive.setPower(turnleft);
+        robot.rightBackDrive.setPower(turnright);
+
+
+        if (gamepad1.right_bumper) {
             robot.shooterWheel.setPower(1);
+            try {
+                sleep(10000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            robot.shooterWheel.setPower(0);
+        }
 
-        if (gamepad1.left_trigger != 0)
+        if (gamepad1.left_bumper) {
             robot.intakeWheel.setPower(1);
+            try {
+                sleep(10000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            robot.intakeWheel.setPower(0);
+        }
 
-        if (gamepad1.right_bumper)
+        if (gamepad1.y) {
             shooterAnglerOffset += SHOOTER_ANGLER_ANGLE;
-        else if (gamepad1.left_bumper)
+        }
+        else if (gamepad1.a) {
             shooterAnglerOffset -= SHOOTER_ANGLER_ANGLE;
+        }
 
-        if (gamepad1.dpad_up)
+        if (gamepad1.dpad_up) {
             wobbleArmOffset += WOBBLE_ARM_ANGLE;
-        else if (gamepad1.dpad_down)
+        }
+        else if (gamepad1.dpad_down) {
             wobbleArmOffset -= WOBBLE_ARM_ANGLE;
+        }
 
-        if (gamepad1.dpad_right)
+        if (gamepad1.dpad_right) {
             wobbleClawOffset += WOBBLE_CLAW_ANGLE;
-        else if (gamepad1.dpad_left)
+        }
+        else if (gamepad1.dpad_left) {
             wobbleClawOffset -= WOBBLE_CLAW_ANGLE;
+        }
 
         // Move both servos to new position.  Assume servos are mirror image of each other.
         wobbleArmOffset = Range.clip(wobbleArmOffset, -0.5, 0.5);
@@ -154,6 +188,7 @@ public class STS_PushbotTeleopTank_Iterative extends OpMode{
         telemetry.addData("shooterAngler",  "Offset = %.2f", shooterAnglerOffset);
         telemetry.addData("left",  "%.2f", left);
         telemetry.addData("right", "%.2f", right);
+
     }
 
     /*
