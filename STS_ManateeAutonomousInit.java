@@ -64,12 +64,19 @@ import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="STS_Pushbot: Auto Drive By Encoder", group="W")
+@Autonomous(name="Manatee: Autonomous Init and Test", group="UltimateGoal")
 //@Disabled
+<<<<<<< HEAD
 public class STS_PushbotAutoDriveByEncoder_Linear extends LinearOpMode {
 
     /* Declare OpMode members. */
     STS_HardwarePushbot robot   = new STS_HardwarePushbot();   // Use a Pushbot's hardware
+=======
+public class STS_ManateeAutonomousInit extends LinearOpMode {
+
+    /* Declare OpMode members. */
+    STS_HardwareManatee     manatee = new STS_HardwareManatee();   // Use a Pushbot's hardware
+>>>>>>> Initial servo code - jjh 1/8/21
     private ElapsedTime     runtime = new ElapsedTime();
 
     static final double     COUNTS_PER_MOTOR_REV    = 28 ;    // eg: TETRIX Motor Encoder
@@ -87,29 +94,40 @@ public class STS_PushbotAutoDriveByEncoder_Linear extends LinearOpMode {
          * Initialize the drive system variables.
          * The init() method of the hardware class does all the work here
          */
+<<<<<<< HEAD
         robot.init(hardwareMap);
 
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Status", "Resetting Encoders");    //
         telemetry.update();
+=======
+        manatee.init(hardwareMap);
+>>>>>>> Initial servo code - jjh 1/8/21
 
-        robot.leftFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.leftBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.rightFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.rightBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        manatee.leftFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        manatee.leftBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        manatee.rightFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        manatee.rightBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        robot.leftFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.leftBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.rightFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.rightBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        manatee.leftFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        manatee.leftBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        manatee.rightFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        manatee.rightBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         // Send telemetry message to indicate successful Encoder reset
         telemetry.addData("Path0",  "Starting at %7d :%7d :%7d :%7d",
+<<<<<<< HEAD
                           robot.leftFrontDrive.getCurrentPosition(),
                           robot.leftBackDrive.getCurrentPosition(),
                           robot.rightFrontDrive.getCurrentPosition(),
                           robot.rightBackDrive.getCurrentPosition());
         telemetry.update();
+=======
+                manatee.leftFrontDrive.getCurrentPosition(),
+                manatee.leftBackDrive.getCurrentPosition(),
+                manatee.rightFrontDrive.getCurrentPosition(),
+                manatee.rightBackDrive.getCurrentPosition());
+>>>>>>> Initial servo code - jjh 1/8/21
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
@@ -120,11 +138,46 @@ public class STS_PushbotAutoDriveByEncoder_Linear extends LinearOpMode {
         //encoderDrive(TURN_SPEED,   12, -12, 4.0);  // S2: Turn Right 12 Inches with 4 Sec timeout
         //encoderDrive(DRIVE_SPEED, -24, -24, 4.0);  // S3: Reverse 24 Inches with 4 Sec timeout
 
+<<<<<<< HEAD
         robot.leftClaw.setPosition(1.0);            // S4: Stop and close the claw.
         robot.rightClaw.setPosition(0.0);
         sleep(1000);     // pause for servos to move
 
         telemetry.addData("Path", "Complete");
+=======
+    public void testServos() {
+        manatee.wobbleArm.setPosition(1.0);
+        telemetry.addData("Test Servos", "wobbleArm.setPosition: %.3f", manatee.wobbleArm.getPosition());
+        telemetry.update();
+        sleep( 2000);     // pause for servos to move
+
+        manatee.wobbleClaw.setPosition(0.1);
+        telemetry.addData("Test Servos", "wobbleClaw.setPosition: %.3f", manatee.wobbleClaw.getPosition());
+        telemetry.update();
+        sleep( 2000);     // pause for servos to move
+
+        manatee.wobbleClaw.setPosition(0.5);
+        telemetry.addData("Test Servos", "wobbleClaw.setPosition: %.3f", manatee.wobbleClaw.getPosition());
+        telemetry.update();
+        sleep( 2000);     // pause for servos to move
+
+        manatee.shooterAngler.setPosition(1.0);
+        telemetry.addData("Test Servos", "shooterAngler.setPosition: %.3f", manatee.shooterAngler.getPosition());
+        telemetry.update();
+        sleep( 3000);     // pause for servos to move
+
+        manatee.shooterAngler.setPosition(0.5);
+        telemetry.addData("Test Servos", "shooterAngler.setPosition: %.3f", manatee.shooterAngler.getPosition());
+        telemetry.update();
+        sleep( 3000);     // pause for servos to move
+
+        manatee.shooterAngler.setPosition(0.0);
+        telemetry.addData("Test Servos", "shooterAngler.setPosition: %.3f", manatee.shooterAngler.getPosition());
+        telemetry.update();
+        sleep( 3000);     // pause for servos to move
+
+        telemetry.addData("Test Servos", "Complete");
+>>>>>>> Initial servo code - jjh 1/8/21
         telemetry.update();
     }
 
@@ -146,29 +199,29 @@ public class STS_PushbotAutoDriveByEncoder_Linear extends LinearOpMode {
 
         // Ensure that the opmode is still active
         if (opModeIsActive()) {
-
             // Determine new target position, and pass to motor controller
-            newLeftFrontTarget = robot.leftFrontDrive.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
-            newLeftBackTarget = robot.leftBackDrive.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
-            newRightFrontTarget = robot.rightFrontDrive.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
-            newRightBackTarget = robot.rightBackDrive.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
-            robot.leftFrontDrive.setTargetPosition(newLeftFrontTarget);
-            robot.leftBackDrive.setTargetPosition(newLeftBackTarget);
-            robot.rightFrontDrive.setTargetPosition(newRightFrontTarget);
-            robot.rightBackDrive.setTargetPosition(newRightBackTarget);
+            newLeftFrontTarget = manatee.leftFrontDrive.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
+            newLeftBackTarget = manatee.leftBackDrive.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
+            newRightFrontTarget = manatee.rightFrontDrive.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
+            newRightBackTarget = manatee.rightBackDrive.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
+
+            manatee.leftFrontDrive.setTargetPosition(newLeftFrontTarget);
+            manatee.leftBackDrive.setTargetPosition(newLeftBackTarget);
+            manatee.rightFrontDrive.setTargetPosition(newRightFrontTarget);
+            manatee.rightBackDrive.setTargetPosition(newRightBackTarget);
 
             // Turn On RUN_TO_POSITION
-            robot.leftFrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            robot.leftBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            robot.rightFrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            robot.rightBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            manatee.leftFrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            manatee.leftBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            manatee.rightFrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            manatee.rightBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
             // reset the timeout time and start motion.
             runtime.reset();
-            robot.leftFrontDrive.setPower(Math.abs(speed));
-            robot.leftBackDrive.setPower(Math.abs(speed));
-            robot.rightFrontDrive.setPower(Math.abs(speed));
-            robot.rightBackDrive.setPower(Math.abs(speed));
+            manatee.leftFrontDrive.setPower(Math.abs(speed));
+            manatee.leftBackDrive.setPower(Math.abs(speed));
+            manatee.rightFrontDrive.setPower(Math.abs(speed));
+            manatee.rightBackDrive.setPower(Math.abs(speed));
 
             // keep looping while we are still active, and there is time left, and both motors are running.
             // Note: We use (isBusy() && isBusy()) in the loop test, which means that when EITHER motor hits
@@ -178,31 +231,38 @@ public class STS_PushbotAutoDriveByEncoder_Linear extends LinearOpMode {
             // onto the next step, use (isBusy() || isBusy()) in the loop test.
             while (opModeIsActive() &&
                    (runtime.seconds() < timeoutS) &&
-                   (robot.leftFrontDrive.isBusy() && robot.leftBackDrive.isBusy() && robot.rightFrontDrive.isBusy() && robot.rightBackDrive.isBusy())) {
+                   (manatee.leftFrontDrive.isBusy() && manatee.leftBackDrive.isBusy() && manatee.rightFrontDrive.isBusy() && manatee.rightBackDrive.isBusy())) {
 
                 // Display it for the driver.
                 telemetry.addData("Path1",  "Running to %7d :%7d :%7d :%7d", newLeftFrontTarget,  newLeftBackTarget,  newRightFrontTarget,  newRightBackTarget);
                 telemetry.addData("Path2",  "Running at %7d :%7d :%7d :%7d",
-                                            robot.leftFrontDrive.getCurrentPosition(),
-                                            robot.leftBackDrive.getCurrentPosition(),
-                                            robot.rightFrontDrive.getCurrentPosition(),
-                                            robot.rightBackDrive.getCurrentPosition());
+                                            manatee.leftFrontDrive.getCurrentPosition(),
+                                            manatee.leftBackDrive.getCurrentPosition(),
+                                            manatee.rightFrontDrive.getCurrentPosition(),
+                                            manatee.rightBackDrive.getCurrentPosition());
                 telemetry.update();
             }
 
             // Stop all motion;
-            robot.leftFrontDrive.setPower(0);
-            robot.leftBackDrive.setPower(0);
-            robot.rightFrontDrive.setPower(0);
-            robot.rightBackDrive.setPower(0);
+            manatee.leftFrontDrive.setPower(0);
+            manatee.leftBackDrive.setPower(0);
+            manatee.rightFrontDrive.setPower(0);
+            manatee.rightBackDrive.setPower(0);
 
             // Turn off RUN_TO_POSITION
+<<<<<<< HEAD
             robot.leftFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             robot.leftBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             robot.rightFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             robot.rightBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
             //  sleep(250);   // optional pause after each move
+=======
+            manatee.leftFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            manatee.leftBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            manatee.rightFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            manatee.rightBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+>>>>>>> Initial servo code - jjh 1/8/21
         }
     }
 }
