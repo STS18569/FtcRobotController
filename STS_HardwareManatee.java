@@ -50,7 +50,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Servo channel:  Servo to open left claw:  "left_hand"
  * Servo channel:  Servo to open right claw: "right_hand"
  */
-public class STS_HardwarePushbot
+public class  STS_HardwarePushbot
 {
     /* Public OpMode members. */
 
@@ -66,9 +66,11 @@ public class STS_HardwarePushbot
     public Servo    shooterAngler = null;
 
 
-    public static final double MID_SERVO       =  0.5 ;
-    public static final double ARM_UP_POWER    =  0.45 ;
-    public static final double ARM_DOWN_POWER  = -0.45 ;
+    public static final double WOBBLE_ARM_MID_SERVO       =  0.5 ;
+    public static final double WOBBLE_CLAW_MID_SERVO       =  0.5 ;
+    public static final double SHOOTER_ANGLER_MID_SERVO       =  0.5 ;
+    // public static final double ARM_UP_POWER    =  0.45 ;
+    // public static final double ARM_DOWN_POWER  = -0.45 ;
 
     /* local OpMode members. */
     HardwareMap hwMap           =  null;
@@ -94,15 +96,19 @@ public class STS_HardwarePushbot
         intakeWheel    = hwMap.get(DcMotor.class, "intake_wheel");
         shooterWheel = hwMap.get(DcMotor.class, "shooter_wheel");
 
-        leftFrontDrive.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
-        leftBackDrive.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
+        leftFrontDrive.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
+        leftBackDrive.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
         rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);// Set to FORWARD if using AndyMark motors
         rightBackDrive.setDirection(DcMotor.Direction.FORWARD);// Set to FORWARD if using AndyMark motors
 
         intakeWheel.setDirection(DcMotor.Direction.FORWARD);
-        shooterWheel.setDirection(DcMotor.Direction.FORWARD);
+        shooterWheel.setDirection(DcMotor.Direction.REVERSE);
 
         // Set all motors to zero power
+        leftFrontDrive.setPower(0);
+        leftBackDrive.setPower(0);
+        rightFrontDrive.setPower(0);
+        rightBackDrive.setPower(0);
 
         intakeWheel.setPower(0);
         shooterWheel.setPower(0);
@@ -117,16 +123,14 @@ public class STS_HardwarePushbot
         intakeWheel.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         shooterWheel.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-
-
         // Define and initialize ALL installed servos.
         wobbleArm  = hwMap.get(Servo.class, "wobble_arm");
         wobbleClaw = hwMap.get(Servo.class, "wobble_claw");
         shooterAngler = hwMap.get(Servo.class,"shooter_angler");
 
-        wobbleArm.setPosition(MID_SERVO);
-        wobbleClaw.setPosition(MID_SERVO);
-        shooterAngler.setPosition(MID_SERVO);
+        wobbleArm.setPosition(1.0);
+        wobbleClaw.setPosition(WOBBLE_CLAW_MID_SERVO);
+        shooterAngler.setPosition(SHOOTER_ANGLER_MID_SERVO);
     }
  }
 
