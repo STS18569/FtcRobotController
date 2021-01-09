@@ -30,12 +30,9 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
-
-import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
 
 /**
  * This file illustrates the concept of driving a path based on encoder counts.
@@ -66,17 +63,10 @@ import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
 
 @Autonomous(name="Manatee: Autonomous Init and Test", group="UltimateGoal")
 //@Disabled
-<<<<<<< HEAD
-public class STS_PushbotAutoDriveByEncoder_Linear extends LinearOpMode {
-
-    /* Declare OpMode members. */
-    STS_HardwarePushbot robot   = new STS_HardwarePushbot();   // Use a Pushbot's hardware
-=======
 public class STS_ManateeAutonomousInit extends LinearOpMode {
 
     /* Declare OpMode members. */
     STS_HardwareManatee     manatee = new STS_HardwareManatee();   // Use a Pushbot's hardware
->>>>>>> Initial servo code - jjh 1/8/21
     private ElapsedTime     runtime = new ElapsedTime();
 
     static final double     COUNTS_PER_MOTOR_REV    = 28 ;    // eg: TETRIX Motor Encoder
@@ -89,20 +79,11 @@ public class STS_ManateeAutonomousInit extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-
         /*
          * Initialize the drive system variables.
          * The init() method of the hardware class does all the work here
          */
-<<<<<<< HEAD
-        robot.init(hardwareMap);
-
-        // Send telemetry message to signify robot waiting;
-        telemetry.addData("Status", "Resetting Encoders");    //
-        telemetry.update();
-=======
         manatee.init(hardwareMap);
->>>>>>> Initial servo code - jjh 1/8/21
 
         manatee.leftFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         manatee.leftBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -116,35 +97,22 @@ public class STS_ManateeAutonomousInit extends LinearOpMode {
 
         // Send telemetry message to indicate successful Encoder reset
         telemetry.addData("Path0",  "Starting at %7d :%7d :%7d :%7d",
-<<<<<<< HEAD
-                          robot.leftFrontDrive.getCurrentPosition(),
-                          robot.leftBackDrive.getCurrentPosition(),
-                          robot.rightFrontDrive.getCurrentPosition(),
-                          robot.rightBackDrive.getCurrentPosition());
-        telemetry.update();
-=======
                 manatee.leftFrontDrive.getCurrentPosition(),
                 manatee.leftBackDrive.getCurrentPosition(),
                 manatee.rightFrontDrive.getCurrentPosition(),
                 manatee.rightBackDrive.getCurrentPosition());
->>>>>>> Initial servo code - jjh 1/8/21
 
-        // Wait for the game to start (driver presses PLAY)
+        /*
         waitForStart();
+        testMotors();
+        testServos();
+         */
+    }
 
-        // Step through each leg of the path,
-        // Note: Reverse movement is obtained by setting a negative distance (not speed)
+    public void testMotors() {
         encoderDrive(DRIVE_SPEED,  48,  48, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
-        //encoderDrive(TURN_SPEED,   12, -12, 4.0);  // S2: Turn Right 12 Inches with 4 Sec timeout
-        //encoderDrive(DRIVE_SPEED, -24, -24, 4.0);  // S3: Reverse 24 Inches with 4 Sec timeout
+    }
 
-<<<<<<< HEAD
-        robot.leftClaw.setPosition(1.0);            // S4: Stop and close the claw.
-        robot.rightClaw.setPosition(0.0);
-        sleep(1000);     // pause for servos to move
-
-        telemetry.addData("Path", "Complete");
-=======
     public void testServos() {
         manatee.wobbleArm.setPosition(1.0);
         telemetry.addData("Test Servos", "wobbleArm.setPosition: %.3f", manatee.wobbleArm.getPosition());
@@ -177,7 +145,6 @@ public class STS_ManateeAutonomousInit extends LinearOpMode {
         sleep( 3000);     // pause for servos to move
 
         telemetry.addData("Test Servos", "Complete");
->>>>>>> Initial servo code - jjh 1/8/21
         telemetry.update();
     }
 
@@ -250,19 +217,10 @@ public class STS_ManateeAutonomousInit extends LinearOpMode {
             manatee.rightBackDrive.setPower(0);
 
             // Turn off RUN_TO_POSITION
-<<<<<<< HEAD
-            robot.leftFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            robot.leftBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            robot.rightFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            robot.rightBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-            //  sleep(250);   // optional pause after each move
-=======
             manatee.leftFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             manatee.leftBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             manatee.rightFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             manatee.rightBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
->>>>>>> Initial servo code - jjh 1/8/21
         }
     }
 }
