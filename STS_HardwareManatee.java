@@ -59,7 +59,8 @@ public class STS_HardwareManatee
     public DcMotor  rightFrontDrive  = null;
     public DcMotor  rightBackDrive  = null;
     public DcMotor  intakeWheel     = null;
-    public DcMotor  shooterWheel     = null;
+    public DcMotor  shooterWheelOne     = null;
+    public DcMotor  shooterWheelTwo     = null;
 
     public Servo    wobbleArm    = null;
     public Servo    wobbleClaw   = null;
@@ -94,7 +95,8 @@ public class STS_HardwareManatee
         rightBackDrive = hwMap.get(DcMotor.class, "right_back_drive");
 
         intakeWheel    = hwMap.get(DcMotor.class, "intake_wheel");
-        shooterWheel = hwMap.get(DcMotor.class, "shooter_wheel");
+        shooterWheelOne = hwMap.get(DcMotor.class, "shooter_wheel_one");
+        shooterWheelTwo = hwMap.get(DcMotor.class, "shooter_wheel_two ");
 
         leftFrontDrive.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
         leftBackDrive.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
@@ -102,7 +104,8 @@ public class STS_HardwareManatee
         rightBackDrive.setDirection(DcMotor.Direction.FORWARD);// Set to FORWARD if using AndyMark motors
 
         intakeWheel.setDirection(DcMotor.Direction.FORWARD);
-        shooterWheel.setDirection(DcMotor.Direction.REVERSE);
+        shooterWheelOne.setDirection(DcMotor.Direction.REVERSE);
+        shooterWheelTwo.setDirection(DcMotor.Direction.REVERSE);
 
         // Set all motors to zero power
         leftFrontDrive.setPower(0);
@@ -111,7 +114,8 @@ public class STS_HardwareManatee
         rightBackDrive.setPower(0);
 
         intakeWheel.setPower(0);
-        shooterWheel.setPower(0);
+        shooterWheelOne.setPower(0);
+        shooterWheelTwo.setPower(0);
 
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
@@ -121,7 +125,8 @@ public class STS_HardwareManatee
         rightBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         intakeWheel.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        shooterWheel.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        shooterWheelOne.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        shooterWheelTwo.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         // Define and initialize ALL installed servos.
         wobbleArm  = hwMap.get(Servo.class, "wobble_arm");

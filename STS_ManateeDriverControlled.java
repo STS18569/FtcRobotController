@@ -59,11 +59,13 @@ public class STS_ManateeDriverControlled extends OpMode{
     double              wobbleClawOffset = 0.0;
     double              shooterAnglerOffset = 0.0;                         // Servo mid position
 
+    boolean             shooterIsOn = false;
+
     final double        WOBBLE_ARM_ANGLE = 0.02;                 // sets rate to move servo
     final double        WOBBLE_CLAW_ANGLE = 0.02;
     final double        SHOOTER_ANGLER_ANGLE = 0.02;
 
-    final double        WHEEL_SPEED_MULTIPLYER = 0.8;
+    final double        WHEEL_SPEED_MULTIPLIER = 0.8;
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -107,10 +109,10 @@ public class STS_ManateeDriverControlled extends OpMode{
         left = -gamepad1.left_stick_y;
         right = -gamepad1.right_stick_y;
 
-        manatee.leftFrontDrive.setPower(WHEEL_SPEED_MULTIPLYER*left);
-        manatee.rightFrontDrive.setPower(WHEEL_SPEED_MULTIPLYER*right);
-        manatee.leftBackDrive.setPower(WHEEL_SPEED_MULTIPLYER*right);
-        manatee.rightBackDrive.setPower(WHEEL_SPEED_MULTIPLYER*left);
+        manatee.leftFrontDrive.setPower(WHEEL_SPEED_MULTIPLIER *left);
+        manatee.rightFrontDrive.setPower(WHEEL_SPEED_MULTIPLIER *right);
+        manatee.leftBackDrive.setPower(WHEEL_SPEED_MULTIPLIER *right);
+        manatee.rightBackDrive.setPower(WHEEL_SPEED_MULTIPLIER *left);
 
         turnright = gamepad1.left_trigger;
         turnleft = gamepad1.right_trigger;
@@ -121,23 +123,21 @@ public class STS_ManateeDriverControlled extends OpMode{
         manatee.rightBackDrive.setPower(turnright);
 
 
-        if (gamepad1.right_bumper) {
-            manatee.shooterWheel.setPower(1);
-            try {
-                sleep(10000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            manatee.shooterWheel.setPower(0);
+        if (gamepad1.right_bumper && !shooterIsOn) {
+            manatee.shooterWheelOne.setPower(1);
+            manatee.shooterWheelTwo.setPower(1);
+            shooterIsOn = true;
+        }
+
+        else if (!gamepad1.right_bumper && shooterIsOn) {
+            manatee.shooterWheelOne.setPower(0);
+            manatee.shooterWheelOne.setPower(0);
+            shooterIsOn = false;
         }
 
         if (gamepad1.left_bumper) {
             manatee.intakeWheel.setPower(1);
-            try {
-                sleep(10000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+
             manatee.intakeWheel.setPower(0);
         }
 
