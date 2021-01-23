@@ -60,6 +60,7 @@ public class STS_ManateeDriverControlled extends OpMode{
     double              shooterAnglerOffset = 0.0;                         // Servo mid position
 
     boolean             shooterIsOn = false;
+    boolean             intakeIsOn = false;
 
     final double        WOBBLE_ARM_ANGLE = 0.02;                 // sets rate to move servo
     final double        WOBBLE_CLAW_ANGLE = 0.02;
@@ -100,45 +101,40 @@ public class STS_ManateeDriverControlled extends OpMode{
      */
     @Override
     public void loop() {
-        double left;
-        double right;
-        double turnleft;
-        double turnright;
+        double left = -gamepad1.left_stick_y;
+        double right = -gamepad1.right_stick_y;
+        double turnLeft = gamepad1.left_trigger;
+        double turnRight = gamepad1.right_trigger;
 
         // Run wheels in tank mode (note: The joystick goes negative when pushed forwards, so negate it)
-        left = -gamepad1.left_stick_y;
-        right = -gamepad1.right_stick_y;
-
         manatee.leftFrontDrive.setPower(WHEEL_SPEED_MULTIPLIER *left);
         manatee.rightFrontDrive.setPower(WHEEL_SPEED_MULTIPLIER *right);
         manatee.leftBackDrive.setPower(WHEEL_SPEED_MULTIPLIER *right);
         manatee.rightBackDrive.setPower(WHEEL_SPEED_MULTIPLIER *left);
 
-        turnright = gamepad1.left_trigger;
-        turnleft = gamepad1.right_trigger;
-
-        manatee.leftFrontDrive.setPower(turnleft);
-        manatee.rightFrontDrive.setPower(turnright);
-        manatee.leftBackDrive.setPower(turnleft);
-        manatee.rightBackDrive.setPower(turnright);
-
+        manatee.leftFrontDrive.setPower(turnLeft);
+        manatee.rightFrontDrive.setPower(turnRight);
+        manatee.leftBackDrive.setPower(turnLeft);
+        manatee.rightBackDrive.setPower(turnRight);
 
         if (gamepad1.right_bumper && !shooterIsOn) {
             manatee.shooterWheelOne.setPower(1);
             manatee.shooterWheelTwo.setPower(1);
             shooterIsOn = true;
         }
-
         else if (!gamepad1.right_bumper && shooterIsOn) {
             manatee.shooterWheelOne.setPower(0);
-            manatee.shooterWheelOne.setPower(0);
+            manatee.shooterWheelTwo.setPower(0);
             shooterIsOn = false;
         }
 
-        if (gamepad1.left_bumper) {
+        if (gamepad1.left_bumper && !intakeIsOn) {
             manatee.intakeWheel.setPower(1);
-
+            intakeIsOn = true;
+        }
+        else if (!gamepad1.left_bumper && intakeIsOn) {
             manatee.intakeWheel.setPower(0);
+            intakeIsOn = false;
         }
 
         if (gamepad1.y) {
