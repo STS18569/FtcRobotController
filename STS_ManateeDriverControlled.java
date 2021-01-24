@@ -31,19 +31,20 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.Range;
 
 import static java.lang.Thread.sleep;
 
 /**
- * This file provides basic Telop driving for a Pushbot robot.
+ * This file provides basic Teleop driving for a Pushbot robot.
  * The code is structured as an Iterative OpMode
  *
  * This OpMode uses the common Pushbot hardware class to define the devices on the robot.
  * All device access is managed through the HardwarePushbot class.
  *
  * This particular OpMode executes a basic Tank Drive Teleop for a PushBot
- * It raises and lowers the claw using the Gampad Y and A buttons respectively.
+ * It raises and lowers the claw using the Gamepad Y and A buttons respectively.
  * It also opens and closes the claws slowly using the left and right Bumper buttons.
  *
  * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
@@ -159,11 +160,12 @@ public class STS_ManateeDriverControlled extends OpMode{
         }
 
         // Move both servos to new position.  Assume servos are mirror image of each other.
-        wobbleArmOffset = Range.clip(wobbleArmOffset, -0.5, 0.5);
-        wobbleClawOffset = Range.clip(wobbleClawOffset, -0.5, 0.5);
-        shooterAnglerOffset = Range.clip(shooterAnglerOffset, -0.5, 0.5);
-        //robot.wobbleArm.setPosition(robot.WOBBLE_ARM_MID_SERVO + wobbleArmOffset);
-        //robot.wobbleClaw.setPosition(robot.WOBBLE_CLAW_MID_SERVO + wobbleClawOffset);
+        wobbleArmOffset = Range.clip(wobbleArmOffset, -1, 1);
+        wobbleClawOffset = Range.clip(wobbleClawOffset, -1, 1);
+        shooterAnglerOffset = Range.clip(shooterAnglerOffset, -1, 1  );
+
+        manatee.wobbleArm.setPosition(manatee.WOBBLE_ARM_MID_SERVO + wobbleArmOffset);
+        manatee.wobbleClaw.setPosition(manatee.WOBBLE_CLAW_MID_SERVO + wobbleClawOffset);
         manatee.shooterAngler.setPosition(manatee.SHOOTER_ANGLER_MID_SERVO + shooterAnglerOffset);
 
         /*
