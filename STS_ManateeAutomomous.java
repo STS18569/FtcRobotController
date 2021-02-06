@@ -57,9 +57,10 @@ public class STS_ManateeAutomomous extends STS_ManateeAutonomousInit {
     private static final String TFOD_MODEL_ASSET = "UltimateGoal.tflite";
     private static final String LABEL_FIRST_ELEMENT = "Quad";
     private static final String LABEL_SECOND_ELEMENT = "Single";
-    private static final double     SCAN_FOR_ELEMENT_TIMEOUT   = 3;
+    private static final double SCAN_FOR_ELEMENT_TIMEOUT = 3;
+    
     private ElapsedTime scanForElementTime = new ElapsedTime();
-    private boolean     foundElement = false;
+    private boolean foundElement = false;
 
 
     /*
@@ -127,48 +128,50 @@ public class STS_ManateeAutomomous extends STS_ManateeAutonomousInit {
                 scanForElementTime.reset();
                 while (scanForElementTime.seconds() < SCAN_FOR_ELEMENT_TIMEOUT) {
                     List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
-                if (updatedRecognitions != null) {
-                    telemetry.addData("# Object Detected", updatedRecognitions.size());
-                    // step through the list of recognitions and display boundary info.
-                    int i = 0;
-                    for (Recognition recognition : updatedRecognitions) {
-                        telemetry.addData(String.format("label (%d)", i), recognition.getLabel());
-                        telemetry.addData(String.format("  left,top (%d)", i), "%.03f , %.03f",
-                                recognition.getLeft(), recognition.getTop());
-                        telemetry.addData(String.format("  right,bottom (%d)", i), "%.03f , %.03f",
-                                recognition.getRight(), recognition.getBottom());
+                    if (updatedRecognitions != null) {
+                        telemetry.addData("# Object Detected", updatedRecognitions.size());
+                        // step through the list of recognitions and display boundary info.
+                        int i = 0;
+                        for (Recognition recognition : updatedRecognitions) {
+                            telemetry.addData(String.format("label (%d)", i), recognition.getLabel());
+                            telemetry.addData(String.format("  left,top (%d)", i), "%.03f , %.03f",
+                                    recognition.getLeft(), recognition.getTop());
+                            telemetry.addData(String.format("  right,bottom (%d)", i), "%.03f , %.03f",
+                                    recognition.getRight(), recognition.getBottom());
 
-                        switch (recognition.getLabel()) {
-                            case LABEL_FIRST_ELEMENT:
-                                encoderDrive(STS_ManateeAutonomousInit.DRIVE_SPEED, 8, 8, 5.0);
-                                foundElement = true;
-                                break;
-                            case LABEL_SECOND_ELEMENT:
-                                encoderDrive(STS_ManateeAutonomousInit.DRIVE_SPEED, 4, 4, 5.0);
-                                foundElement = true;
-                                break;
-                            case "":
-                                break;
-                            default:
-                                // TODO: Is this possible or should I throw an
-                                //  UnsupportedOperationException
-                                break;
+                            switch (recognition.getLabel()) {
+                                case LABEL_FIRST_ELEMENT:
+                                    encoderDrive(STS_ManateeAutonomousInit.DRIVE_SPEED, 8, 8, 5.0);
+                                    foundElement = true;
+                                    break;
+                                case LABEL_SECOND_ELEMENT:
+                                    encoderDrive(STS_ManateeAutonomousInit.DRIVE_SPEED, 4, 4, 5.0);
+                                    foundElement = true;
+                                    break;
+                                case "":
+                                    break;
+                                default:
+                                    // TODO: Is this possible or should I throw an
+                                    //  UnsupportedOperationException
+                                    break;
+                            }
+                            tfod.shutdown();
+
+                            telemetry.update();
+                            // retInt = 1;
                         }
-                        tfod.shutdown();
-
-                        telemetry.update();
-                        // retInt = 1;
                     }
-                }
-            }    // while (scanForElementTime.seconds() < SCAN_FOR_ELEMENT_TIMEOUT)
+                }    // while (scanForElementTime.seconds() < SCAN_FOR_ELEMENT_TIMEOUT)
             }
             else {
                 telemetry.addData("tfod != null", "ERROR!!!");
                 telemetry.update();
             } // if (tfod != null)
+
             if (foundElement = false) {
                 encoderDrive(STS_ManateeAutonomousInit.DRIVE_SPEED, 8, 8, 5.0);
             }
+
             if (tfod != null) {
                 tfod.shutdown();
             }
