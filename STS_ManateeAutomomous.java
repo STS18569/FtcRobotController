@@ -30,6 +30,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
@@ -56,6 +57,10 @@ public class STS_ManateeAutomomous extends STS_ManateeAutonomousInit {
     private static final String TFOD_MODEL_ASSET = "UltimateGoal.tflite";
     private static final String LABEL_FIRST_ELEMENT = "Quad";
     private static final String LABEL_SECOND_ELEMENT = "Single";
+    private static final double     SCAN_FOR_ELEMENT_TIMEOUT   = 3;
+    private ElapsedTime scanForElementTime = new ElapsedTime();
+    private boolean     foundElement = false;
+
 
     /*
      * IMPORTANT: You need to obtain your own license key to use Vuforia. The string below with which
@@ -119,7 +124,9 @@ public class STS_ManateeAutomomous extends STS_ManateeAutonomousInit {
             if (tfod != null) {
                 // getUpdatedRecognitions() will return null if no new information is available since
                 // the last time that call was made.
-                List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
+                scanForElementTime.reset();
+                while (scanForElementTime.seconds() < SCAN_FOR_ELEMENT_TIMEOUT) {
+                    List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
                 if (updatedRecognitions != null) {
                     telemetry.addData("# Object Detected", updatedRecognitions.size());
                     // step through the list of recognitions and display boundary info.
@@ -134,9 +141,11 @@ public class STS_ManateeAutomomous extends STS_ManateeAutonomousInit {
                         switch (recognition.getLabel()) {
                             case LABEL_FIRST_ELEMENT:
                                 encoderDrive(STS_ManateeAutonomousInit.DRIVE_SPEED, 8, 8, 5.0);
+                                foundElement = true;
                                 break;
                             case LABEL_SECOND_ELEMENT:
                                 encoderDrive(STS_ManateeAutonomousInit.DRIVE_SPEED, 4, 4, 5.0);
+                                foundElement = true;
                                 break;
                             case "":
                                 break;
@@ -151,12 +160,15 @@ public class STS_ManateeAutomomous extends STS_ManateeAutonomousInit {
                         // retInt = 1;
                     }
                 }
+            }    // while (scanForElementTime.seconds() < SCAN_FOR_ELEMENT_TIMEOUT)
             }
             else {
                 telemetry.addData("tfod != null", "ERROR!!!");
                 telemetry.update();
             } // if (tfod != null)
-
+            if (foundElement = false) {
+                encoderDrive(STS_ManateeAutonomousInit.DRIVE_SPEED, 8, 8, 5.0);
+            }
             if (tfod != null) {
                 tfod.shutdown();
             }
