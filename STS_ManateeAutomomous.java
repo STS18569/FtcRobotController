@@ -61,7 +61,7 @@ public class STS_ManateeAutomomous extends STS_ManateeAutonomousInit {
     
     private ElapsedTime scanForElementTime = new ElapsedTime();
     private boolean foundElement = false;
-
+    private boolean autonomousIsActive = true;
 
     /*
      * IMPORTANT: You need to obtain your own license key to use Vuforia. The string below with which
@@ -121,7 +121,7 @@ public class STS_ManateeAutomomous extends STS_ManateeAutonomousInit {
         /** Wait for the game to begin */
         waitForStart();
 
-        while (opModeIsActive()) {
+        while (opModeIsActive() && autonomousIsActive) {
             if (tfod != null) {
                 // getUpdatedRecognitions() will return null if no new information is available since
                 // the last time that call was made.
@@ -141,12 +141,14 @@ public class STS_ManateeAutomomous extends STS_ManateeAutonomousInit {
 
                             switch (recognition.getLabel()) {
                                 case LABEL_FIRST_ELEMENT:
-                                    encoderDrive(STS_ManateeAutonomousInit.DRIVE_SPEED, 8, 8, 5.0);
+                                    encoderDrive(STS_ManateeAutonomousInit.DRIVE_SPEED, 0,8, 8, 5.0);
                                     foundElement = true;
+                                    autonomousIsActive = false;
                                     break;
                                 case LABEL_SECOND_ELEMENT:
-                                    encoderDrive(STS_ManateeAutonomousInit.DRIVE_SPEED, 4, 4, 5.0);
+                                    encoderDrive(STS_ManateeAutonomousInit.DRIVE_SPEED, 0,4, 4, 5.0);
                                     foundElement = true;
+                                    autonomousIsActive = false;
                                     break;
                                 case "":
                                     break;
@@ -168,15 +170,27 @@ public class STS_ManateeAutomomous extends STS_ManateeAutonomousInit {
                 telemetry.update();
             } // if (tfod != null)
 
-            if (foundElement = false) {
-                encoderDrive(STS_ManateeAutonomousInit.DRIVE_SPEED, 8, 8, 5.0);
+            if (!foundElement) {
+                //encoderDrive(DRIVE_SPEED,  0,   12,  12, 5.0);
+                encoderDrive(DRIVE_SPEED,  0,   0,  4.712, 5.0);
+                //encoderDrive(DRIVE_SPEED,  0,   24,  24, 5.0);
+                //encoderDrive(DRIVE_SPEED,  -45,   4.712,  0, 5.0);
+                //encoderDrive(DRIVE_SPEED,  0,   24,  24, 5.0);
+                autonomousIsActive = false;
+                telemetry.addLine("leaving !foundElement");
             }
+
+            telemetry.addLine("Done with finding elements");
+            telemetry.update();
+            sleep(2000);
 
             if (tfod != null) {
                 tfod.shutdown();
             }
         } // while (opModeIsActive())
     }
+
+
 
     /**
      * Initialize the Vuforia localization engine.

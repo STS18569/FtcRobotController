@@ -72,6 +72,7 @@ public class STS_ManateeAutonomousInit extends LinearOpMode {
     static final double     COUNTS_PER_MOTOR_REV    = 28.0;    // eg: TETRIX Motor Encoder
     static final double     DRIVE_GEAR_REDUCTION    = 4.0;     // This is < 1.0 if geared UP
     static final double     WHEEL_DIAMETER_INCHES   = 4.0;     // For figuring circumference
+    static final double     WHEEL_BASE              = 12.0;
     static final double     FUDGE_FACTOR            = 23.0 / 44.0;
     static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION * FUDGE_FACTOR) /
                                                       (WHEEL_DIAMETER_INCHES * 3.1415);
@@ -111,15 +112,28 @@ public class STS_ManateeAutonomousInit extends LinearOpMode {
     }
 
     public void testMotors() {
-        encoderDrive(DRIVE_SPEED,  -48,  -48, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+        telemetry.addLine("Leaving TestMotors");
+        telemetry.update();
+        sleep( 2000);
     }
+/*
+    public void testMotors() {
+        encoderDrive(DRIVE_SPEED,  0,   4.712,  0, 5.0);  //Forward 12 inches with 5 sec timeout
+        encoderDrive(DRIVE_SPEED,  0,   4.24,  4.24, 5.0);  //Turns 45 degrees to the left with 5 Sec timeout
+        encoderDrive(DRIVE_SPEED,  0,   0,  9.425, 5.0);  //Forward 24 inches with 5 sec timeout
+        encoderDrive(DRIVE_SPEED,  0,   4.24,  4.24, 5.0);  //Turns 45 degrees to the right with 5 sec timeout
+        encoderDrive(DRIVE_SPEED,  0,   0,  4.712, 5.0);  //Forward 24 inches with 5 sec timeout
+        encoderDrive(DRIVE_SPEED,  0,   24,  24, 5.0);
+    }
+*/
 
     public void testServos() {
+/*
         manatee.wobbleArm.setPosition(1.0);
         telemetry.addData("Test Servos", "wobbleArm.setPosition: %.3f", manatee.wobbleArm.getPosition());
         telemetry.update();
         sleep( 2000);     // pause for servos to move
-        /*
+
 
         manatee.wobbleClaw.setPosition(0.1);
         telemetry.addData("Test Servos", "wobbleClaw.setPosition: %.3f", manatee.wobbleClaw.getPosition());
@@ -160,7 +174,7 @@ public class STS_ManateeAutonomousInit extends LinearOpMode {
      *  2) Move runs out of time
      *  3) Driver stops the opmode running.
      */
-    public void encoderDrive(double speed,
+    public void encoderDrive(double speed, double degree,
                              double leftInches, double rightInches,
                              double timeoutS) {
         int newLeftFrontTarget;

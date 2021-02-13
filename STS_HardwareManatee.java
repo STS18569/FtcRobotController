@@ -133,10 +133,11 @@ public class STS_HardwareManatee
         wobbleArm  = hwMap.get(Servo.class, "wobble_arm");
         wobbleClaw = hwMap.get(Servo.class, "wobble_claw");
         shooterAngler = hwMap.get(Servo.class,"shooter_angler");
-
+/*
         wobbleArm.setPosition(1.0);
         wobbleClaw.setPosition(WOBBLE_CLAW_MID_SERVO);
         shooterAngler.setPosition(SHOOTER_ANGLER_MID_SERVO);
+ */
     }
  }
 
