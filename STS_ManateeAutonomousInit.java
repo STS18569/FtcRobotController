@@ -76,7 +76,7 @@ public class STS_ManateeAutonomousInit extends LinearOpMode {
     static final double     FUDGE_FACTOR            = 23.0 / 44.0;
     static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION * FUDGE_FACTOR) /
                                                       (WHEEL_DIAMETER_INCHES * 3.1415);
-    static final double     DRIVE_SPEED             = 0.6;
+    static final double     DRIVE_SPEED             = 0.4;
     static final double     TURN_SPEED              = 0.5;
 
     @Override
@@ -92,10 +92,10 @@ public class STS_ManateeAutonomousInit extends LinearOpMode {
         manatee.rightFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         manatee.rightBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        manatee.leftFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         manatee.leftBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         manatee.rightFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         manatee.rightBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        manatee.leftFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         // Send telemetry message to indicate successful Encoder reset
         telemetry.addData("Path0",  "Starting at %7d :%7d :%7d :%7d",
@@ -107,28 +107,21 @@ public class STS_ManateeAutonomousInit extends LinearOpMode {
 
         waitForStart();
         testMotors();
-        testServos();
-
+        // testServos();
     }
 
     public void testMotors() {
-        telemetry.addLine("Leaving TestMotors");
-        telemetry.update();
-        sleep( 2000);
-    }
-/*
-    public void testMotors() {
+        /*
         encoderDrive(DRIVE_SPEED,  0,   4.712,  0, 5.0);  //Forward 12 inches with 5 sec timeout
         encoderDrive(DRIVE_SPEED,  0,   4.24,  4.24, 5.0);  //Turns 45 degrees to the left with 5 Sec timeout
         encoderDrive(DRIVE_SPEED,  0,   0,  9.425, 5.0);  //Forward 24 inches with 5 sec timeout
         encoderDrive(DRIVE_SPEED,  0,   4.24,  4.24, 5.0);  //Turns 45 degrees to the right with 5 sec timeout
         encoderDrive(DRIVE_SPEED,  0,   0,  4.712, 5.0);  //Forward 24 inches with 5 sec timeout
-        encoderDrive(DRIVE_SPEED,  0,   24,  24, 5.0);
+         */
+        encoderDrive(DRIVE_SPEED,  0,   120,  120, 5.0);
     }
-*/
 
     public void testServos() {
-/*
         manatee.wobbleArm.setPosition(1.0);
         telemetry.addData("Test Servos", "wobbleArm.setPosition: %.3f", manatee.wobbleArm.getPosition());
         telemetry.update();
@@ -159,8 +152,6 @@ public class STS_ManateeAutonomousInit extends LinearOpMode {
         telemetry.addData("Test Servos", "shooterAngler.setPosition: %.3f", manatee.shooterAngler.getPosition());
         telemetry.update();
         sleep( 3000);     // pause for servos to move
-        
-         */
 
         telemetry.addData("Test Servos", "Complete");
         telemetry.update();
@@ -214,17 +205,26 @@ public class STS_ManateeAutonomousInit extends LinearOpMode {
             // always end the motion as soon as possible.
             // However, if you require that BOTH motors have finished their moves before the robot continues
             // onto the next step, use (isBusy() || isBusy()) in the loop test.
+            // telemetry.addData("speed == ", speed);
+            // telemetry.addData("timeoutS == ", timeoutS);
             while (opModeIsActive() &&
                    (runtime.seconds() < timeoutS) &&
-                   (manatee.leftFrontDrive.isBusy() && manatee.leftBackDrive.isBusy() && manatee.rightFrontDrive.isBusy() && manatee.rightBackDrive.isBusy())) {
+                    ((manatee.leftFrontDrive.isBusy() || manatee.leftBackDrive.isBusy() || manatee.rightFrontDrive.isBusy() || manatee.rightBackDrive.isBusy()))) {
 
                 // Display it for the driver.
-                telemetry.addData("Path1",  "Running to %7d :%7d :%7d :%7d", newLeftFrontTarget,  newLeftBackTarget,  newRightFrontTarget,  newRightBackTarget);
-                telemetry.addData("Path2",  "Running at %7d :%7d :%7d :%7d",
-                                            manatee.leftFrontDrive.getCurrentPosition(),
-                                            manatee.leftBackDrive.getCurrentPosition(),
-                                            manatee.rightFrontDrive.getCurrentPosition(),
-                                            manatee.rightBackDrive.getCurrentPosition());
+                /*
+                telemetry.addData("speed",  speed);
+                telemetry.addData("degree",  degree);
+                telemetry.addData("leftInches",  leftInches);
+                telemetry.addData("rightInches",  rightInches);
+                telemetry.addData("timeoutS",  timeoutS);
+                 */
+                telemetry.addData("Path1 (target)",  "Running to %7d :%7d :%7d :%7d", newLeftFrontTarget,  newLeftBackTarget,
+                                                                                                      newRightFrontTarget,  newRightBackTarget);
+                telemetry.addData("Path2 (position)",  "Running at %7d :%7d :%7d :%7d", manatee.leftFrontDrive.getCurrentPosition(), manatee.leftBackDrive.getCurrentPosition(),
+                                                                                                        manatee.rightFrontDrive.getCurrentPosition(), manatee.rightBackDrive.getCurrentPosition());
+                // telemetry.addData("EncoderDrive", "time(%3d) : %3f", timeoutS, runtime.seconds());
+                telemetry.addData("EncoderDrive: time: ", runtime.seconds());
                 telemetry.update();
             }
 

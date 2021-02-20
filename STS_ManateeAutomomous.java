@@ -129,7 +129,8 @@ public class STS_ManateeAutomomous extends STS_ManateeAutonomousInit {
                 while (scanForElementTime.seconds() < SCAN_FOR_ELEMENT_TIMEOUT) {
                     List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
                     if (updatedRecognitions != null) {
-                        telemetry.addData("# Object Detected", updatedRecognitions.size());
+                        // telemetry.addData("# Object Detected", updatedRecognitions.size());
+
                         // step through the list of recognitions and display boundary info.
                         int i = 0;
                         for (Recognition recognition : updatedRecognitions) {
@@ -141,20 +142,23 @@ public class STS_ManateeAutomomous extends STS_ManateeAutonomousInit {
 
                             switch (recognition.getLabel()) {
                                 case LABEL_FIRST_ELEMENT:
-                                    encoderDrive(STS_ManateeAutonomousInit.DRIVE_SPEED, 0,8, 8, 5.0);
+                                    encoderDrive(STS_ManateeAutonomousInit.DRIVE_SPEED,  0,   36,  36, 5.0);
+                                    telemetry.addLine("foundElement == LABEL_FIRST_ELEMENT");
+                                    telemetry.update();
                                     foundElement = true;
                                     autonomousIsActive = false;
                                     break;
                                 case LABEL_SECOND_ELEMENT:
-                                    encoderDrive(STS_ManateeAutonomousInit.DRIVE_SPEED, 0,4, 4, 5.0);
+                                    encoderDrive(STS_ManateeAutonomousInit.DRIVE_SPEED, 0,60, 60, 5.0);
+                                    telemetry.addLine("foundElement == LABEL_SECOND_ELEMENT");
+                                    telemetry.update();
                                     foundElement = true;
                                     autonomousIsActive = false;
-                                    break;
-                                case "":
                                     break;
                                 default:
                                     // TODO: Is this possible or should I throw an
                                     //  UnsupportedOperationException
+                                    telemetry.addData("# Object Detected", updatedRecognitions.size());
                                     break;
                             }
                             tfod.shutdown();
@@ -162,35 +166,41 @@ public class STS_ManateeAutomomous extends STS_ManateeAutonomousInit {
                             telemetry.update();
                             // retInt = 1;
                         }
+                    }  //if (updatedRecognitions != null)
+                    else {
+                        telemetry.addData("SCANNING FOR RINGS: time: ", scanForElementTime.seconds());
+                        telemetry.update();
                     }
-                }    // while (scanForElementTime.seconds() < SCAN_FOR_ELEMENT_TIMEOUT)
+                }  // while (scanForElementTime.seconds() < SCAN_FOR_ELEMENT_TIMEOUT)
+
+                if (!foundElement) {
+                    // telemetry.addData("STS_ManateeAutonomousInit.DRIVE_SPEED == ", STS_ManateeAutonomousInit.DRIVE_SPEED);
+                    encoderDrive(STS_ManateeAutonomousInit.DRIVE_SPEED,  0,   12,  12, 5.0);
+                    /*
+                    encoderDrive(STS_ManateeAutonomousInit.DRIVE_SPEED,  0,   0,  4.712, 5.0);
+                    encoderDrive(STS_ManateeAutonomousInit.DRIVE_SPEED,  0,   24,  24, 5.0);
+                    encoderDrive(STS_ManateeAutonomousInit.DRIVE_SPEED,  -45,   4.712,  0, 5.0);
+                    encoderDrive(STS_ManateeAutonomousInit.DRIVE_SPEED,  0,   24,  24, 5.0);
+                    */
+                    telemetry.addLine("foundElement == LABEL_ZERO_ELEMENT");
+                    autonomousIsActive = false;
+                }
+
+                telemetry.addLine("Done with finding elements.");
+                telemetry.update();
+                sleep(2000);
             }
             else {
                 telemetry.addData("tfod != null", "ERROR!!!");
                 telemetry.update();
+                sleep(5000);
             } // if (tfod != null)
-
-            if (!foundElement) {
-                //encoderDrive(DRIVE_SPEED,  0,   12,  12, 5.0);
-                encoderDrive(DRIVE_SPEED,  0,   0,  4.712, 5.0);
-                //encoderDrive(DRIVE_SPEED,  0,   24,  24, 5.0);
-                //encoderDrive(DRIVE_SPEED,  -45,   4.712,  0, 5.0);
-                //encoderDrive(DRIVE_SPEED,  0,   24,  24, 5.0);
-                autonomousIsActive = false;
-                telemetry.addLine("leaving !foundElement");
-            }
-
-            telemetry.addLine("Done with finding elements");
-            telemetry.update();
-            sleep(2000);
 
             if (tfod != null) {
                 tfod.shutdown();
             }
         } // while (opModeIsActive())
     }
-
-
 
     /**
      * Initialize the Vuforia localization engine.
