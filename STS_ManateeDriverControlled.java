@@ -34,6 +34,8 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.robotcore.internal.camera.delegating.DelegatingCaptureSequence;
+
 import static java.lang.Thread.sleep;
 
 /**
@@ -63,11 +65,11 @@ public class STS_ManateeDriverControlled extends OpMode{
     boolean             shooterIsOn = false;
     boolean             intakeIsOn = false;
 
-    final double        WOBBLE_ARM_ANGLE = 0.02;                 // sets rate to move servo
+    final double        WOBBLE_ARM_ANGLE = 0.001;                 // sets rate to move servo
     final double        WOBBLE_CLAW_ANGLE = 0.02;
-    final double        SHOOTER_ANGLER_ANGLE = 0.02;
+    final double        SHOOTER_ANGLER_ANGLE = 0.0001;
 
-    final double        WHEEL_SPEED_MULTIPLIER = 0.6;
+    final double        WHEEL_SPEED_MULTIPLIER = 1.0;
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -104,16 +106,25 @@ public class STS_ManateeDriverControlled extends OpMode{
     public void loop() {
         double left = -gamepad1.left_stick_y;
         double right = -gamepad1.right_stick_y;
-        double turnLeft = gamepad1.left_trigger;
-        double turnRight = gamepad1.right_trigger;
+        double turnRight = gamepad1.left_trigger;
+        double turnLeft = gamepad1.right_trigger;
 
         // Run wheels in tank mode (note: The joystick goes negative when pushed forwards, so negate it)
         if ((turnLeft != 0) || (turnRight != 0)) {
-            telemetry.addLine("TURN MODE");
-            manatee.leftFrontDrive.setPower(WHEEL_SPEED_MULTIPLIER*turnLeft);
-            manatee.rightFrontDrive.setPower(WHEEL_SPEED_MULTIPLIER*turnRight);
-            manatee.leftBackDrive.setPower(WHEEL_SPEED_MULTIPLIER*turnLeft);
-            manatee.rightBackDrive.setPower(WHEEL_SPEED_MULTIPLIER*turnRight);
+            if (turnLeft != 0) {
+                telemetry.addLine("TURN LEFT MODE");
+                manatee.leftFrontDrive.setPower(WHEEL_SPEED_MULTIPLIER * turnLeft);
+                manatee.rightFrontDrive.setPower(WHEEL_SPEED_MULTIPLIER * -turnLeft);
+                manatee.leftBackDrive.setPower(WHEEL_SPEED_MULTIPLIER * turnLeft);
+                manatee.rightBackDrive.setPower(WHEEL_SPEED_MULTIPLIER * -turnLeft);
+            }
+            else {
+                telemetry.addLine("TURN RIGHT MODE");
+                manatee.leftFrontDrive.setPower(WHEEL_SPEED_MULTIPLIER * -turnRight);
+                manatee.rightFrontDrive.setPower(WHEEL_SPEED_MULTIPLIER * turnRight);
+                manatee.leftBackDrive.setPower(WHEEL_SPEED_MULTIPLIER * -turnRight);
+                manatee.rightBackDrive.setPower(WHEEL_SPEED_MULTIPLIER * turnRight);
+            }
         }
         else {
             telemetry.addLine("LATERAL MODE");

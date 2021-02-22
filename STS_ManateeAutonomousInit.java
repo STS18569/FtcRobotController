@@ -73,10 +73,10 @@ public class STS_ManateeAutonomousInit extends LinearOpMode {
     static final double     DRIVE_GEAR_REDUCTION    = 4.0;     // This is < 1.0 if geared UP
     static final double     WHEEL_DIAMETER_INCHES   = 4.0;     // For figuring circumference
     static final double     WHEEL_BASE              = 12.0;
-    static final double     FUDGE_FACTOR            = 23.0 / 44.0;
+    static final double     FUDGE_FACTOR            = 8.0;
     static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION * FUDGE_FACTOR) /
                                                       (WHEEL_DIAMETER_INCHES * 3.1415);
-    static final double     DRIVE_SPEED             = 0.4;
+    static final double     DRIVE_SPEED             = 0.6;
     static final double     TURN_SPEED              = 0.5;
 
     @Override
@@ -118,7 +118,7 @@ public class STS_ManateeAutonomousInit extends LinearOpMode {
         encoderDrive(DRIVE_SPEED,  0,   4.24,  4.24, 5.0);  //Turns 45 degrees to the right with 5 sec timeout
         encoderDrive(DRIVE_SPEED,  0,   0,  4.712, 5.0);  //Forward 24 inches with 5 sec timeout
          */
-        encoderDrive(DRIVE_SPEED,  0,   120,  120, 5.0);
+        encoderDrive(DRIVE_SPEED,  0,   72,  72, 5.0);
     }
 
     public void testServos() {
