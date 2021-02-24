@@ -66,8 +66,8 @@ public class STS_ManateeDriverControlled extends OpMode{
     boolean             intakeIsOn = false;
 
     final double        WOBBLE_ARM_ANGLE = 0.001;                 // sets rate to move servo
-    final double        WOBBLE_CLAW_ANGLE = 0.02;
-    final double        SHOOTER_ANGLER_ANGLE = 0.0001;
+    final double        WOBBLE_CLAW_ANGLE = 0.01;
+    final double        SHOOTER_ANGLER_ANGLE = 0.0002;
 
     final double        WHEEL_SPEED_MULTIPLIER = 1.0;
 
@@ -137,11 +137,13 @@ public class STS_ManateeDriverControlled extends OpMode{
         if (gamepad1.right_bumper && !shooterIsOn) {
             manatee.shooterWheelOne.setPower(-1);
             manatee.shooterWheelTwo.setPower(-1);
+            manatee.slapper.setPower(-1);
             shooterIsOn = true;
         }
         else if (!gamepad1.right_bumper && shooterIsOn) {
             manatee.shooterWheelOne.setPower(0);
             manatee.shooterWheelTwo.setPower(0);
+            manatee.slapper.setPower(0);
             shooterIsOn = false;
         }
 

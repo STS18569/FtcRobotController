@@ -142,7 +142,9 @@ public class STS_ManateeAutomomous extends STS_ManateeAutonomousInit {
 
                             switch (recognition.getLabel()) {
                                 case LABEL_FIRST_ELEMENT:
-                                    encoderDrive(STS_ManateeAutonomousInit.DRIVE_SPEED,  0,   36,  36, 5.0);
+                                    encoderDrive(STS_ManateeAutonomousInit.DRIVE_SPEED,  0,   72,  72, 5.0);
+                                    manatee.wobbleArm.setPosition(0.23);
+                                    manatee.wobbleClaw.setPosition(1.0);
                                     telemetry.addLine("foundElement == LABEL_FIRST_ELEMENT");
                                     telemetry.update();
                                     foundElement = true;
