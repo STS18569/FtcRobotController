@@ -142,7 +142,7 @@ public class STS_ManateeAutomomous extends STS_ManateeAutonomousInit {
 
                             switch (recognition.getLabel()) {
                                 case LABEL_FIRST_ELEMENT:
-                                    encoderDrive(STS_ManateeAutonomousInit.DRIVE_SPEED,  0,   72,  72, 5.0);
+                                    encoderDrive(DriveMode.LINEAR, DRIVE_SPEED,  0,   120,  120, 5.0);
                                     manatee.wobbleArm.setPosition(0.23);
                                     manatee.wobbleClaw.setPosition(1.0);
                                     telemetry.addLine("foundElement == LABEL_FIRST_ELEMENT");
@@ -151,7 +151,7 @@ public class STS_ManateeAutomomous extends STS_ManateeAutonomousInit {
                                     autonomousIsActive = false;
                                     break;
                                 case LABEL_SECOND_ELEMENT:
-                                    encoderDrive(STS_ManateeAutonomousInit.DRIVE_SPEED, 0,60, 60, 5.0);
+                                    encoderDrive(DriveMode.LINEAR, DRIVE_SPEED,  0,   120,  120, 5.0);
                                     telemetry.addLine("foundElement == LABEL_SECOND_ELEMENT");
                                     telemetry.update();
                                     foundElement = true;
@@ -177,7 +177,7 @@ public class STS_ManateeAutomomous extends STS_ManateeAutonomousInit {
 
                 if (!foundElement) {
                     // telemetry.addData("STS_ManateeAutonomousInit.DRIVE_SPEED == ", STS_ManateeAutonomousInit.DRIVE_SPEED);
-                    encoderDrive(STS_ManateeAutonomousInit.DRIVE_SPEED,  0,   12,  12, 5.0);
+                    encoderDrive(DriveMode.LINEAR, DRIVE_SPEED,  0,   120,  120, 5.0);
                     /*
                     encoderDrive(STS_ManateeAutonomousInit.DRIVE_SPEED,  0,   0,  4.712, 5.0);
                     encoderDrive(STS_ManateeAutonomousInit.DRIVE_SPEED,  0,   24,  24, 5.0);

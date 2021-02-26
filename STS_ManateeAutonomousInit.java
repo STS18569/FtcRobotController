@@ -69,6 +69,8 @@ public class STS_ManateeAutonomousInit extends LinearOpMode {
     STS_HardwareManatee     manatee = new STS_HardwareManatee();   // Use a Pushbot's hardware
     private ElapsedTime     runtime = new ElapsedTime();
 
+    static enum             DriveMode {LAT_LEFT, LAT_RIGHT, LINEAR};
+
     static final double     COUNTS_PER_MOTOR_REV    = 28.0;    // eg: TETRIX Motor Encoder
     static final double     DRIVE_GEAR_REDUCTION    = 4.0;     // This is < 1.0 if geared UP
     static final double     WHEEL_DIAMETER_INCHES   = 4.0;     // For figuring circumference
@@ -106,8 +108,8 @@ public class STS_ManateeAutonomousInit extends LinearOpMode {
                 manatee.rightBackDrive.getCurrentPosition());
 
 
-        //waitForStart();
-        //testMotors();
+        waitForStart();
+        testMotors();
         // testServos();
     }
 
@@ -119,7 +121,9 @@ public class STS_ManateeAutonomousInit extends LinearOpMode {
         encoderDrive(DRIVE_SPEED,  0,   4.24,  4.24, 5.0);  //Turns 45 degrees to the right with 5 sec timeout
         encoderDrive(DRIVE_SPEED,  0,   0,  4.712, 5.0);  //Forward 24 inches with 5 sec timeout
          */
-        encoderDrive(DRIVE_SPEED,  0,   72,  72, 5.0);
+        encoderDrive(DriveMode.LINEAR, DRIVE_SPEED,  0,   120,  120, 5.0);
+        sleep(3000);
+        encoderDrive(DriveMode.LAT_RIGHT, DRIVE_SPEED,  0,   60,  60, 5.0);
     }
 
     public void testServos() {
@@ -166,21 +170,40 @@ public class STS_ManateeAutonomousInit extends LinearOpMode {
      *  2) Move runs out of time
      *  3) Driver stops the opmode running.
      */
-    public void encoderDrive(double speed, double degree,
+    public void encoderDrive(DriveMode mode, double speed, double degree,
                              double leftInches, double rightInches,
                              double timeoutS) {
-        int newLeftFrontTarget;
-        int newLeftBackTarget;
-        int newRightFrontTarget;
-        int newRightBackTarget;
+        int newLeftFrontTarget = 0;
+        int newLeftBackTarget = 0;
+        int newRightFrontTarget = 0;
+        int newRightBackTarget = 0;
+
 
         // Ensure that the opmode is still active
         if (opModeIsActive()) {
             // Determine new target position, and pass to motor controller
-            newLeftFrontTarget = manatee.leftFrontDrive.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
-            newLeftBackTarget = manatee.leftBackDrive.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
-            newRightFrontTarget = manatee.rightFrontDrive.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
-            newRightBackTarget = manatee.rightBackDrive.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
+            switch(mode) {
+                case LINEAR:
+                    newLeftFrontTarget = manatee.leftFrontDrive.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
+                    newLeftBackTarget = manatee.leftBackDrive.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
+                    newRightFrontTarget = manatee.rightFrontDrive.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
+                    newRightBackTarget = manatee.rightBackDrive.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
+                    break;
+                case LAT_LEFT:
+                    newLeftFrontTarget = manatee.leftFrontDrive.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
+                    newLeftBackTarget = manatee.leftBackDrive.getCurrentPosition() + (int)(-rightInches * COUNTS_PER_INCH);
+                    newRightFrontTarget = manatee.rightFrontDrive.getCurrentPosition() + (int)(-rightInches * COUNTS_PER_INCH);
+                    newRightBackTarget = manatee.rightBackDrive.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
+                    break;
+                case LAT_RIGHT:
+                    newLeftFrontTarget = manatee.leftFrontDrive.getCurrentPosition() + (int)(-leftInches * COUNTS_PER_INCH);
+                    newLeftBackTarget = manatee.leftBackDrive.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
+                    newRightFrontTarget = manatee.rightFrontDrive.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
+                    newRightBackTarget = manatee.rightBackDrive.getCurrentPosition() + (int)(-leftInches * COUNTS_PER_INCH);
+                    break;
+                default:
+                    // code block
+            }
 
             manatee.leftFrontDrive.setTargetPosition(newLeftFrontTarget);
             manatee.leftBackDrive.setTargetPosition(newLeftBackTarget);

@@ -68,7 +68,7 @@ public class STS_HardwareManatee
     public Servo    shooterAngler = null;
 
 
-    public static final double WOBBLE_ARM_MID_SERVO       =  -1.0;
+    public static final double WOBBLE_ARM_MID_SERVO       =  1.0;
     public static final double WOBBLE_CLAW_MID_SERVO       =  0.5;
     public static final double SHOOTER_ANGLER_MID_SERVO       =  0.5;
     // public static final double ARM_UP_POWER    =  0.45 ;
@@ -98,6 +98,7 @@ public class STS_HardwareManatee
         intakeWheel    = hwMap.get(DcMotor.class, "intake_wheel");
         shooterWheelOne = hwMap.get(DcMotor.class, "shooter_wheel_one");
         shooterWheelTwo = hwMap.get(DcMotor.class, "shooter_wheel_two ");
+        slapper         = hwMap.get(DcMotor.class, "slapper");
 
         leftFrontDrive.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
         leftBackDrive.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
