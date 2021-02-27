@@ -75,11 +75,11 @@ public class STS_ManateeAutonomousInit extends LinearOpMode {
     static final double     DRIVE_GEAR_REDUCTION    = 4.0;     // This is < 1.0 if geared UP
     static final double     WHEEL_DIAMETER_INCHES   = 4.0;     // For figuring circumference
     static final double     WHEEL_BASE              = 12.0;
-    static final double     FUDGE_FACTOR            = 1.375;
+    static final double     FUDGE_FACTOR            = 1.4;
     static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION * FUDGE_FACTOR) /
                                                       (WHEEL_DIAMETER_INCHES * 3.1415);
     static final double     DRIVE_SPEED             = 0.28;
-    static final double     LATERAL_ADJUSTMENT      = 1.02;
+    static final double     LATERAL_ADJUSTMENT      = 1.01;
     static final double     TURN_SPEED              = 0.5;
 
     @Override
@@ -108,8 +108,8 @@ public class STS_ManateeAutonomousInit extends LinearOpMode {
                 manatee.rightBackDrive.getCurrentPosition());
 
 
-        waitForStart();
-        testMotors();
+        //waitForStart();
+        //testMotors();
         // testServos();
     }
 

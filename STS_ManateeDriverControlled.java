@@ -33,10 +33,8 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.Range;
-
 import org.firstinspires.ftc.robotcore.internal.camera.delegating.DelegatingCaptureSequence;
 
-import static java.lang.Thread.sleep;
 
 /**
  * This file provides basic Teleop driving for a Pushbot robot.
@@ -70,6 +68,16 @@ public class STS_ManateeDriverControlled extends OpMode{
     final double        SHOOTER_ANGLER_ANGLE = 0.0002;
 
     final double        WHEEL_SPEED_MULTIPLIER = 1.0;
+    final double        LATERAL_ADJUSTMENT      = 0.99;
+
+    public final void sleep(long milliseconds) {
+        try {
+            Thread.sleep(milliseconds);
+        } catch (InterruptedException var4) {
+            Thread.currentThread().interrupt();
+        }
+
+    }
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -114,29 +122,30 @@ public class STS_ManateeDriverControlled extends OpMode{
             if (turnLeft != 0) {
                 telemetry.addLine("TURN LEFT MODE");
                 manatee.leftFrontDrive.setPower(WHEEL_SPEED_MULTIPLIER * turnLeft);
-                manatee.rightFrontDrive.setPower(WHEEL_SPEED_MULTIPLIER * -turnLeft);
+                manatee.rightFrontDrive.setPower(WHEEL_SPEED_MULTIPLIER * LATERAL_ADJUSTMENT * -turnLeft);
                 manatee.leftBackDrive.setPower(WHEEL_SPEED_MULTIPLIER * turnLeft);
-                manatee.rightBackDrive.setPower(WHEEL_SPEED_MULTIPLIER * -turnLeft);
+                manatee.rightBackDrive.setPower(WHEEL_SPEED_MULTIPLIER * LATERAL_ADJUSTMENT * -turnLeft);
             }
             else {
                 telemetry.addLine("TURN RIGHT MODE");
                 manatee.leftFrontDrive.setPower(WHEEL_SPEED_MULTIPLIER * -turnRight);
-                manatee.rightFrontDrive.setPower(WHEEL_SPEED_MULTIPLIER * turnRight);
+                manatee.rightFrontDrive.setPower(WHEEL_SPEED_MULTIPLIER * LATERAL_ADJUSTMENT * turnRight);
                 manatee.leftBackDrive.setPower(WHEEL_SPEED_MULTIPLIER * -turnRight);
-                manatee.rightBackDrive.setPower(WHEEL_SPEED_MULTIPLIER * turnRight);
+                manatee.rightBackDrive.setPower(WHEEL_SPEED_MULTIPLIER * LATERAL_ADJUSTMENT * turnRight);
             }
         }
         else {
             telemetry.addLine("LATERAL MODE");
-            manatee.leftFrontDrive.setPower(WHEEL_SPEED_MULTIPLIER*left);
-            manatee.rightFrontDrive.setPower(WHEEL_SPEED_MULTIPLIER*right);
-            manatee.leftBackDrive.setPower(WHEEL_SPEED_MULTIPLIER*right);
-            manatee.rightBackDrive.setPower(WHEEL_SPEED_MULTIPLIER*left);
+            manatee.leftFrontDrive.setPower(WHEEL_SPEED_MULTIPLIER * left);
+            manatee.rightFrontDrive.setPower(WHEEL_SPEED_MULTIPLIER * LATERAL_ADJUSTMENT * right);
+            manatee.leftBackDrive.setPower(WHEEL_SPEED_MULTIPLIER * right);
+            manatee.rightBackDrive.setPower(WHEEL_SPEED_MULTIPLIER * LATERAL_ADJUSTMENT * left);
         }
 
         if (gamepad1.right_bumper && !shooterIsOn) {
             manatee.shooterWheelOne.setPower(-1);
             manatee.shooterWheelTwo.setPower(-1);
+            sleep(250);
             manatee.slapper.setPower(-1);
             shooterIsOn = true;
         }
@@ -180,7 +189,7 @@ public class STS_ManateeDriverControlled extends OpMode{
         // Move both servos to new position.  Assume servos are mirror image of each other.
         wobbleArmOffset = Range.clip(wobbleArmOffset, -1, 1);
         wobbleClawOffset = Range.clip(wobbleClawOffset, -1, 1);
-        shooterAnglerOffset = Range.clip(shooterAnglerOffset, -1, 1  );
+        shooterAnglerOffset = Range.clip(shooterAnglerOffset, 0.15, 0.2  );
 
         manatee.wobbleArm.setPosition(manatee.WOBBLE_ARM_MID_SERVO + wobbleArmOffset);
         manatee.wobbleClaw.setPosition(manatee.WOBBLE_CLAW_MID_SERVO + wobbleClawOffset);
