@@ -145,7 +145,7 @@ public class STS_ManateeDriverControlled extends OpMode{
         if (gamepad1.right_bumper && !shooterIsOn) {
             manatee.shooterWheelOne.setPower(-1);
             manatee.shooterWheelTwo.setPower(-1);
-            sleep(250);
+            sleep(500);
             manatee.slapper.setPower(-1);
             shooterIsOn = true;
         }

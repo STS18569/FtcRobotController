@@ -57,7 +57,7 @@ public class STS_ManateeAutomomous extends STS_ManateeAutonomousInit {
     private static final String TFOD_MODEL_ASSET = "UltimateGoal.tflite";
     private static final String LABEL_FIRST_ELEMENT = "Quad";
     private static final String LABEL_SECOND_ELEMENT = "Single";
-    private static final double SCAN_FOR_ELEMENT_TIMEOUT = 3;
+    private static final double SCAN_FOR_ELEMENT_TIMEOUT = 5.0;
     
     private ElapsedTime scanForElementTime = new ElapsedTime();
     private boolean foundElement = false;
@@ -112,7 +112,7 @@ public class STS_ManateeAutomomous extends STS_ManateeAutonomousInit {
             // (typically 1.78 or 16/9).
 
             // Uncomment the following line if you want to adjust the magnification and/or the aspect ratio of the input images.
-            //tfod.setZoom(2.5, 1.78);
+            tfod.setZoom(3.0, 1.78);
         }
 
         /** Commit all init information to the Driver Station */
@@ -131,7 +131,7 @@ public class STS_ManateeAutomomous extends STS_ManateeAutonomousInit {
                     if (updatedRecognitions != null) {
                         // telemetry.addData("# Object Detected", updatedRecognitions.size());
 
-                        // step through the list of recognitions and display boundary info.
+                        // step through the list of recognitions and display boundary info
                         int i = 0;
                         for (Recognition recognition : updatedRecognitions) {
                             telemetry.addData(String.format("label (%d)", i), recognition.getLabel());
@@ -144,18 +144,20 @@ public class STS_ManateeAutomomous extends STS_ManateeAutonomousInit {
                                 case LABEL_FIRST_ELEMENT:
                                     telemetry.addLine("foundElement == LABEL_FIRST_ELEMENT");
                                     telemetry.update();
-                                    encoderDrive(DriveMode.LINEAR, DRIVE_SPEED,  0,   72,  72, 7.0);
+                                    encoderDrive(DriveMode.LINEAR, DRIVE_SPEED,  0,   72,  72, 10.0);
+                                    encoderDrive(DriveMode.LINEAR, DRIVE_SPEED,  90,   0,  0, 10.0);
                                     manatee.wobbleArm.setPosition(-1.0);
-                                    manatee.wobbleClaw.setPosition(-1.0);
+                                    manatee.wobbleClaw.setPosition(1.0);
                                     foundElement = true;
                                     autonomousIsActive = false;
                                     break;
                                 case LABEL_SECOND_ELEMENT:
                                     telemetry.addLine("foundElement == LABEL_SECOND_ELEMENT");
                                     telemetry.update();
-                                    encoderDrive(DriveMode.LINEAR, DRIVE_SPEED,  0,   84,  84, 7.0);
+                                    encoderDrive(DriveMode.LINEAR, DRIVE_SPEED,  0,   84,  84, 10.0);
+                                    encoderDrive(DriveMode.LINEAR, DRIVE_SPEED,  90,   0,  0, 10.0);
                                     manatee.wobbleArm.setPosition(-1.0);
-                                    manatee.wobbleClaw.setPosition(-1.0);
+                                    manatee.wobbleClaw.setPosition(1.0);
                                     foundElement = true;
                                     autonomousIsActive = false;
                                     break;
@@ -181,15 +183,10 @@ public class STS_ManateeAutomomous extends STS_ManateeAutonomousInit {
                     // telemetry.addData("STS_ManateeAutonomousInit.DRIVE_SPEED == ", STS_ManateeAutonomousInit.DRIVE_SPEED);
                     telemetry.addLine("foundElement == LABEL_ZERO_ELEMENT");
                     telemetry.update();
-                    encoderDrive(DriveMode.LINEAR, DRIVE_SPEED,  0,   60,  60, 7.0);
+                    encoderDrive(DriveMode.LINEAR, DRIVE_SPEED,  0,   60,  60, 10);
+                    encoderDrive(DriveMode.LINEAR, DRIVE_SPEED,  90,   0,  0, 10.0);
                     manatee.wobbleArm.setPosition(-1.0);
-                    manatee.wobbleClaw.setPosition(-1.0);
-                    /*
-                    encoderDrive(STS_ManateeAutonomousInit.DRIVE_SPEED,  0,   0,  4.712, 5.0);
-                    encoderDrive(STS_ManateeAutonomousInit.DRIVE_SPEED,  0,   24,  24, 5.0);
-                    encoderDrive(STS_ManateeAutonomousInit.DRIVE_SPEED,  -45,   4.712,  0, 5.0);
-                    encoderDrive(STS_ManateeAutonomousInit.DRIVE_SPEED,  0,   24,  24, 5.0);
-                    */
+                    manatee.wobbleClaw.setPosition(1.0);
                     autonomousIsActive = false;
                 }
 
@@ -220,6 +217,7 @@ public class STS_ManateeAutomomous extends STS_ManateeAutonomousInit {
 
         parameters.vuforiaLicenseKey = VUFORIA_KEY;
         parameters.cameraName = hardwareMap.get(WebcamName.class, "Webcam 1");
+        telemetry.addLine(parameters.cameraName.toString());
 
         //  Instantiate the Vuforia engine
         vuforia = ClassFactory.getInstance().createVuforia(parameters);
@@ -232,7 +230,7 @@ public class STS_ManateeAutomomous extends STS_ManateeAutonomousInit {
         int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
                 "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
-        tfodParameters.minResultConfidence = 0.8f;
+        tfodParameters.minResultConfidence = 0.7f;
         tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
         tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_FIRST_ELEMENT, LABEL_SECOND_ELEMENT);
     }

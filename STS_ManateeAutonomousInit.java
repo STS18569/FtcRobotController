@@ -75,10 +75,10 @@ public class STS_ManateeAutonomousInit extends LinearOpMode {
     static final double     DRIVE_GEAR_REDUCTION    = 4.0;     // This is < 1.0 if geared UP
     static final double     WHEEL_DIAMETER_INCHES   = 4.0;     // For figuring circumference
     static final double     WHEEL_BASE              = 12.0;
-    static final double     FUDGE_FACTOR            = 1.4;
+    static final double     FUDGE_FACTOR            = 0.91;
     static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION * FUDGE_FACTOR) /
                                                       (WHEEL_DIAMETER_INCHES * 3.1415);
-    static final double     DRIVE_SPEED             = 0.28;
+    static final double     DRIVE_SPEED             = 0.2;
     static final double     LATERAL_ADJUSTMENT      = 1.01;
     static final double     TURN_SPEED              = 0.5;
 
@@ -108,9 +108,9 @@ public class STS_ManateeAutonomousInit extends LinearOpMode {
                 manatee.rightBackDrive.getCurrentPosition());
 
 
-        //waitForStart();
-        //testMotors();
-        // testServos();
+        waitForStart();
+        testMotors();
+        //testServos();
     }
 
     public void testMotors() {
@@ -121,9 +121,10 @@ public class STS_ManateeAutonomousInit extends LinearOpMode {
         encoderDrive(DRIVE_SPEED,  0,   4.24,  4.24, 5.0);  //Turns 45 degrees to the right with 5 sec timeout
         encoderDrive(DRIVE_SPEED,  0,   0,  4.712, 5.0);  //Forward 24 inches with 5 sec timeout
          */
-        encoderDrive(DriveMode.LINEAR, DRIVE_SPEED,  0,   120,  120, 5.0);
-        sleep(3000);
-        encoderDrive(DriveMode.LAT_RIGHT, DRIVE_SPEED,  0,   60,  60, 5.0);
+        encoderDrive(DriveMode.LINEAR, DRIVE_SPEED,  0,   68,  68, 10.0);
+        //manatee.wobbleArm.setPosition(-1.0);
+        //sleep(5000);
+        //manatee.wobbleClaw.setPosition(1.0);
     }
 
     public void testServos() {
@@ -173,6 +174,22 @@ public class STS_ManateeAutonomousInit extends LinearOpMode {
     public void encoderDrive(DriveMode mode, double speed, double degree,
                              double leftInches, double rightInches,
                              double timeoutS) {
+
+        if (degree < 0) {
+            leftInches = degree*((WHEEL_BASE*3.14159)/360);
+            rightInches = 0;
+        }
+
+        else if (degree > 0) {
+            rightInches = degree*((WHEEL_BASE*3.14159)/360);
+            leftInches = 0;
+        }
+
+        else if (degree == 0) {
+            leftInches = leftInches;
+            rightInches = rightInches;
+        }
+
         int newLeftFrontTarget = 0;
         int newLeftBackTarget = 0;
         int newRightFrontTarget = 0;
