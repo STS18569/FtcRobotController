@@ -165,24 +165,24 @@ public class STS_ManateeDriverControlled extends OpMode{
             intakeIsOn = false;
         }
 
-        if (gamepad1.y) {
+        if (gamepad1.dpad_up) {
             shooterAnglerOffset += SHOOTER_ANGLER_ANGLE;
         }
-        else if (gamepad1.a) {
+        else if (gamepad1.dpad_down) {
             shooterAnglerOffset -= SHOOTER_ANGLER_ANGLE;
         }
 
-        if (gamepad1.dpad_up) {
+        if (gamepad1.y) {
             wobbleArmOffset += WOBBLE_ARM_ANGLE;
         }
-        else if (gamepad1.dpad_down) {
+        else if (gamepad1.a) {
             wobbleArmOffset -= WOBBLE_ARM_ANGLE;
         }
 
-        if (gamepad1.dpad_right) {
+        if (gamepad1.x) {
             wobbleClawOffset += WOBBLE_CLAW_ANGLE;
         }
-        else if (gamepad1.dpad_left) {
+        else if (gamepad1.b) {
             wobbleClawOffset -= WOBBLE_CLAW_ANGLE;
         }
 
