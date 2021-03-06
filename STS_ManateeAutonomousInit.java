@@ -241,9 +241,9 @@ public class STS_ManateeAutonomousInit extends LinearOpMode {
 
             // reset the timeout time and start motion.
             runtime.reset();
-            manatee.leftFrontDrive.setPower(Math.abs(speed * LATERAL_ADJUSTMENT));
-            manatee.leftBackDrive.setPower(Math.abs(speed * LATERAL_ADJUSTMENT));
-            sleep(0100);
+            manatee.leftFrontDrive.setPower(Math.abs(speed));
+            manatee.leftBackDrive.setPower(Math.abs(speed));
+            //sleep(0100);
             manatee.rightFrontDrive.setPower(Math.abs(speed));
             manatee.rightBackDrive.setPower(Math.abs(speed));
 
