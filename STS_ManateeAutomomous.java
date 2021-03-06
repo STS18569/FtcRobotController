@@ -147,12 +147,14 @@ public class STS_ManateeAutomomous extends STS_ManateeAutonomousInit {
                                     telemetry.update();
                                     sleep(250);
                                     encoderDrive(DriveMode.LINEAR, DRIVE_SPEED,  0,   100,  100, 10);
-                                    manatee.wobbleArm.setPosition(-0.1);
-                                    sleep(250);
-                                    manatee.wobbleClaw.setPosition(1.0);
-                                    sleep(250);
-                                    //encoderDrive(DriveMode.LINEAR, DRIVE_SPEED, 0, 5, 5, 10);
-                                    manatee.wobbleArm.setPosition(1.0);
+                                    if (!STS_HardwareManatee.CHASSIS_ONLY) {
+                                        manatee.wobbleArm.setPosition(-0.1);
+                                        sleep(250);
+                                        manatee.wobbleClaw.setPosition(1.0);
+                                        sleep(250);
+                                        //encoderDrive(DriveMode.LINEAR, DRIVE_SPEED, 0, 5, 5, 10);
+                                        manatee.wobbleArm.setPosition(1.0);
+                                    }
                                     encoderDrive(DriveMode.LINEAR, DRIVE_SPEED,  0,   -20,  -20, 10);
                                     foundElement = true;
                                     autonomousIsActive = false;
@@ -164,12 +166,14 @@ public class STS_ManateeAutomomous extends STS_ManateeAutonomousInit {
                                     encoderDrive(DriveMode.LINEAR, DRIVE_SPEED,  0,   98,  98, 10);
                                     encoderDrive(DriveMode.LINEAR, DRIVE_SPEED,  -90,   0,  0, 10);
                                     encoderDrive(DriveMode.LINEAR, DRIVE_SPEED,  0,   -44,  -44, 10);
-                                    manatee.wobbleArm.setPosition(-0.1);
-                                    sleep(2000);
-                                    manatee.wobbleClaw.setPosition(1.0);
-                                    sleep(250);
-                                    //encoderDrive(DriveMode.LINEAR, DRIVE_SPEED, 0, 5, 5, 10);
-                                    manatee.wobbleArm.setPosition(1.0);
+                                    if (!STS_HardwareManatee.CHASSIS_ONLY) {
+                                        manatee.wobbleArm.setPosition(-0.1);
+                                        sleep(2000);
+                                        manatee.wobbleClaw.setPosition(1.0);
+                                        sleep(250);
+                                        //encoderDrive(DriveMode.LINEAR, DRIVE_SPEED, 0, 5, 5, 10);
+                                        manatee.wobbleArm.setPosition(1.0);
+                                    }
                                     encoderDrive(DriveMode.LINEAR, DRIVE_SPEED,  0,   30,  30, 10);
                                     encoderDrive(DriveMode.LINEAR, DRIVE_SPEED,  90,   0,  0, 10);
                                     encoderDrive(DriveMode.LINEAR, DRIVE_SPEED,  0,   30,  30, 10);
@@ -202,12 +206,14 @@ public class STS_ManateeAutomomous extends STS_ManateeAutonomousInit {
                     encoderDrive(DriveMode.LINEAR, DRIVE_SPEED,  0,   99,  99, 10);
                     encoderDrive(DriveMode.LINEAR, REAL_TURN_SPEED,  90,   0,  0, 10);
                     encoderDrive(DriveMode.LINEAR, DRIVE_SPEED,  0,   38,  38, 10);
-                    manatee.wobbleArm.setPosition(-0.1);
-                    sleep(2000);
-                    manatee.wobbleClaw.setPosition(1.0);
-                    sleep(500);
-                    //encoderDrive(DriveMode.LINEAR, DRIVE_SPEED, 0, 3, 3, 10);
-                    manatee.wobbleArm.setPosition(1.0);
+                    if (!STS_HardwareManatee.CHASSIS_ONLY) {
+                        manatee.wobbleArm.setPosition(-0.1);
+                        sleep(2000);
+                        manatee.wobbleClaw.setPosition(1.0);
+                        sleep(500);
+                        //encoderDrive(DriveMode.LINEAR, DRIVE_SPEED, 0, 3, 3, 10);
+                        manatee.wobbleArm.setPosition(1.0);
+                    }
                     encoderDrive(DriveMode.LINEAR, DRIVE_SPEED,  0,   -30,  -30, 10);
                     encoderDrive(DriveMode.LINEAR, REAL_TURN_SPEED,  90,   0,  0, 10);
                     encoderDrive(DriveMode.LINEAR, DRIVE_SPEED,  0,   26,  26, 10);

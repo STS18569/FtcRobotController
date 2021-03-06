@@ -124,45 +124,49 @@ public class STS_ManateeAutonomousInit extends LinearOpMode {
         encoderDrive(DRIVE_SPEED,  0,   0,  4.712, 5.0);  //Forward 24 inches with 5 sec timeout
          */
         encoderDrive(DriveMode.LINEAR, DRIVE_SPEED,  0,   72,  72, 10.0);
-        manatee.wobbleArm.setPosition(-0.4);
-        sleep(5000);
-        manatee.wobbleClaw.setPosition(0.8);
+        if (!STS_HardwareManatee.CHASSIS_ONLY) {
+            manatee.wobbleArm.setPosition(-0.4);
+            sleep(5000);
+            manatee.wobbleClaw.setPosition(0.8);
+        }
     }
 
     public void testServos() {
-        manatee.wobbleArm.setPosition(1.0);
-        telemetry.addData("Test Servos", "wobbleArm.setPosition: %.3f", manatee.wobbleArm.getPosition());
-        telemetry.update();
-        sleep( 2000);     // pause for servos to move
+        if (!STS_HardwareManatee.CHASSIS_ONLY) {
+            manatee.wobbleArm.setPosition(1.0);
+            telemetry.addData("Test Servos", "wobbleArm.setPosition: %.3f", manatee.wobbleArm.getPosition());
+            telemetry.update();
+            sleep(2000);     // pause for servos to move
 
 
-        manatee.wobbleClaw.setPosition(0.1);
-        telemetry.addData("Test Servos", "wobbleClaw.setPosition: %.3f", manatee.wobbleClaw.getPosition());
-        telemetry.update();
-        sleep( 2000);     // pause for servos to move
+            manatee.wobbleClaw.setPosition(0.1);
+            telemetry.addData("Test Servos", "wobbleClaw.setPosition: %.3f", manatee.wobbleClaw.getPosition());
+            telemetry.update();
+            sleep(2000);     // pause for servos to move
 
-        manatee.wobbleClaw.setPosition(0.5);
-        telemetry.addData("Test Servos", "wobbleClaw.setPosition: %.3f", manatee.wobbleClaw.getPosition());
-        telemetry.update();
-        sleep( 2000);     // pause for servos to move
+            manatee.wobbleClaw.setPosition(0.5);
+            telemetry.addData("Test Servos", "wobbleClaw.setPosition: %.3f", manatee.wobbleClaw.getPosition());
+            telemetry.update();
+            sleep(2000);     // pause for servos to move
 
-        manatee.shooterAngler.setPosition(1.0);
-        telemetry.addData("Test Servos", "shooterAngler.setPosition: %.3f", manatee.shooterAngler.getPosition());
-        telemetry.update();
-        sleep( 3000);     // pause for servos to move
+            manatee.shooterAngler.setPosition(1.0);
+            telemetry.addData("Test Servos", "shooterAngler.setPosition: %.3f", manatee.shooterAngler.getPosition());
+            telemetry.update();
+            sleep(3000);     // pause for servos to move
 
-        manatee.shooterAngler.setPosition(0.5);
-        telemetry.addData("Test Servos", "shooterAngler.setPosition: %.3f", manatee.shooterAngler.getPosition());
-        telemetry.update();
-        sleep( 3000);     // pause for servos to move
+            manatee.shooterAngler.setPosition(0.5);
+            telemetry.addData("Test Servos", "shooterAngler.setPosition: %.3f", manatee.shooterAngler.getPosition());
+            telemetry.update();
+            sleep(3000);     // pause for servos to move
 
-        manatee.shooterAngler.setPosition(0.0);
-        telemetry.addData("Test Servos", "shooterAngler.setPosition: %.3f", manatee.shooterAngler.getPosition());
-        telemetry.update();
-        sleep( 3000);     // pause for servos to move
+            manatee.shooterAngler.setPosition(0.0);
+            telemetry.addData("Test Servos", "shooterAngler.setPosition: %.3f", manatee.shooterAngler.getPosition());
+            telemetry.update();
+            sleep(3000);     // pause for servos to move
 
-        telemetry.addData("Test Servos", "Complete");
-        telemetry.update();
+            telemetry.addData("Test Servos", "Complete");
+            telemetry.update();
+        }
     }
 
     /*
