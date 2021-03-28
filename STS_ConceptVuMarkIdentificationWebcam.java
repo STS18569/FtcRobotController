@@ -26,12 +26,13 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.firstinspires.ftc.robotcontroller.external.samples;
+package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.robotcontroller.external.samples.ConceptVuforiaNavigationWebcam;
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
@@ -67,8 +68,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
  */
 
 @TeleOp(name="Concept: VuMark Id Webcam", group ="Concept")
-@Disabled
-public class ConceptVuMarkIdentificationWebcam extends LinearOpMode {
+//@Disabled
+public class STS_ConceptVuMarkIdentificationWebcam extends LinearOpMode {
 
     public static final String TAG = "Vuforia VuMark Sample";
 
@@ -115,7 +116,7 @@ public class ConceptVuMarkIdentificationWebcam extends LinearOpMode {
          * Once you've obtained a license key, copy the string from the Vuforia web site
          * and paste it in to your code on the next line, between the double quotes.
          */
-        parameters.vuforiaLicenseKey = " -- YOUR NEW VUFORIA KEY GOES HERE  --- ";
+        parameters.vuforiaLicenseKey = "AdnLowb/////AAABmZNRoOYqak4+lc8AgsQ5vBMOIRDeD+0zoGNlSa//jZJWI6XfuWDNNrQY6PRX55edReDvHQXYkMdN+8nKqohfB8rn2AbVxq4LUeoe67LM4u5NVBGGS5teWMKQbXtqtRBgOkHRCgghllRNAfCOxKNdTT13e6fGNo8tgwQTwKiWHkNylKCBtlaS6ImDNRHQQ1Y1FBu7gr6qWlbvydsPZhnu1VDLMgUxNmK4HaYr/8Xm1865QBaPW9ePFPjHBuHm3h4k0M3Cj19QY2qbLJisNvH+uhkZF3PRxmGJiaeKxM8CkiDCj1JVvYhmjK/enFYGES7eVv4SYvmdizpJNtBrovFelExh25BKICZrdtWPkVm3zXDI";
 
 
         /**

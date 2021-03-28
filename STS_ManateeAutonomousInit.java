@@ -177,6 +177,7 @@ public class STS_ManateeAutonomousInit extends LinearOpMode {
      *  2) Move runs out of time
      *  3) Driver stops the opmode running.
      */
+
     public void encoderDrive(DriveMode mode, double speed, double degree,
                              double leftInches, double rightInches,
                              double timeoutS) {

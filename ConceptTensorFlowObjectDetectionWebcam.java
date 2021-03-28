@@ -132,6 +132,9 @@ public class ConceptTensorFlowObjectDetectionWebcam extends LinearOpMode {
                                 recognition.getLeft(), recognition.getTop());
                         telemetry.addData(String.format("  right,bottom (%d)", i), "%.03f , %.03f",
                                 recognition.getRight(), recognition.getBottom());
+                        telemetry.addData(String.format("  confidence (%d)", i), "%.03f",
+                                  recognition.getConfidence());
+
                       }
                       telemetry.update();
                     }
@@ -173,4 +176,5 @@ public class ConceptTensorFlowObjectDetectionWebcam extends LinearOpMode {
        tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
        tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_FIRST_ELEMENT, LABEL_SECOND_ELEMENT);
     }
+
 }

@@ -54,7 +54,7 @@ import java.util.List;
  */
 @Autonomous(name = "Manatee: Autonomous", group = "UltimateGoal")
 // @Disabled
-public class STS_ManateeAutomomous extends STS_ManateeAutonomousInit {
+public class  STS_ManateeAutomomous extends STS_ManateeAutonomousInit {
     private static final String TFOD_MODEL_ASSET = "UltimateGoal.tflite";
     private static final String LABEL_FIRST_ELEMENT = "Quad";
     private static final String LABEL_SECOND_ELEMENT = "Single";
