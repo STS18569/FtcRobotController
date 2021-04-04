@@ -29,7 +29,6 @@
 
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.hardware.lynx.commands.standard.LynxSetModuleLEDPatternCommand;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -113,7 +112,7 @@ public class  STS_ManateeAutomomous extends STS_ManateeAutonomousInit {
             // (typically 1.78 or 16/9).
 
             // Uncomment the following line if you want to adjust the magnification and/or the aspect ratio of the input images.
-            tfod.setZoom(3.0, 1.78);
+            tfod.setZoom(2.5, 1.78);
         }
 
         /** Commit all init information to the Driver Station */

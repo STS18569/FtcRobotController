@@ -74,7 +74,7 @@ public class STS_ManateeAutonomousInit extends LinearOpMode {
     static final double     COUNTS_PER_MOTOR_REV    = 28.0;    // eg: TETRIX Motor Encoder
     static final double     DRIVE_GEAR_REDUCTION    = 4.0;     // This is < 1.0 if geared UP
     static final double     WHEEL_DIAMETER_INCHES   = 4.0;     // For figuring circumference
-    static final double     WHEEL_BASE              = 12.0;
+    static final double     WHEEL_BASE              = 11.375;
     static final double     FUDGE_FACTOR            = 0.89;
     static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION * FUDGE_FACTOR) /
                                                       (WHEEL_DIAMETER_INCHES * 3.1415);
@@ -82,7 +82,7 @@ public class STS_ManateeAutonomousInit extends LinearOpMode {
     static final double     LATERAL_ADJUSTMENT      = 1.0;
     static final double     TURN_SPEED              = 0.65;
     static final double     REAL_TURN_SPEED         = 0.35;
-    static final double     WHEEL_FUDGE_FACTOR      = 1.0;
+    static final double     TURN_FUDGE_FACTOR       = 0.75;
 
     @Override
     public void runOpMode() {
@@ -110,8 +110,8 @@ public class STS_ManateeAutonomousInit extends LinearOpMode {
                 manatee.rightBackDrive.getCurrentPosition());
 
 
-        //waitForStart();
-        //testMotors();
+        waitForStart();
+        testMotors();
         //testServos();
     }
 
@@ -123,7 +123,13 @@ public class STS_ManateeAutonomousInit extends LinearOpMode {
         encoderDrive(DRIVE_SPEED,  0,   4.24,  4.24, 5.0);  //Turns 45 degrees to the right with 5 sec timeout
         encoderDrive(DRIVE_SPEED,  0,   0,  4.712, 5.0);  //Forward 24 inches with 5 sec timeout
          */
-        encoderDrive(DriveMode.LINEAR, DRIVE_SPEED,  0,   72,  72, 10.0);
+
+        encoderDrive(DriveMode.LINEAR, 0.1,  90,   0,  0, 10.0);
+        /*sleep(3000);
+        encoderDrive(DriveMode.LAT_LEFT, DRIVE_SPEED,  0,   10,  10, 10.0);
+        sleep(000);
+        encoderDrive(DriveMode.LAT_RIGHT, DRIVE_SPEED,  0,   10,  10, 10.0);
+        sleep(3000);*/
         if (!STS_HardwareManatee.CHASSIS_ONLY) {
             manatee.wobbleArm.setPosition(-0.4);
             sleep(5000);
@@ -149,21 +155,6 @@ public class STS_ManateeAutonomousInit extends LinearOpMode {
             telemetry.update();
             sleep(2000);     // pause for servos to move
 
-            manatee.shooterAngler.setPosition(1.0);
-            telemetry.addData("Test Servos", "shooterAngler.setPosition: %.3f", manatee.shooterAngler.getPosition());
-            telemetry.update();
-            sleep(3000);     // pause for servos to move
-
-            manatee.shooterAngler.setPosition(0.5);
-            telemetry.addData("Test Servos", "shooterAngler.setPosition: %.3f", manatee.shooterAngler.getPosition());
-            telemetry.update();
-            sleep(3000);     // pause for servos to move
-
-            manatee.shooterAngler.setPosition(0.0);
-            telemetry.addData("Test Servos", "shooterAngler.setPosition: %.3f", manatee.shooterAngler.getPosition());
-            telemetry.update();
-            sleep(3000);     // pause for servos to move
-
             telemetry.addData("Test Servos", "Complete");
             telemetry.update();
         }
@@ -183,13 +174,13 @@ public class STS_ManateeAutonomousInit extends LinearOpMode {
                              double timeoutS) {
 
         if (degree < 0) {
-            leftInches = degree*((WHEEL_BASE*3.14159)/360);
-            rightInches = -(WHEEL_FUDGE_FACTOR*(degree*((WHEEL_BASE*3.14159)/360)));
+            leftInches = degree*((WHEEL_BASE * Math.PI)/360);
+            rightInches = -(TURN_FUDGE_FACTOR *(degree*((WHEEL_BASE * Math.PI)/360)));
         }
 
         else if (degree > 0) {
-            rightInches = degree*((WHEEL_BASE*3.14159)/360);
-            leftInches = -(WHEEL_FUDGE_FACTOR*(degree*((WHEEL_BASE*3.14159)/360)));
+            rightInches = degree*((WHEEL_BASE * Math.PI)/360);
+            leftInches = -(TURN_FUDGE_FACTOR *(degree*((WHEEL_BASE * Math.PI)/360)));
         }
 
         else if (degree == 0) {
