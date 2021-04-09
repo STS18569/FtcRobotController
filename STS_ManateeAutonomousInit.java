@@ -124,17 +124,18 @@ public class STS_ManateeAutonomousInit extends LinearOpMode {
         encoderDrive(DRIVE_SPEED,  0,   0,  4.712, 5.0);  //Forward 24 inches with 5 sec timeout
          */
 
-        encoderDrive(DriveMode.LINEAR, 0.1,  90,   0,  0, 10.0);
+        encoderDrive(DriveMode.LINEAR, DRIVE_SPEED,  0,   72,  72, 10.0);
         /*sleep(3000);
         encoderDrive(DriveMode.LAT_LEFT, DRIVE_SPEED,  0,   10,  10, 10.0);
         sleep(000);
         encoderDrive(DriveMode.LAT_RIGHT, DRIVE_SPEED,  0,   10,  10, 10.0);
-        sleep(3000);*/
+        sleep(3000);
         if (!STS_HardwareManatee.CHASSIS_ONLY) {
             manatee.wobbleArm.setPosition(-0.4);
             sleep(5000);
             manatee.wobbleClaw.setPosition(0.8);
         }
+         */
     }
 
     public void testServos() {

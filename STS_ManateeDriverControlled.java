@@ -64,7 +64,7 @@ public class STS_ManateeDriverControlled extends OpMode{
     boolean             armIsMovingForward = false;
     boolean             armIsMovingBackward = false;
 
-    final double        WOBBLE_ARM_ANGLE = 0.001;                 // sets rate to move servo
+    final double        WOBBLE_ARM_ANGLE = 0.002;                 // sets rate to move servo
     final double        WOBBLE_CLAW_ANGLE = 0.01;
     final double        HOPPER_ANGLE = 0.0001;
     final double        SHOOTER_ANGLER_ANGLE = 0.0002;
@@ -90,6 +90,7 @@ public class STS_ManateeDriverControlled extends OpMode{
          * The init() method of the hardware class does all the work here
          */
         manatee.init(hardwareMap);
+        manatee.hopper.setPosition(0.45);
 
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Say", "Hello Driver");    //
@@ -185,12 +186,16 @@ public class STS_ManateeDriverControlled extends OpMode{
             if ((gamepad1.right_trigger > 0) && !shooterIsOn) {
                 manatee.shooterWheelOne.setPower(1);
                 manatee.shooterWheelTwo.setPower(-1);
-                //wobbleArmOffset = 0;
+                wobbleArmOffset = 0;
                 shooterIsOn = true;
+                sleep(0750);
+                manatee.hopper.setPosition(1.0);
             } else if ((gamepad1.right_trigger == 0) && shooterIsOn) {
                 manatee.shooterWheelOne.setPower(0);
                 manatee.shooterWheelTwo.setPower(0);
                 shooterIsOn = false;
+                sleep(0500);
+                manatee.hopper.setPosition(0.45);
             }
 
             if ((gamepad1.left_trigger > 0) && !intakeIsOn) {
@@ -226,7 +231,7 @@ public class STS_ManateeDriverControlled extends OpMode{
             if (gamepad1.right_bumper) {
                 manatee.hopper.setPosition(1.0);
             } else if (gamepad1.left_bumper) {
-                manatee.hopper.setPosition(0.5);
+                manatee.hopper.setPosition(0.45);
             }
 
             if (gamepad1.a) {
