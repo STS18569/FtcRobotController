@@ -69,7 +69,7 @@ public class STS_ManateeDriverControlled extends OpMode{
     final double        HOPPER_ANGLE = 0.0001;
     final double        SHOOTER_ANGLER_ANGLE = 0.0002;
 
-    final double        WHEEL_SPEED_MULTIPLIER = 1.0;
+    final double        WHEEL_SPEED_MULTIPLIER = 0.5;
     final double        LATERAL_ADJUSTMENT      = 0.99;
 
     public final void sleep(long milliseconds) {
@@ -90,7 +90,6 @@ public class STS_ManateeDriverControlled extends OpMode{
          * The init() method of the hardware class does all the work here
          */
         manatee.init(hardwareMap);
-        manatee.hopper.setPosition(0.45);
 
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Say", "Hello Driver");    //
@@ -115,45 +114,52 @@ public class STS_ManateeDriverControlled extends OpMode{
      */
     @Override
     public void loop() {
-        double left = -gamepad1.left_stick_y;
-        double right = -gamepad1.right_stick_y;
-        double turnRight = gamepad1.left_trigger;
-        double turnLeft = gamepad1.right_trigger;
+        double left = gamepad1.left_stick_y;
+        double right = gamepad1.right_stick_y;
+        double middleRight = gamepad1.right_trigger;
+        double middleLeft = gamepad1.left_trigger;
         double rotationLeft = gamepad1.right_stick_x;
-        double rotationRight = - gamepad1.right_stick_x;
+        double rotationRight = -gamepad1.right_stick_x;
+
 
 
         double r = (Math.hypot(gamepad1.left_stick_x, gamepad1.left_stick_y)) * (-1);
         double robotAngle = Math.atan2(gamepad1.left_stick_y, gamepad1.left_stick_x) - Math.PI / 4.0;
         double rightX = gamepad1.right_stick_x;
-        final double v1 = r * Math.cos(robotAngle) + rightX; 
+        final double v1 = r * Math.cos(robotAngle) + rightX;
         final double v2 = r * Math.sin(robotAngle) - rightX;
         final double v3 = r * Math.sin(robotAngle) + rightX;
         final double v4 = r * Math.cos(robotAngle) - rightX;
 
 
-        if ((rotationLeft != 0) || (rotationRight != 0)) {
-            if (rotationLeft != 0) {
-                telemetry.addLine("ROTATION LEFT MODE");
-                manatee.leftFrontDrive.setPower(WHEEL_SPEED_MULTIPLIER * rotationLeft);
-                manatee.rightFrontDrive.setPower(WHEEL_SPEED_MULTIPLIER * -rotationLeft);
-                manatee.leftBackDrive.setPower(WHEEL_SPEED_MULTIPLIER * rotationLeft);
-                manatee.rightBackDrive.setPower(WHEEL_SPEED_MULTIPLIER * -rotationLeft);
-            }
-            else {
-                telemetry.addLine("ROTATION RIGHT MODE");
-                manatee.leftFrontDrive.setPower(WHEEL_SPEED_MULTIPLIER * -rotationRight);
-                manatee.rightFrontDrive.setPower(WHEEL_SPEED_MULTIPLIER * rotationRight);
-                manatee.leftBackDrive.setPower(WHEEL_SPEED_MULTIPLIER * -rotationRight);
-                manatee.rightBackDrive.setPower(WHEEL_SPEED_MULTIPLIER * rotationRight);
+        if (STS_HardwareManatee.MECANUM) {
+            if ((rotationLeft != 0) || (rotationRight != 0)) {
+                if (rotationLeft != 0) {
+                    telemetry.addLine("ROTATION LEFT MODE");
+                    manatee.leftFrontDrive.setPower(WHEEL_SPEED_MULTIPLIER * rotationLeft);
+                    manatee.rightFrontDrive.setPower(WHEEL_SPEED_MULTIPLIER * -rotationLeft);
+                    manatee.leftBackDrive.setPower(WHEEL_SPEED_MULTIPLIER * rotationLeft);
+                    manatee.rightBackDrive.setPower(WHEEL_SPEED_MULTIPLIER * -rotationLeft);
+                } else {
+                    telemetry.addLine("ROTATION RIGHT MODE");
+                    manatee.leftFrontDrive.setPower(WHEEL_SPEED_MULTIPLIER * -rotationRight);
+                    manatee.rightFrontDrive.setPower(WHEEL_SPEED_MULTIPLIER * rotationRight);
+                    manatee.leftBackDrive.setPower(WHEEL_SPEED_MULTIPLIER * -rotationRight);
+                    manatee.rightBackDrive.setPower(WHEEL_SPEED_MULTIPLIER * rotationRight);
+                }
+            } else {
+                telemetry.addLine("LATERAL MODE");
+                manatee.leftFrontDrive.setPower(WHEEL_SPEED_MULTIPLIER * v1);
+                manatee.rightFrontDrive.setPower(WHEEL_SPEED_MULTIPLIER * v2);
+                manatee.leftBackDrive.setPower(WHEEL_SPEED_MULTIPLIER * v3);
+                manatee.rightBackDrive.setPower(WHEEL_SPEED_MULTIPLIER * v4);
             }
         }
-         else {
-            telemetry.addLine("LATERAL MODE");
-            manatee.leftFrontDrive.setPower(WHEEL_SPEED_MULTIPLIER * v1);
-            manatee.rightFrontDrive.setPower(WHEEL_SPEED_MULTIPLIER * v2);
-            manatee.leftBackDrive.setPower(WHEEL_SPEED_MULTIPLIER * v3);
-            manatee.rightBackDrive.setPower(WHEEL_SPEED_MULTIPLIER * v4);
+        else if (!STS_HardwareManatee.MECANUM) {
+            manatee.leftDrive.setPower(WHEEL_SPEED_MULTIPLIER * left);
+            manatee.rightDrive.setPower(WHEEL_SPEED_MULTIPLIER * right);
+            manatee.middleDrive.setPower(WHEEL_SPEED_MULTIPLIER * middleLeft);
+            manatee.middleDrive.setPower(-WHEEL_SPEED_MULTIPLIER * middleRight);
         }
 /*
         // Run wheels in tank mode (note: The joystick goes negative when pushed forwards, so negate it)
@@ -183,6 +189,7 @@ public class STS_ManateeDriverControlled extends OpMode{
 
  */
         if (!STS_HardwareManatee.CHASSIS_ONLY) {
+            manatee.hopper.setPosition(0.45);
             if ((gamepad1.right_trigger > 0) && !shooterIsOn) {
                 manatee.shooterWheelOne.setPower(1);
                 manatee.shooterWheelTwo.setPower(-1);
@@ -245,7 +252,7 @@ public class STS_ManateeDriverControlled extends OpMode{
             } else if (gamepad1.b) {
                 wobbleClawOffset -= WOBBLE_CLAW_ANGLE;
             }
-            
+
             // Move both servos to new position.  Assume servos are mirror image of each other.
             wobbleArmOffset = Range.clip(wobbleArmOffset, 0, 2);
             wobbleClawOffset = Range.clip(wobbleClawOffset, -1, 1);
@@ -273,22 +280,30 @@ public class STS_ManateeDriverControlled extends OpMode{
             telemetry.addData("hopper", "%.2f", manatee.hopper.getPosition());
             //telemetry.addData("shooterAngler", "Offset = %.2f", shooterAnglerOffset);
         }
+        if (STS_HardwareManatee.MECANUM) {
+            telemetry.addData("leftFrontDrive.Power", "%.2f", manatee.leftFrontDrive.getPower());
+            telemetry.addData("rightFrontDrive.Power", "%.2f", manatee.rightFrontDrive.getPower());
+            telemetry.addData("leftBackDrive.Power", "%.2f", manatee.leftBackDrive.getPower());
+            telemetry.addData("rightBackDrive.Power", "%.2f", manatee.rightBackDrive.getPower());
+            telemetry.addData("v1", "%.2f", v1);
+            telemetry.addData("v2", "%.2f", v2);
+            telemetry.addData("v3", "%.2f", v3);
+            telemetry.addData("v4", "%.2f", v4);
 
-        telemetry.addData("leftFrontDrive.Power", "%.2f", manatee.leftFrontDrive.getPower());
-        telemetry.addData("rightFrontDrive.Power", "%.2f", manatee.rightFrontDrive.getPower());
-        telemetry.addData("leftBackDrive.Power", "%.2f", manatee.leftBackDrive.getPower());
-        telemetry.addData("rightBackDrive.Power", "%.2f", manatee.rightBackDrive.getPower());
-        telemetry.addData("v1", "%.2f", v1);
-        telemetry.addData("v2", "%.2f", v2);
-        telemetry.addData("v3", "%.2f", v3);
-        telemetry.addData("v4", "%.2f", v4);
+        }
+        else if (!STS_HardwareManatee.MECANUM) {
+            telemetry.addData("leftDrive.Power", "%.2f", manatee.leftDrive.getPower());
+            telemetry.addData("rightDrive.Power", "%.2f", manatee.rightDrive.getPower());
+            telemetry.addData("middleDrive.Power", "%.2f", manatee.middleDrive.getPower());
+        }
         telemetry.update();
+
     }
 
     /*
      * Code to run ONCE after the driver hits STOP
      */
-    @Override
+    //@Override
     public void stop() {
     }
 }

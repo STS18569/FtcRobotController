@@ -30,6 +30,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -50,16 +51,20 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Servo channel:  Servo to open left claw:  "left_hand"
  * Servo channel:  Servo to open right claw: "right_hand"
  */
-public class STS_HardwareManatee
+public class  STS_HardwareManatee
 {
     /* Public OpMode members. */
-    static public final boolean CHASSIS_ONLY = false;
+    static public final boolean CHASSIS_ONLY = true;
+    static public final boolean MECANUM = false;
 
-    public DcMotor  leftFrontDrive   = null;
-    public DcMotor  leftBackDrive   = null;
-    public DcMotor  rightFrontDrive  = null;
-    public DcMotor  rightBackDrive  = null;
-    public DcMotor  intake = null;
+    public DcMotor  leftDrive           = null;
+    public DcMotor  rightDrive          = null;
+    public DcMotor  middleDrive         = null;
+    public DcMotor  leftFrontDrive      = null;
+    public DcMotor  leftBackDrive       = null;
+    public DcMotor  rightFrontDrive     = null;
+    public DcMotor  rightBackDrive      = null;
+    public DcMotor  intake              = null;
     public DcMotor  shooterWheelOne     = null;
     public DcMotor  shooterWheelTwo     = null;
     //public DcMotor wobbleArm = null;
@@ -93,10 +98,18 @@ public class STS_HardwareManatee
 
         // Define and Initialize Motors
 
-        leftFrontDrive  = hwMap.get(DcMotor.class, "left_front_drive");
-        leftBackDrive  = hwMap.get(DcMotor.class, "left_back_drive");
-        rightFrontDrive = hwMap.get(DcMotor.class, "right_front_drive");
-        rightBackDrive = hwMap.get(DcMotor.class, "right_back_drive");
+        if (MECANUM) {
+            leftFrontDrive = hwMap.get(DcMotor.class, "left_front_drive");
+            leftBackDrive = hwMap.get(DcMotor.class, "left_back_drive");
+            rightFrontDrive = hwMap.get(DcMotor.class, "right_front_drive");
+            rightBackDrive = hwMap.get(DcMotor.class, "right_back_drive");
+        }
+
+        else if (!MECANUM) {
+            leftDrive   = hwMap.get(DcMotor.class, "left_drive");
+            rightDrive  = hwMap.get(DcMotor.class, "right_drive");
+            middleDrive = hwMap.get(DcMotor.class, "middle_drive");
+        }
 
         if (!CHASSIS_ONLY) {
             intake = hwMap.get(DcMotor.class, "intake");
@@ -104,10 +117,18 @@ public class STS_HardwareManatee
             shooterWheelTwo = hwMap.get(DcMotor.class, "shooter_wheel_two ");
             //wobbleArm = hwMap.get(DcMotor.class, "wobble_arm");
         }
-        leftFrontDrive.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
-        leftBackDrive.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
-        rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);// Set to FORWARD if using AndyMark motors
-        rightBackDrive.setDirection(DcMotor.Direction.FORWARD);// Set to FORWARD if using AndyMark motors
+
+        if (MECANUM) {
+            leftFrontDrive.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
+            leftBackDrive.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
+            rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);// Set to FORWARD if using AndyMark motors
+            rightBackDrive.setDirection(DcMotor.Direction.FORWARD);// Set to FORWARD if using AndyMark motors
+        }
+        else if (!MECANUM) {
+            leftDrive.setDirection(DcMotor.Direction.REVERSE);
+            rightDrive.setDirection(DcMotor.Direction.FORWARD);
+            middleDrive.setDirection(DcMotor.Direction.FORWARD);
+        }
 
         if (!CHASSIS_ONLY) {
             intake.setDirection(DcMotor.Direction.REVERSE);
@@ -115,11 +136,19 @@ public class STS_HardwareManatee
             shooterWheelTwo.setDirection(DcMotor.Direction.FORWARD);
             //wobbleArm.setDirection(DcMotor.Direction.FORWARD);
         }
-        // Set all motors to zero power
-        leftFrontDrive.setPower(0);
-        leftBackDrive.setPower(0);
-        rightFrontDrive.setPower(0);
-        rightBackDrive.setPower(0);
+
+        if (MECANUM) {
+            // Set all motors to zero power
+            leftFrontDrive.setPower(0);
+            leftBackDrive.setPower(0);
+            rightFrontDrive.setPower(0);
+            rightBackDrive.setPower(0);
+        }
+        else if (!MECANUM) {
+            leftDrive.setPower(0);
+            rightDrive.setPower(0);
+            middleDrive.setPower(0);
+        }
 
         if (!CHASSIS_ONLY) {
             intake.setPower(0);
@@ -129,11 +158,17 @@ public class STS_HardwareManatee
         }
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
-
-        leftFrontDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        leftBackDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        rightFrontDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        rightBackDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        if (MECANUM) {
+            leftFrontDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            leftBackDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            rightFrontDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            rightBackDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        }
+        else if (!MECANUM) {
+            leftDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            rightDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            middleDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        }
 
         if (!CHASSIS_ONLY) {
             intake.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
