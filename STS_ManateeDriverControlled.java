@@ -31,7 +31,6 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.util.Range;
 
 
 /**
@@ -57,13 +56,16 @@ public class STS_ManateeDriverControlled extends OpMode{
     double              wobbleArmOffset = 0.0;
     double              wobbleClawOffset = 0.0;
     double              hopperOffset = 0.0;
-    double              shooterAnglerOffset = 0.0;                         // Servo mid position
+    double              intakeLeftOffset = 0.0;
+    double              intakeRightOffset = 0.0;
+    double              shooterAnglerOffset = 0.0;                 // Servo mid position
 
     boolean             shooterIsOn = false;
-    boolean             intakeIsOn = false;
+    boolean             armIsOn = false;
     boolean             armIsMovingForward = false;
     boolean             armIsMovingBackward = false;
 
+    final double        INTAKE_ANGLE = 1;
     final double        WOBBLE_ARM_ANGLE = 0.002;                 // sets rate to move servo
     final double        WOBBLE_CLAW_ANGLE = 0.01;
     final double        HOPPER_ANGLE = 0.0001;
@@ -189,29 +191,29 @@ public class STS_ManateeDriverControlled extends OpMode{
 
  */
         if (!STS_HardwareManatee.CHASSIS_ONLY) {
-            manatee.hopper.setPosition(0.45);
-            if ((gamepad1.right_trigger > 0) && !shooterIsOn) {
-                manatee.shooterWheelOne.setPower(1);
-                manatee.shooterWheelTwo.setPower(-1);
-                wobbleArmOffset = 0;
-                shooterIsOn = true;
-                sleep(0750);
-                manatee.hopper.setPosition(1.0);
-            } else if ((gamepad1.right_trigger == 0) && shooterIsOn) {
-                manatee.shooterWheelOne.setPower(0);
-                manatee.shooterWheelTwo.setPower(0);
-                shooterIsOn = false;
-                sleep(0500);
-                manatee.hopper.setPosition(0.45);
+
+            if (gamepad1.left_bumper && !armIsOn) {
+                manatee.arm.setPower(0.2);
+                armIsOn = true;
+            } else if (!gamepad1.left_bumper && armIsOn) {
+                manatee.arm.setPower(0);
+                armIsOn = false;
             }
 
-            if ((gamepad1.left_trigger > 0) && !intakeIsOn) {
-                manatee.intake.setPower(1);
-                intakeIsOn = true;
-            } else if ((gamepad1.left_trigger == 0) && intakeIsOn) {
-                manatee.intake.setPower(0);
-                intakeIsOn = false;
+            if (gamepad1.right_bumper && !armIsMovingBackward) {
+                manatee.arm.setPower(-0.2);
+                armIsMovingBackward = true;
+            } else if (!gamepad1.right_bumper && armIsMovingBackward) {
+                manatee.arm.setPower(0);
+                armIsMovingBackward = false;
             }
+
+            if (gamepad1.square) {
+                intakeLeftOffset += INTAKE_ANGLE;
+                intakeRightOffset -= INTAKE_ANGLE;
+            }
+
+
             /*
             if (gamepad1.y && !armIsMovingForward) {
                 manatee.wobbleArm.setPower(0.5);
@@ -234,7 +236,7 @@ public class STS_ManateeDriverControlled extends OpMode{
             } else if (gamepad1.dpad_down) {
                 shooterAnglerOffset -= SHOOTER_ANGLER_ANGLE;
             }
-            */
+
             if (gamepad1.right_bumper) {
                 manatee.hopper.setPosition(1.0);
             } else if (gamepad1.left_bumper) {
@@ -253,6 +255,7 @@ public class STS_ManateeDriverControlled extends OpMode{
                 wobbleClawOffset -= WOBBLE_CLAW_ANGLE;
             }
 
+
             // Move both servos to new position.  Assume servos are mirror image of each other.
             wobbleArmOffset = Range.clip(wobbleArmOffset, 0, 2);
             wobbleClawOffset = Range.clip(wobbleClawOffset, -1, 1);
@@ -262,6 +265,7 @@ public class STS_ManateeDriverControlled extends OpMode{
             manatee.wobbleArm.setPosition(manatee.WOBBLE_ARM_MID_SERVO + wobbleArmOffset);
             manatee.wobbleClaw.setPosition(manatee.WOBBLE_CLAW_MID_SERVO + wobbleClawOffset);
             //manatee.shooterAngler.setPosition(manatee.SHOOTER_ANGLER_MID_SERVO + shooterAnglerOffset);
+            */
         }
         /*
         // Use gamepad buttons to move the arm up (Y) and down (A)
@@ -278,6 +282,8 @@ public class STS_ManateeDriverControlled extends OpMode{
             telemetry.addData("wobbleArm", "Offset = %.2f", wobbleArmOffset);
             telemetry.addData("wobbleClaw", "Offset = %.2f", wobbleClawOffset);
             telemetry.addData("hopper", "%.2f", manatee.hopper.getPosition());
+            telemetry.addData("intakeLeft", "%.2f", manatee.intakeLeft);
+            telemetry.addData("intakeRight", "%.2f", manatee.intakeRight);
             //telemetry.addData("shooterAngler", "Offset = %.2f", shooterAnglerOffset);
         }
         if (STS_HardwareManatee.MECANUM) {

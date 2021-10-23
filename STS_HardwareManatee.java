@@ -64,23 +64,24 @@ public class  STS_HardwareManatee
     public DcMotor  leftBackDrive       = null;
     public DcMotor  rightFrontDrive     = null;
     public DcMotor  rightBackDrive      = null;
-    public DcMotor  intake              = null;
-    public DcMotor  shooterWheelOne     = null;
-    public DcMotor  shooterWheelTwo     = null;
+    public DcMotor  arm                 = null;
     //public DcMotor wobbleArm = null;
 
-    public Servo    wobbleArm = null;
-    public Servo    wobbleClaw   = null;
-    public Servo    hopper   = null;
-    public Servo    shooterAngler = null;
+    public Servo    intakeLeft          = null;
+    public Servo    intakeRight         = null;
+    public Servo    wobbleArm           = null;
+    public Servo    wobbleClaw          = null;
+    public Servo    hopper              = null;
+    public Servo    shooterAngler       = null;
 
 
     public static final double WOBBLE_ARM_MID_SERVO =  -1.0;
     public static final double WOBBLE_CLAW_MID_SERVO       =  0.5;
     public static final double HOPPER_MID_SERVO       =  0.5;
     public static final double SHOOTER_ANGLER_MID_SERVO       =  0.5;
-    // public static final double ARM_UP_POWER    =  0.45 ;
-    // public static final double ARM_DOWN_POWER  = -0.45 ;
+    public static final double ARM_UP_POWER    =  0.45 ;
+    public static final double ARM_DOWN_POWER  = -0.45 ;
+
 
     /* local OpMode members. */
     HardwareMap hwMap           =  null;
@@ -112,10 +113,10 @@ public class  STS_HardwareManatee
         }
 
         if (!CHASSIS_ONLY) {
-            intake = hwMap.get(DcMotor.class, "intake");
-            shooterWheelOne = hwMap.get(DcMotor.class, "shooter_wheel_one");
-            shooterWheelTwo = hwMap.get(DcMotor.class, "shooter_wheel_two ");
+
+            arm = hwMap.get(DcMotor.class, "arm");
             //wobbleArm = hwMap.get(DcMotor.class, "wobble_arm");
+
         }
 
         if (MECANUM) {
@@ -131,10 +132,9 @@ public class  STS_HardwareManatee
         }
 
         if (!CHASSIS_ONLY) {
-            intake.setDirection(DcMotor.Direction.REVERSE);
-            shooterWheelOne.setDirection(DcMotor.Direction.FORWARD);
-            shooterWheelTwo.setDirection(DcMotor.Direction.FORWARD);
+            arm.setDirection(DcMotor.Direction.REVERSE);
             //wobbleArm.setDirection(DcMotor.Direction.FORWARD);
+
         }
 
         if (MECANUM) {
@@ -151,10 +151,9 @@ public class  STS_HardwareManatee
         }
 
         if (!CHASSIS_ONLY) {
-            intake.setPower(0);
-            shooterWheelOne.setPower(0);
-            shooterWheelTwo.setPower(0);
+            arm.setPower(0);
             //wobbleArm.setPower(0);
+
         }
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
@@ -171,15 +170,19 @@ public class  STS_HardwareManatee
         }
 
         if (!CHASSIS_ONLY) {
-            intake.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            shooterWheelOne.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            shooterWheelTwo.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             //wobbleArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
+
             // Define and initialize ALL installed servos.
+
+            intakeLeft = hwMap.get(Servo.class, "intake_left");
+            intakeRight = hwMap.get(Servo.class, "intake_right");
+            /*
             wobbleArm = hwMap.get(Servo.class, "wobble_arm");
             wobbleClaw = hwMap.get(Servo.class, "wobble_claw");
             hopper = hwMap.get(Servo.class, "hopper");
+             */
         }
 /*
         wobbleArm.setPosition(1.0);
