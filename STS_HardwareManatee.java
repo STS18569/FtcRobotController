@@ -88,8 +88,7 @@ public class  STS_HardwareManatee
     private ElapsedTime period  = new ElapsedTime();
 
     /* Constructor */
-    public STS_HardwareManatee(){
-
+    public STS_HardwareManatee() {
     }
 
     /* Initialize standard Hardware interfaces */
@@ -134,7 +133,6 @@ public class  STS_HardwareManatee
         if (!CHASSIS_ONLY) {
             arm.setDirection(DcMotor.Direction.REVERSE);
             //wobbleArm.setDirection(DcMotor.Direction.FORWARD);
-
         }
 
         if (MECANUM) {
@@ -153,8 +151,8 @@ public class  STS_HardwareManatee
         if (!CHASSIS_ONLY) {
             arm.setPower(0);
             //wobbleArm.setPower(0);
-
         }
+
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
         if (MECANUM) {
@@ -173,11 +171,10 @@ public class  STS_HardwareManatee
             arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             //wobbleArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-
             // Define and initialize ALL installed servos.
-
             intakeLeft = hwMap.get(Servo.class, "intake_left");
             intakeRight = hwMap.get(Servo.class, "intake_right");
+
             /*
             wobbleArm = hwMap.get(Servo.class, "wobble_arm");
             wobbleClaw = hwMap.get(Servo.class, "wobble_claw");
@@ -188,7 +185,7 @@ public class  STS_HardwareManatee
         wobbleArm.setPosition(1.0);
         wobbleClaw.setPosition(WOBBLE_CLAW_MID_SERVO);
         shooterAngler.setPosition(SHOOTER_ANGLER_MID_SERVO);
- */
+*/
     }
  }
 
