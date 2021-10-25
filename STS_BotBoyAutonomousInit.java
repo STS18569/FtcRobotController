@@ -139,26 +139,7 @@ public class STS_ManateeAutonomousInit extends LinearOpMode {
     }
 
     public void testServos() {
-        if (!STS_HardwareManatee.CHASSIS_ONLY) {
-            manatee.wobbleArm.setPosition(1.0);
-            telemetry.addData("Test Servos", "wobbleArm.setPosition: %.3f", manatee.wobbleArm.getPosition());
-            telemetry.update();
-            sleep(2000);     // pause for servos to move
 
-
-            manatee.wobbleClaw.setPosition(0.1);
-            telemetry.addData("Test Servos", "wobbleClaw.setPosition: %.3f", manatee.wobbleClaw.getPosition());
-            telemetry.update();
-            sleep(2000);     // pause for servos to move
-
-            manatee.wobbleClaw.setPosition(0.5);
-            telemetry.addData("Test Servos", "wobbleClaw.setPosition: %.3f", manatee.wobbleClaw.getPosition());
-            telemetry.update();
-            sleep(2000);     // pause for servos to move
-
-            telemetry.addData("Test Servos", "Complete");
-            telemetry.update();
-        }
     }
 
     /*

@@ -29,7 +29,6 @@
 
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 
@@ -79,12 +78,12 @@ public class STS_ManateeDriverControlled extends STS_ManateeDriverControlledInit
      */
     @Override
     public void loop() {
-        if (gamepad1.left_bumper && !armIsOn) {
+        if (gamepad1.left_bumper && !armIsMovingForward) {
             manatee.arm.setPower(0.2);
-            armIsOn = true;
-        } else if (!gamepad1.left_bumper && armIsOn) {
+            armIsMovingForward = true;
+        } else if (!gamepad1.left_bumper && armIsMovingForward) {
             manatee.arm.setPower(0);
-            armIsOn = false;
+            armIsMovingForward = false;
         }
 
         if (gamepad1.right_bumper && !armIsMovingBackward) {
@@ -96,9 +95,22 @@ public class STS_ManateeDriverControlled extends STS_ManateeDriverControlledInit
         }
 
         if (gamepad1.square) {
-            intakeLeftOffset += INTAKE_ANGLE;
-            intakeRightOffset -= INTAKE_ANGLE;
+            intakeLeftOffset += INTAKE_SPEED;
+            intakeRightOffset -= INTAKE_SPEED;
         }
+
+        if (gamepad1.triangle) {
+            armLidOffset += ARM_LID_SPEED;
+        }
+
+        if (gamepad1.x) {
+            armLidOffset -= ARM_LID_SPEED;
+        }
+
+        manatee.armLid.setPosition(manatee.INTAKE_MID_SERVO + intakeLeftOffset);
+        manatee.intakeLeft.setPosition(manatee.INTAKE_MID_SERVO + intakeLeftOffset);
+        manatee.intakeRight.setPosition(manatee.ARM_LID_MID_SERVO + intakeRightOffset);
+
 
         /*
         if (gamepad1.y && !armIsMovingForward) {
@@ -163,6 +175,7 @@ public class STS_ManateeDriverControlled extends STS_ManateeDriverControlledInit
         */
 
         // Send telemetry message to signify robot running;
+        telemetry.addData("lid", "%.2f", manatee.armLid);
         telemetry.addData("intakeLeft", "%.2f", manatee.intakeLeft);
         telemetry.addData("intakeRight", "%.2f", manatee.intakeRight);
 

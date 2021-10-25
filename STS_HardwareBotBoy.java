@@ -30,7 +30,6 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -67,20 +66,13 @@ public class  STS_HardwareManatee
     public DcMotor  arm                 = null;
     //public DcMotor wobbleArm = null;
 
+    public Servo    armLid              = null;
     public Servo    intakeLeft          = null;
     public Servo    intakeRight         = null;
-    public Servo    wobbleArm           = null;
-    public Servo    wobbleClaw          = null;
-    public Servo    hopper              = null;
-    public Servo    shooterAngler       = null;
 
 
-    public static final double WOBBLE_ARM_MID_SERVO =  -1.0;
-    public static final double WOBBLE_CLAW_MID_SERVO       =  0.5;
-    public static final double HOPPER_MID_SERVO       =  0.5;
-    public static final double SHOOTER_ANGLER_MID_SERVO       =  0.5;
-    public static final double ARM_UP_POWER    =  0.45 ;
-    public static final double ARM_DOWN_POWER  = -0.45 ;
+    public static final double ARM_LID_MID_SERVO =  0.5;
+    public static final double INTAKE_MID_SERVO =  0.5;
 
 
     /* local OpMode members. */
@@ -169,23 +161,16 @@ public class  STS_HardwareManatee
 
         if (!CHASSIS_ONLY) {
             arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            //wobbleArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
             // Define and initialize ALL installed servos.
+            armLid = hwMap.get(Servo.class, "arm_lid");
             intakeLeft = hwMap.get(Servo.class, "intake_left");
             intakeRight = hwMap.get(Servo.class, "intake_right");
+            armLid.setPosition(ARM_LID_MID_SERVO);
+            intakeLeft.setPosition(INTAKE_MID_SERVO);
+            intakeRight.setPosition(INTAKE_MID_SERVO);
 
-            /*
-            wobbleArm = hwMap.get(Servo.class, "wobble_arm");
-            wobbleClaw = hwMap.get(Servo.class, "wobble_claw");
-            hopper = hwMap.get(Servo.class, "hopper");
-             */
         }
-/*
-        wobbleArm.setPosition(1.0);
-        wobbleClaw.setPosition(WOBBLE_CLAW_MID_SERVO);
-        shooterAngler.setPosition(SHOOTER_ANGLER_MID_SERVO);
-*/
     }
  }
 

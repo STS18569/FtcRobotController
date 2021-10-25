@@ -54,23 +54,16 @@ public class STS_ManateeDriverControlledInit extends OpMode{
     /* Declare OpMode members. */
     STS_HardwareManatee manatee = new STS_HardwareManatee(); // use the class created to define a STS_HardwareManatee's hardware
 
-    // double              wobbleArmOffset = 0.0;
-    // double              wobbleClawOffset = 0.0;
-    // double              hopperOffset = 0.0;
-    double              intakeLeftOffset = 0.0;
-    double              intakeRightOffset = 0.0;
-    // double              shooterAnglerOffset = 0.0;                 // Servo mid position
 
-    // boolean             shooterIsOn = false;
-    boolean             armIsOn = false;
-    // boolean             armIsMovingForward = false;
+    double              armLidOffset      = 0.0;
+    double              intakeLeftOffset  = 0.0;
+    double              intakeRightOffset = 0.0;
+
+    boolean             armIsMovingForward = false;
     boolean             armIsMovingBackward = false;
 
-    final double        INTAKE_ANGLE           = 1;
-    // final double        WOBBLE_ARM_ANGLE       = 0.002;                 // sets rate to move servo
-    // final double        WOBBLE_CLAW_ANGLE      = 0.01;
-    // final double        HOPPER_ANGLE           = 0.0001;
-    // final double        SHOOTER_ANGLER_ANGLE   = 0.0002;
+    double              ARM_LID_SPEED = 0.1;
+    double              INTAKE_SPEED = 0.2;
 
     final double        WHEEL_SPEED_MULTIPLIER = 0.5;
     // final double        LATERAL_ADJUSTMENT     = 0.99;
