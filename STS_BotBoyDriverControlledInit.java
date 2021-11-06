@@ -50,9 +50,9 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 @TeleOp(name="Manatee: Driver Controlled Init", group="`Freight Frenzy`")
 // @Disabled
-public class STS_ManateeDriverControlledInit extends OpMode{
+public class STS_BotBoyDriverControlledInit extends OpMode{
     /* Declare OpMode members. */
-    STS_HardwareManatee manatee = new STS_HardwareManatee(); // use the class created to define a STS_HardwareManatee's hardware
+    STS_HardwareBotBoy manatee = new STS_HardwareBotBoy(); // use the class created to define a STS_HardwareManatee's hardware
 
 
     double              armLidOffset      = 0.0;

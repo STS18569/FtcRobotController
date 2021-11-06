@@ -63,10 +63,10 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 @Autonomous(name="Manatee: Autonomous Init and Test", group="UltimateGoal")
 //@Disabled
-public class STS_ManateeAutonomousInit extends LinearOpMode {
+public class STS_BotBoyAutonomousInit extends LinearOpMode {
 
     /* Declare OpMode members. */
-    STS_HardwareManatee     manatee = new STS_HardwareManatee();   // Use a Pushbot's hardware
+    STS_HardwareBotBoy manatee = new STS_HardwareBotBoy();   // Use a Pushbot's hardware
     private ElapsedTime     runtime = new ElapsedTime();
 
     static enum             DriveMode {LAT_LEFT, LAT_RIGHT, LINEAR};

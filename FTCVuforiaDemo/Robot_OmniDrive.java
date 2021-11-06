@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.Range;
 
-import org.firstinspires.ftc.teamcode.STS_HardwareManatee;
+import org.firstinspires.ftc.teamcode.STS_HardwareBotBoy;
 
 /**
  * This is NOT an opmode.
@@ -33,7 +33,7 @@ public class Robot_OmniDrive
 {
     // Private Members
     private LinearOpMode myOpMode;
-    private STS_HardwareManatee pushbot = null;
+    private STS_HardwareBotBoy pushbot = null;
     private DcMotor  leftFrontDrive      = null;
     private DcMotor  rightFrontDrive     = null;
     private DcMotor  backDrive      = null;
@@ -45,7 +45,7 @@ public class Robot_OmniDrive
     /* Constructor */
     public Robot_OmniDrive(){
 
-        pushbot = new STS_HardwareManatee();
+        pushbot = new STS_HardwareBotBoy();
     }
 
 
@@ -55,7 +55,7 @@ public class Robot_OmniDrive
 
         // Save reference to Hardware map
         myOpMode = opMode;
-        pushbot = new STS_HardwareManatee();
+        pushbot = new STS_HardwareBotBoy();
         pushbot.init(myOpMode.hardwareMap);
 
         // Define and Initialize Motors

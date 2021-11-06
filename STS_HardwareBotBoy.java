@@ -50,7 +50,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Servo channel:  Servo to open left claw:  "left_hand"
  * Servo channel:  Servo to open right claw: "right_hand"
  */
-public class  STS_HardwareManatee
+public class STS_HardwareBotBoy
 {
     /* Public OpMode members. */
     static public final boolean CHASSIS_ONLY = true;
@@ -80,7 +80,7 @@ public class  STS_HardwareManatee
     private ElapsedTime period  = new ElapsedTime();
 
     /* Constructor */
-    public STS_HardwareManatee() {
+    public STS_HardwareBotBoy() {
     }
 
     /* Initialize standard Hardware interfaces */

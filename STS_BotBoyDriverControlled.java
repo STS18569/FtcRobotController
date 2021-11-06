@@ -49,7 +49,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 @TeleOp(name="Manatee: Driver Controlled", group="Freight Frenzy")
 // @Disabled
-public class STS_ManateeDriverControlled extends STS_ManateeDriverControlledInit {
+public class STS_BotBoyDriverControlled extends STS_BotBoyDriverControlledInit {
 
     /*
      * Code to run ONCE when the driver hits INIT
