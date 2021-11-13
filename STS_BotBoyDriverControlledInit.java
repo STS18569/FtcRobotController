@@ -48,24 +48,21 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="Manatee: Driver Controlled Init", group="`Freight Frenzy`")
+@TeleOp(name="BotBoy: Driver Controlled Init", group="`Freight Frenzy`")
 // @Disabled
 public class STS_BotBoyDriverControlledInit extends OpMode{
     /* Declare OpMode members. */
-    STS_HardwareBotBoy manatee = new STS_HardwareBotBoy(); // use the class created to define a STS_HardwareManatee's hardware
-
-
+    public STS_HardwareBotBoy botBoyHW;
     double              armLidOffset      = 0.0;
-    double              intakeLeftOffset  = 0.0;
-    double              intakeRightOffset = 0.0;
 
     boolean             armIsMovingForward = false;
     boolean             armIsMovingBackward = false;
+    boolean             intakeIsMoving = false;
 
-    double              ARM_LID_SPEED = 0.1;
+    double              ARM_LID_SPEED = 0.01;
     double              INTAKE_SPEED = 0.2;
 
-    final double        WHEEL_SPEED_MULTIPLIER = 0.5;
+    final double        WHEEL_SPEED_MULTIPLIER = 1.0;
     // final double        LATERAL_ADJUSTMENT     = 0.99;
 
     public final void sleep(long milliseconds) {
@@ -84,10 +81,11 @@ public class STS_BotBoyDriverControlledInit extends OpMode{
         /* Initialize the hardware variables.
          * The init() method of the hardware class does all the work here
          */
-        manatee.init(hardwareMap);
+        botBoyHW = new STS_HardwareBotBoy(); // use the class created to define a STS_HardwareManatee's hardware
+        botBoyHW.init(hardwareMap);
 
         // Send telemetry message to signify robot waiting;
-        telemetry.addData("Say", "Hello Driver");    //
+        telemetry.addData("BREAKING:", "BatBoy Initialized");    //
     }
 
     /*
@@ -116,16 +114,14 @@ public class STS_BotBoyDriverControlledInit extends OpMode{
         double rotationLeft = gamepad1.right_stick_x;
         double rotationRight = -gamepad1.right_stick_x;
 
-        manatee.leftDrive.setPower(WHEEL_SPEED_MULTIPLIER * left);
-        manatee.rightDrive.setPower(WHEEL_SPEED_MULTIPLIER * right);
-        manatee.middleDrive.setPower(WHEEL_SPEED_MULTIPLIER * middleLeft);
-        manatee.middleDrive.setPower(-WHEEL_SPEED_MULTIPLIER * middleRight);
+        botBoyHW.leftDrive.setPower(WHEEL_SPEED_MULTIPLIER * left);
+        botBoyHW.rightDrive.setPower(WHEEL_SPEED_MULTIPLIER * right);
+        botBoyHW.middleDrive.setPower(WHEEL_SPEED_MULTIPLIER * middleLeft);
+        botBoyHW.middleDrive.setPower(-WHEEL_SPEED_MULTIPLIER * middleRight);
 
-        telemetry.addData("leftDrive.Power", "%.2f", manatee.leftDrive.getPower());
-        telemetry.addData("rightDrive.Power", "%.2f", manatee.rightDrive.getPower());
-        telemetry.addData("middleDrive.Power", "%.2f", manatee.middleDrive.getPower());
-
-        telemetry.update();
+        telemetry.addData("leftDrive.Power", "%.2f", botBoyHW.leftDrive.getPower());
+        telemetry.addData("rightDrive.Power", "%.2f", botBoyHW.rightDrive.getPower());
+        telemetry.addData("middleDrive.Power", "%.2f", botBoyHW.middleDrive.getPower());
     }
 
     /*

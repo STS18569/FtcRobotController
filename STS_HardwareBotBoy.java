@@ -29,7 +29,9 @@
 
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -53,7 +55,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class STS_HardwareBotBoy
 {
     /* Public OpMode members. */
-    static public final boolean CHASSIS_ONLY = true;
+    static public final boolean CHASSIS_ONLY = false;
     static public final boolean MECANUM = false;
 
     public DcMotor  leftDrive           = null;
@@ -67,13 +69,10 @@ public class STS_HardwareBotBoy
     //public DcMotor wobbleArm = null;
 
     public Servo    armLid              = null;
-    public Servo    intakeLeft          = null;
-    public Servo    intakeRight         = null;
-
+    public CRServo intakeLeft          = null;
+    public CRServo    intakeRight         = null;
 
     public static final double ARM_LID_MID_SERVO =  0.5;
-    public static final double INTAKE_MID_SERVO =  0.5;
-
 
     /* local OpMode members. */
     HardwareMap hwMap           =  null;
@@ -104,10 +103,8 @@ public class STS_HardwareBotBoy
         }
 
         if (!CHASSIS_ONLY) {
-
             arm = hwMap.get(DcMotor.class, "arm");
             //wobbleArm = hwMap.get(DcMotor.class, "wobble_arm");
-
         }
 
         if (MECANUM) {
@@ -117,14 +114,13 @@ public class STS_HardwareBotBoy
             rightBackDrive.setDirection(DcMotor.Direction.FORWARD);// Set to FORWARD if using AndyMark motors
         }
         else if (!MECANUM) {
-            leftDrive.setDirection(DcMotor.Direction.REVERSE);
-            rightDrive.setDirection(DcMotor.Direction.FORWARD);
+            leftDrive.setDirection(DcMotor.Direction.FORWARD);
+            rightDrive.setDirection(DcMotor.Direction.REVERSE);
             middleDrive.setDirection(DcMotor.Direction.FORWARD);
         }
 
         if (!CHASSIS_ONLY) {
             arm.setDirection(DcMotor.Direction.REVERSE);
-            //wobbleArm.setDirection(DcMotor.Direction.FORWARD);
         }
 
         if (MECANUM) {
@@ -164,11 +160,10 @@ public class STS_HardwareBotBoy
 
             // Define and initialize ALL installed servos.
             armLid = hwMap.get(Servo.class, "arm_lid");
-            intakeLeft = hwMap.get(Servo.class, "intake_left");
-            intakeRight = hwMap.get(Servo.class, "intake_right");
+            intakeLeft = hwMap.get(CRServo.class, "intake_left");
+            intakeRight = hwMap.get(CRServo.class, "intake_right");
+
             armLid.setPosition(ARM_LID_MID_SERVO);
-            intakeLeft.setPosition(INTAKE_MID_SERVO);
-            intakeRight.setPosition(INTAKE_MID_SERVO);
 
         }
     }

@@ -30,6 +30,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.util.Range;
 
 
 /**
@@ -47,7 +48,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="Manatee: Driver Controlled", group="Freight Frenzy")
+@TeleOp(name="BotBoy: Driver Controlled", group="Freight Frenzy")
 // @Disabled
 public class STS_BotBoyDriverControlled extends STS_BotBoyDriverControlledInit {
 
@@ -78,108 +79,57 @@ public class STS_BotBoyDriverControlled extends STS_BotBoyDriverControlledInit {
      */
     @Override
     public void loop() {
+        super.loop();
+
         if (gamepad1.left_bumper && !armIsMovingForward) {
-            manatee.arm.setPower(0.2);
+            botBoyHW.arm.setPower(0.5);
             armIsMovingForward = true;
         } else if (!gamepad1.left_bumper && armIsMovingForward) {
-            manatee.arm.setPower(0);
+            botBoyHW.arm.setPower(0);
             armIsMovingForward = false;
         }
 
         if (gamepad1.right_bumper && !armIsMovingBackward) {
-            manatee.arm.setPower(-0.2);
+            botBoyHW.arm.setPower(-0.5);
             armIsMovingBackward = true;
         } else if (!gamepad1.right_bumper && armIsMovingBackward) {
-            manatee.arm.setPower(0);
+            botBoyHW.arm.setPower(0);
             armIsMovingBackward = false;
         }
 
-        if (gamepad1.square) {
-            intakeLeftOffset += INTAKE_SPEED;
-            intakeRightOffset -= INTAKE_SPEED;
+        if (gamepad1.square && !intakeIsMoving) {
+            intakeIsMoving = true;
+            botBoyHW.intakeLeft.setPower(-1.0);
+            botBoyHW.intakeRight.setPower(1.0);
+        }
+
+        if (gamepad1.square && intakeIsMoving) {
+            intakeIsMoving = false;
+            botBoyHW.intakeLeft.setPower(0.0);
+            botBoyHW.intakeRight.setPower(0.0);
         }
 
         if (gamepad1.triangle) {
             armLidOffset += ARM_LID_SPEED;
         }
 
-        if (gamepad1.x) {
+        if (gamepad1.cross) {
             armLidOffset -= ARM_LID_SPEED;
         }
 
-        manatee.armLid.setPosition(manatee.INTAKE_MID_SERVO + intakeLeftOffset);
-        manatee.intakeLeft.setPosition(manatee.INTAKE_MID_SERVO + intakeLeftOffset);
-        manatee.intakeRight.setPosition(manatee.ARM_LID_MID_SERVO + intakeRightOffset);
-
-
-        /*
-        if (gamepad1.y && !armIsMovingForward) {
-            manatee.wobbleArm.setPower(0.5);
-            armIsMovingForward = true;
-        } else if (!gamepad1.y && armIsMovingForward) {
-            manatee.wobbleArm.setPower(0);
-            armIsMovingForward = false;
-        }
-
-        if (gamepad1.a && !armIsMovingBackward) {
-            manatee.wobbleArm.setPower(-0.5);
-            armIsMovingBackward = true;
-        } else if (!gamepad1.a && armIsMovingBackward) {
-            manatee.wobbleArm.setPower(0);
-            armIsMovingBackward = false;
-        }
-
-        if (gamepad1.dpad_up) {
-            shooterAnglerOffset += SHOOTER_ANGLER_ANGLE;
-        } else if (gamepad1.dpad_down) {
-            shooterAnglerOffset -= SHOOTER_ANGLER_ANGLE;
-        }
-
-        if (gamepad1.right_bumper) {
-            manatee.hopper.setPosition(1.0);
-        } else if (gamepad1.left_bumper) {
-            manatee.hopper.setPosition(0.45);
-        }
-
-        if (gamepad1.a) {
-            wobbleArmOffset += WOBBLE_ARM_ANGLE;
-        } else if (gamepad1.y) {
-            wobbleArmOffset -= WOBBLE_ARM_ANGLE;
-        }
-
-        if (gamepad1.x) {
-            wobbleClawOffset += WOBBLE_CLAW_ANGLE;
-        } else if (gamepad1.b) {
-            wobbleClawOffset -= WOBBLE_CLAW_ANGLE;
-        }
-
-        // Move both servos to new position.  Assume servos are mirror image of each other.
-        wobbleArmOffset = Range.clip(wobbleArmOffset, 0, 2);
-        wobbleClawOffset = Range.clip(wobbleClawOffset, -1, 1);
-        hopperOffset = Range.clip(hopperOffset, -1, 1);
-        //shooterAnglerOffset = Range.clip(shooterAnglerOffset, 0.15, 0.2);
-
-        manatee.wobbleArm.setPosition(manatee.WOBBLE_ARM_MID_SERVO + wobbleArmOffset);
-        manatee.wobbleClaw.setPosition(manatee.WOBBLE_CLAW_MID_SERVO + wobbleClawOffset);
-        //manatee.shooterAngler.setPosition(manatee.SHOOTER_ANGLER_MID_SERVO + shooterAnglerOffset);
-        */
-
-        /*
-        // Use gamepad buttons to move the arm up (Y) and down (A)
-        if (gamepad1.y)
-            robot.leftArm.setPower(robot.ARM_UP_POWER);
-        else if (gamepad1.a)
-            robot.leftArm.setPower(robot.ARM_DOWN_POWER);
-        else
-            robot.leftArm.setPower(0.0);
-        */
+        armLidOffset = Range.clip(armLidOffset, (-1.0 - botBoyHW.ARM_LID_MID_SERVO), (1.0 - botBoyHW.ARM_LID_MID_SERVO));
+        botBoyHW.armLid.setPosition(botBoyHW.ARM_LID_MID_SERVO + armLidOffset);
 
         // Send telemetry message to signify robot running;
-        telemetry.addData("lid", "%.2f", manatee.armLid);
-        telemetry.addData("intakeLeft", "%.2f", manatee.intakeLeft);
-        telemetry.addData("intakeRight", "%.2f", manatee.intakeRight);
-
+        telemetry.addData("lid", "%.2f", armLidOffset);
+        telemetry.addData("intake moving?", "%.2f", intakeIsMoving);
+    /*
+        telemetry.addData("intakeLeft", "%.2f", armLidOffset);
+        telemetry.addData("intakeRight", "%.2f", botBoyHW.intakeRight);
+    */
         telemetry.update();
+
+
     }
 
     /*
