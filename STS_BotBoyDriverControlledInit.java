@@ -53,14 +53,14 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 public class STS_BotBoyDriverControlledInit extends OpMode{
     /* Declare OpMode members. */
     public STS_HardwareBotBoy botBoyHW;
-    double              armLidOffset      = 0.0;
 
+    boolean             carouselIsMoving = false;
     boolean             armIsMovingForward = false;
     boolean             armIsMovingBackward = false;
     boolean             intakeIsMoving = false;
 
+    double              armLidOffset = 0.0;
     double              ARM_LID_SPEED = 0.01;
-    double              INTAKE_SPEED = 0.2;
 
     final double        WHEEL_SPEED_MULTIPLIER = 1.0;
     // final double        LATERAL_ADJUSTMENT     = 0.99;
@@ -81,7 +81,7 @@ public class STS_BotBoyDriverControlledInit extends OpMode{
         /* Initialize the hardware variables.
          * The init() method of the hardware class does all the work here
          */
-        botBoyHW = new STS_HardwareBotBoy(); // use the class created to define a STS_HardwareManatee's hardware
+        botBoyHW = new STS_HardwareBotBoyChassis2022(); // use the class created to define a STS_HardwareManatee's hardware
         botBoyHW.init(hardwareMap);
 
         // Send telemetry message to signify robot waiting;
@@ -109,19 +109,12 @@ public class STS_BotBoyDriverControlledInit extends OpMode{
     public void loop() {
         double left = gamepad1.left_stick_y;
         double right = gamepad1.right_stick_y;
-        double middleRight = gamepad1.right_trigger;
-        double middleLeft = gamepad1.left_trigger;
-        double rotationLeft = gamepad1.right_stick_x;
-        double rotationRight = -gamepad1.right_stick_x;
 
         botBoyHW.leftDrive.setPower(WHEEL_SPEED_MULTIPLIER * left);
         botBoyHW.rightDrive.setPower(WHEEL_SPEED_MULTIPLIER * right);
-        botBoyHW.middleDrive.setPower(WHEEL_SPEED_MULTIPLIER * middleLeft);
-        botBoyHW.middleDrive.setPower(-WHEEL_SPEED_MULTIPLIER * middleRight);
 
         telemetry.addData("leftDrive.Power", "%.2f", botBoyHW.leftDrive.getPower());
         telemetry.addData("rightDrive.Power", "%.2f", botBoyHW.rightDrive.getPower());
-        telemetry.addData("middleDrive.Power", "%.2f", botBoyHW.middleDrive.getPower());
     }
 
     /*

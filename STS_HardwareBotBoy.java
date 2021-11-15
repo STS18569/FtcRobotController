@@ -55,22 +55,20 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class STS_HardwareBotBoy
 {
     /* Public OpMode members. */
-    static public final boolean CHASSIS_ONLY = false;
-    static public final boolean MECANUM = false;
 
     public DcMotor  leftDrive           = null;
     public DcMotor  rightDrive          = null;
-    public DcMotor  middleDrive         = null;
     public DcMotor  leftFrontDrive      = null;
     public DcMotor  leftBackDrive       = null;
     public DcMotor  rightFrontDrive     = null;
     public DcMotor  rightBackDrive      = null;
+    public DcMotor  carousel            = null;
     public DcMotor  arm                 = null;
     //public DcMotor wobbleArm = null;
 
     public Servo    armLid              = null;
-    public CRServo intakeLeft          = null;
-    public CRServo    intakeRight         = null;
+    public CRServo  intakeLeft          = null;
+    public CRServo  intakeRight         = null;
 
     public static final double ARM_LID_MID_SERVO =  0.5;
 
@@ -86,86 +84,6 @@ public class STS_HardwareBotBoy
     public void init(HardwareMap ahwMap) {
         // Save reference to Hardware map
         hwMap = ahwMap;
-
-        // Define and Initialize Motors
-
-        if (MECANUM) {
-            leftFrontDrive = hwMap.get(DcMotor.class, "left_front_drive");
-            leftBackDrive = hwMap.get(DcMotor.class, "left_back_drive");
-            rightFrontDrive = hwMap.get(DcMotor.class, "right_front_drive");
-            rightBackDrive = hwMap.get(DcMotor.class, "right_back_drive");
-        }
-
-        else if (!MECANUM) {
-            leftDrive   = hwMap.get(DcMotor.class, "left_drive");
-            rightDrive  = hwMap.get(DcMotor.class, "right_drive");
-            middleDrive = hwMap.get(DcMotor.class, "middle_drive");
-        }
-
-        if (!CHASSIS_ONLY) {
-            arm = hwMap.get(DcMotor.class, "arm");
-            //wobbleArm = hwMap.get(DcMotor.class, "wobble_arm");
-        }
-
-        if (MECANUM) {
-            leftFrontDrive.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
-            leftBackDrive.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
-            rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);// Set to FORWARD if using AndyMark motors
-            rightBackDrive.setDirection(DcMotor.Direction.FORWARD);// Set to FORWARD if using AndyMark motors
-        }
-        else if (!MECANUM) {
-            leftDrive.setDirection(DcMotor.Direction.FORWARD);
-            rightDrive.setDirection(DcMotor.Direction.REVERSE);
-            middleDrive.setDirection(DcMotor.Direction.FORWARD);
-        }
-
-        if (!CHASSIS_ONLY) {
-            arm.setDirection(DcMotor.Direction.REVERSE);
-        }
-
-        if (MECANUM) {
-            // Set all motors to zero power
-            leftFrontDrive.setPower(0);
-            leftBackDrive.setPower(0);
-            rightFrontDrive.setPower(0);
-            rightBackDrive.setPower(0);
-        }
-        else if (!MECANUM) {
-            leftDrive.setPower(0);
-            rightDrive.setPower(0);
-            middleDrive.setPower(0);
-        }
-
-        if (!CHASSIS_ONLY) {
-            arm.setPower(0);
-            //wobbleArm.setPower(0);
-        }
-
-        // Set all motors to run without encoders.
-        // May want to use RUN_USING_ENCODERS if encoders are installed.
-        if (MECANUM) {
-            leftFrontDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            leftBackDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            rightFrontDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            rightBackDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        }
-        else if (!MECANUM) {
-            leftDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            rightDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            middleDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        }
-
-        if (!CHASSIS_ONLY) {
-            arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
-            // Define and initialize ALL installed servos.
-            armLid = hwMap.get(Servo.class, "arm_lid");
-            intakeLeft = hwMap.get(CRServo.class, "intake_left");
-            intakeRight = hwMap.get(CRServo.class, "intake_right");
-
-            armLid.setPosition(ARM_LID_MID_SERVO);
-
-        }
     }
  }
 

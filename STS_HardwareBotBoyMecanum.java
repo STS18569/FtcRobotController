@@ -50,13 +50,13 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Servo channel:  Servo to open left claw:  "left_hand"
  * Servo channel:  Servo to open right claw: "right_hand"
  */
-public class STS_HardwareBotBoyChassis extends STS_HardwareBotBoy
+public class STS_HardwareBotBoyMecanum extends STS_HardwareBotBoy
 {
-    /* local OpMode members. */
+     /* local OpMode members. */
     private ElapsedTime period  = new ElapsedTime();
 
     /* Constructor */
-    public STS_HardwareBotBoyChassis(){
+    public STS_HardwareBotBoyMecanum(){
 
     }
 
@@ -66,19 +66,27 @@ public class STS_HardwareBotBoyChassis extends STS_HardwareBotBoy
         super.init(ahwMap);
 
         // Define and Initialize Motors
-        leftDrive   = hwMap.get(DcMotor.class, "left_drive");
-        rightDrive  = hwMap.get(DcMotor.class, "right_drive");
-        leftDrive.setDirection(DcMotor.Direction.FORWARD);
-        rightDrive.setDirection(DcMotor.Direction.REVERSE);
+        leftFrontDrive = hwMap.get(DcMotor.class, "left_front_drive");
+        leftBackDrive = hwMap.get(DcMotor.class, "left_back_drive");
+        rightFrontDrive = hwMap.get(DcMotor.class, "right_front_drive");
+        rightBackDrive = hwMap.get(DcMotor.class, "right_back_drive");
+        leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
+        leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
+        rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
+        rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
 
         // Set all motors to zero power
-        leftDrive.setPower(0);
-        rightDrive.setPower(0);
+        leftFrontDrive.setPower(0);
+        leftBackDrive.setPower(0);
+        rightFrontDrive.setPower(0);
+        rightBackDrive.setPower(0);
 
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
-        leftDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        rightDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        leftFrontDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        leftBackDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rightFrontDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rightBackDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
  }
 

@@ -66,7 +66,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class STS_BotBoyAutonomousInit extends LinearOpMode {
 
     /* Declare OpMode members. */
-    STS_HardwareBotBoy manatee = new STS_HardwareBotBoy();   // Use a Pushbot's hardware
+    STS_HardwareBotBoy botBoyHW = new STS_HardwareBotBoyChassis2022();   // Use a Pushbot's hardware
     private ElapsedTime     runtime = new ElapsedTime();
 
     static enum             DriveMode {LAT_LEFT, LAT_RIGHT, LINEAR};
@@ -90,24 +90,24 @@ public class STS_BotBoyAutonomousInit extends LinearOpMode {
          * Initialize the drive system variables.
          * The init() method of the hardware class does all the work here
          */
-        manatee.init(hardwareMap);
+        botBoyHW.init(hardwareMap);
 
-        manatee.leftFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        manatee.leftBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        manatee.rightFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        manatee.rightBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        botBoyHW.leftFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        botBoyHW.leftBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        botBoyHW.rightFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        botBoyHW.rightBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        manatee.leftBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        manatee.rightFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        manatee.rightBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        manatee.leftFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        botBoyHW.leftBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        botBoyHW.rightFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        botBoyHW.rightBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        botBoyHW.leftFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         // Send telemetry message to indicate successful Encoder reset
         telemetry.addData("Path0",  "Starting at %7d :%7d :%7d :%7d",
-                manatee.leftFrontDrive.getCurrentPosition(),
-                manatee.leftBackDrive.getCurrentPosition(),
-                manatee.rightFrontDrive.getCurrentPosition(),
-                manatee.rightBackDrive.getCurrentPosition());
+                botBoyHW.leftFrontDrive.getCurrentPosition(),
+                botBoyHW.leftBackDrive.getCurrentPosition(),
+                botBoyHW.rightFrontDrive.getCurrentPosition(),
+                botBoyHW.rightBackDrive.getCurrentPosition());
 
 
         waitForStart();
@@ -181,45 +181,45 @@ public class STS_BotBoyAutonomousInit extends LinearOpMode {
             // Determine new target position, and pass to motor controller
             switch(mode) {
                 case LINEAR:
-                    newLeftFrontTarget = manatee.leftFrontDrive.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
-                    newLeftBackTarget = manatee.leftBackDrive.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
-                    newRightFrontTarget = manatee.rightFrontDrive.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
-                    newRightBackTarget = manatee.rightBackDrive.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
+                    newLeftFrontTarget = botBoyHW.leftFrontDrive.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
+                    newLeftBackTarget = botBoyHW.leftBackDrive.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
+                    newRightFrontTarget = botBoyHW.rightFrontDrive.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
+                    newRightBackTarget = botBoyHW.rightBackDrive.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
                     break;
                 case LAT_LEFT:
-                    newLeftFrontTarget = manatee.leftFrontDrive.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
-                    newLeftBackTarget = manatee.leftBackDrive.getCurrentPosition() + (int)(-rightInches * COUNTS_PER_INCH);
-                    newRightFrontTarget = manatee.rightFrontDrive.getCurrentPosition() + (int)(-rightInches * COUNTS_PER_INCH);
-                    newRightBackTarget = manatee.rightBackDrive.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
+                    newLeftFrontTarget = botBoyHW.leftFrontDrive.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
+                    newLeftBackTarget = botBoyHW.leftBackDrive.getCurrentPosition() + (int)(-rightInches * COUNTS_PER_INCH);
+                    newRightFrontTarget = botBoyHW.rightFrontDrive.getCurrentPosition() + (int)(-rightInches * COUNTS_PER_INCH);
+                    newRightBackTarget = botBoyHW.rightBackDrive.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
                     break;
                 case LAT_RIGHT:
-                    newLeftFrontTarget = manatee.leftFrontDrive.getCurrentPosition() + (int)(-leftInches * COUNTS_PER_INCH);
-                    newLeftBackTarget = manatee.leftBackDrive.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
-                    newRightFrontTarget = manatee.rightFrontDrive.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
-                    newRightBackTarget = manatee.rightBackDrive.getCurrentPosition() + (int)(-leftInches * COUNTS_PER_INCH);
+                    newLeftFrontTarget = botBoyHW.leftFrontDrive.getCurrentPosition() + (int)(-leftInches * COUNTS_PER_INCH);
+                    newLeftBackTarget = botBoyHW.leftBackDrive.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
+                    newRightFrontTarget = botBoyHW.rightFrontDrive.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
+                    newRightBackTarget = botBoyHW.rightBackDrive.getCurrentPosition() + (int)(-leftInches * COUNTS_PER_INCH);
                     break;
                 default:
                     // code block
             }
 
-            manatee.leftFrontDrive.setTargetPosition(newLeftFrontTarget);
-            manatee.leftBackDrive.setTargetPosition(newLeftBackTarget);
-            manatee.rightFrontDrive.setTargetPosition(newRightFrontTarget);
-            manatee.rightBackDrive.setTargetPosition(newRightBackTarget);
+            botBoyHW.leftFrontDrive.setTargetPosition(newLeftFrontTarget);
+            botBoyHW.leftBackDrive.setTargetPosition(newLeftBackTarget);
+            botBoyHW.rightFrontDrive.setTargetPosition(newRightFrontTarget);
+            botBoyHW.rightBackDrive.setTargetPosition(newRightBackTarget);
 
             // Turn On RUN_TO_POSITION
-            manatee.leftFrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            manatee.leftBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            manatee.rightFrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            manatee.rightBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            botBoyHW.leftFrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            botBoyHW.leftBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            botBoyHW.rightFrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            botBoyHW.rightBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
             // reset the timeout time and start motion.
             runtime.reset();
-            manatee.leftFrontDrive.setPower(Math.abs(speed));
-            manatee.leftBackDrive.setPower(Math.abs(speed));
+            botBoyHW.leftFrontDrive.setPower(Math.abs(speed));
+            botBoyHW.leftBackDrive.setPower(Math.abs(speed));
             //sleep(0100);
-            manatee.rightFrontDrive.setPower(Math.abs(speed));
-            manatee.rightBackDrive.setPower(Math.abs(speed));
+            botBoyHW.rightFrontDrive.setPower(Math.abs(speed));
+            botBoyHW.rightBackDrive.setPower(Math.abs(speed));
 
             // keep looping while we are still active, and there is time left, and both motors are running.
             // Note: We use (isBusy() && isBusy()) in the loop test, which means that when EITHER motor hits
@@ -231,7 +231,7 @@ public class STS_BotBoyAutonomousInit extends LinearOpMode {
             // telemetry.addData("timeoutS == ", timeoutS);
             while (opModeIsActive() &&
                    (runtime.seconds() < timeoutS) &&
-                    ((manatee.leftFrontDrive.isBusy() || manatee.rightFrontDrive.isBusy()))) {
+                    ((botBoyHW.leftFrontDrive.isBusy() || botBoyHW.rightFrontDrive.isBusy()))) {
 
                 // Display it for the driver.
                 /*
@@ -243,24 +243,24 @@ public class STS_BotBoyAutonomousInit extends LinearOpMode {
                  */
                 telemetry.addData("Path1 (target)",  "Running to %7d :%7d :%7d :%7d", newLeftFrontTarget,  newLeftBackTarget,
                                                                                                       newRightFrontTarget,  newRightBackTarget);
-                telemetry.addData("Path2 (position)",  "Running at %7d :%7d :%7d :%7d", manatee.leftFrontDrive.getCurrentPosition(), manatee.leftBackDrive.getCurrentPosition(),
-                                                                                                        manatee.rightFrontDrive.getCurrentPosition(), manatee.rightBackDrive.getCurrentPosition());
+                telemetry.addData("Path2 (position)",  "Running at %7d :%7d :%7d :%7d", botBoyHW.leftFrontDrive.getCurrentPosition(), botBoyHW.leftBackDrive.getCurrentPosition(),
+                                                                                                        botBoyHW.rightFrontDrive.getCurrentPosition(), botBoyHW.rightBackDrive.getCurrentPosition());
                 // telemetry.addData("EncoderDrive", "time(%3d) : %3f", timeoutS, runtime.seconds());
                 telemetry.addData("EncoderDrive: time: ", runtime.seconds());
                 telemetry.update();
             }
 
             // Stop all motion;
-            manatee.leftFrontDrive.setPower(0);
-            manatee.leftBackDrive.setPower(0);
-            manatee.rightFrontDrive.setPower(0);
-            manatee.rightBackDrive.setPower(0);
+            botBoyHW.leftFrontDrive.setPower(0);
+            botBoyHW.leftBackDrive.setPower(0);
+            botBoyHW.rightFrontDrive.setPower(0);
+            botBoyHW.rightBackDrive.setPower(0);
 
             // Turn off RUN_TO_POSITION
-            manatee.leftFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            manatee.leftBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            manatee.rightFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            manatee.rightBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            botBoyHW.leftFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            botBoyHW.leftBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            botBoyHW.rightFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            botBoyHW.rightBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
     }
 }

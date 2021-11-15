@@ -97,6 +97,16 @@ public class STS_BotBoyDriverControlled extends STS_BotBoyDriverControlledInit {
             armIsMovingBackward = false;
         }
 
+        if (gamepad1.circle && !carouselIsMoving) {
+            carouselIsMoving = true;
+            botBoyHW.carousel.setPower(1.0);
+        }
+
+        if (gamepad1.circle && carouselIsMoving) {
+            carouselIsMoving = false;
+            botBoyHW.carousel.setPower(0.0);
+        }
+
         if (gamepad1.square && !intakeIsMoving) {
             intakeIsMoving = true;
             botBoyHW.intakeLeft.setPower(-1.0);
@@ -122,7 +132,11 @@ public class STS_BotBoyDriverControlled extends STS_BotBoyDriverControlledInit {
 
         // Send telemetry message to signify robot running;
         telemetry.addData("lid", "%.2f", armLidOffset);
+        /*
         telemetry.addData("intake moving?", "%.2f", intakeIsMoving);
+        telemetry.addData("carousel moving?", "%.2f", carouselIsMoving);
+
+         */
     /*
         telemetry.addData("intakeLeft", "%.2f", armLidOffset);
         telemetry.addData("intakeRight", "%.2f", botBoyHW.intakeRight);

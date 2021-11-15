@@ -29,6 +29,7 @@
 
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -50,13 +51,13 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Servo channel:  Servo to open left claw:  "left_hand"
  * Servo channel:  Servo to open right claw: "right_hand"
  */
-public class STS_HardwareBotBoyChassis extends STS_HardwareBotBoy
+public class STS_HardwareBotBoyChassis2022 extends STS_HardwareBotBoyChassis
 {
-    /* local OpMode members. */
+     /* local OpMode members. */
     private ElapsedTime period  = new ElapsedTime();
 
     /* Constructor */
-    public STS_HardwareBotBoyChassis(){
+    public STS_HardwareBotBoyChassis2022(){
 
     }
 
@@ -66,19 +67,25 @@ public class STS_HardwareBotBoyChassis extends STS_HardwareBotBoy
         super.init(ahwMap);
 
         // Define and Initialize Motors
-        leftDrive   = hwMap.get(DcMotor.class, "left_drive");
-        rightDrive  = hwMap.get(DcMotor.class, "right_drive");
-        leftDrive.setDirection(DcMotor.Direction.FORWARD);
-        rightDrive.setDirection(DcMotor.Direction.REVERSE);
+        carousel = hwMap.get(DcMotor.class, "carousel");
+        arm = hwMap.get(DcMotor.class, "arm");
+        carousel.setDirection(DcMotor.Direction.REVERSE);
+        arm.setDirection(DcMotor.Direction.REVERSE);
 
         // Set all motors to zero power
-        leftDrive.setPower(0);
-        rightDrive.setPower(0);
+        carousel.setPower(0);
+        arm.setPower(0);
 
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
-        leftDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        rightDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        carousel.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+        // Define and initialize ALL installed servos.
+        armLid = hwMap.get(Servo.class, "arm_lid");
+        intakeLeft = hwMap.get(CRServo.class, "intake_left");
+        intakeRight = hwMap.get(CRServo.class, "intake_right");
+        armLid.setPosition(ARM_LID_MID_SERVO);
     }
  }
 
