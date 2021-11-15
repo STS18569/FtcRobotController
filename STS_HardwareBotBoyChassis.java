@@ -50,26 +50,14 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Servo channel:  Servo to open left claw:  "left_hand"
  * Servo channel:  Servo to open right claw: "right_hand"
  */
-public class STS_HardwarePushbot
+public class STS_HardwareBotBoyChassisOnly extends STS_HardwareBotBoy
 {
-    /* Public OpMode members. */
-    public DcMotor  leftDrive   = null;
-    public DcMotor  rightDrive  = null;
-    public DcMotor elbowMotor = null;
-    public Servo    leftIntake    = null;
-    public Servo    rightIntake   = null;
-    public Servo    armLid = null;
-
-    public static final double MID_SERVO       =  0.5 ;
-    public static final double ARM_UP_POWER    =  0.45 ;
-    public static final double ARM_DOWN_POWER  = -0.45 ;
-
     /* local OpMode members. */
     HardwareMap hwMap           =  null;
     private ElapsedTime period  = new ElapsedTime();
 
     /* Constructor */
-    public STS_HardwarePushbot(){
+    public STS_HardwareBotBoyChassisOnly(){
 
     }
 
@@ -79,30 +67,23 @@ public class STS_HardwarePushbot
         hwMap = ahwMap;
 
         // Define and Initialize Motors
-        leftDrive  = hwMap.get(DcMotor.class, "left_drive");
-        rightDrive = hwMap.get(DcMotor.class, "right_drive");
-        elbowMotor = hwMap.get(DcMotor.class, "elbow_motor");
-        leftDrive.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
-        rightDrive.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
+        leftDrive   = hwMap.get(DcMotor.class, "left_drive");
+        rightDrive  = hwMap.get(DcMotor.class, "right_drive");
+        middleDrive = hwMap.get(DcMotor.class, "middle_drive");
+        leftDrive.setDirection(DcMotor.Direction.FORWARD);
+        rightDrive.setDirection(DcMotor.Direction.REVERSE);
+        middleDrive.setDirection(DcMotor.Direction.FORWARD);
 
         // Set all motors to zero power
         leftDrive.setPower(0);
         rightDrive.setPower(0);
-        elbowMotor.setPower(0);
+        middleDrive.setPower(0);
 
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
         leftDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        elbowMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
-        // Define and initialize ALL installed servos.
-        leftIntake  = hwMap.get(Servo.class, "left_intake");
-        rightIntake = hwMap.get(Servo.class, "right_intake");
-        armLid = hwMap.get(Servo.class, "arm_lid");
-        leftIntake.setPosition(MID_SERVO);
-        rightIntake.setPosition(MID_SERVO);
-
+        middleDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
  }
 
