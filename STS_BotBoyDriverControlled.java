@@ -31,7 +31,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.Range;
-
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 /**
  * This file provides basic Teleop driving for a Pushbot robot.
@@ -48,10 +48,18 @@ import com.qualcomm.robotcore.util.Range;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
+
 @TeleOp(name="BotBoy: Driver Controlled", group="Freight Frenzy")
 // @Disabled
 public class STS_BotBoyDriverControlled extends STS_BotBoyDriverControlledInit {
-
+    private ElapsedTime runtime = new ElapsedTime();
+    /*
+    Insert useMap1.a = runtime.milliseconds(); after every use of gamepad1.a to reset the cooldown.
+    Use toggleMap1.a to access whether gamepad1.a is toggled or not.
+    cdCheck(useMap1.a, 1000) returns true or false based on whether gamepad1.a has been used in the last 1000 milliseconds.
+    */
+    toggleMap toggleMap1 = new toggleMap();
+    useMap useMap1 = new useMap();
     /*
      * Code to run ONCE when the driver hits INIT
      */
@@ -81,6 +89,7 @@ public class STS_BotBoyDriverControlled extends STS_BotBoyDriverControlledInit {
     public void loop() {
         super.loop();
 
+        updateKeys();
         if (gamepad1.left_bumper && !armIsMovingForward) {
             botBoyHW.arm.setPower(0.5);
             armIsMovingForward = true;
@@ -97,28 +106,6 @@ public class STS_BotBoyDriverControlled extends STS_BotBoyDriverControlledInit {
             armIsMovingBackward = false;
         }
 
-        if (gamepad1.circle && !carouselIsMoving) {
-            carouselIsMoving = true;
-            botBoyHW.carousel.setPower(1.0);
-        }
-
-        if (gamepad1.circle && carouselIsMoving) {
-            carouselIsMoving = false;
-            botBoyHW.carousel.setPower(0.0);
-        }
-
-        if (gamepad1.square && !intakeIsMoving) {
-            intakeIsMoving = true;
-            botBoyHW.intakeLeft.setPower(-1.0);
-            botBoyHW.intakeRight.setPower(1.0);
-        }
-
-        if (gamepad1.square && intakeIsMoving) {
-            intakeIsMoving = false;
-            botBoyHW.intakeLeft.setPower(0.0);
-            botBoyHW.intakeRight.setPower(0.0);
-        }
-
         if (gamepad1.triangle) {
             armLidOffset += ARM_LID_SPEED;
         }
@@ -131,19 +118,65 @@ public class STS_BotBoyDriverControlled extends STS_BotBoyDriverControlledInit {
         botBoyHW.armLid.setPosition(botBoyHW.ARM_LID_MID_SERVO + armLidOffset);
 
         // Send telemetry message to signify robot running;
-        telemetry.addData("lid", "%.2f", armLidOffset);
-        /*
-        telemetry.addData("intake moving?", "%.2f", intakeIsMoving);
-        telemetry.addData("carousel moving?", "%.2f", carouselIsMoving);
-
-         */
-    /*
-        telemetry.addData("intakeLeft", "%.2f", armLidOffset);
-        telemetry.addData("intakeRight", "%.2f", botBoyHW.intakeRight);
-    */
+        telemetry.addData("lid position", "%.2f", botBoyHW.armLid.getPosition());
+        telemetry.addData("circle (carousel)", toggleMap1.circle + " " + (runtime.milliseconds() - useMap1.circle));
+        telemetry.addData("square (intake)", toggleMap1.square + " " + (runtime.milliseconds() - useMap1.square));
         telemetry.update();
 
 
+    }
+
+    public void updateKeys() {      // This section is for buttons that use toggle rather than hold
+        if(gamepad1.circle && cdCheck(useMap1.circle, 500) && !carouselIsMoving){
+            toggleMap1.circle = toggle(toggleMap1.circle);
+            useMap1.circle = runtime.milliseconds();
+            carouselIsMoving = true;
+            botBoyHW.carousel.setPower(1.0);
+        }
+
+        if(gamepad1.circle && cdCheck(useMap1.circle, 500) && carouselIsMoving){
+            toggleMap1.circle = toggle(toggleMap1.circle);
+            useMap1.circle = runtime.milliseconds();
+            carouselIsMoving = false;
+            botBoyHW.carousel.setPower(0.0);
+        }
+
+        if(gamepad1.square && cdCheck(useMap1.square, 500) && !intakeIsMoving){
+            toggleMap1.square = toggle(toggleMap1.square);
+            useMap1.square = runtime.milliseconds();
+            intakeIsMoving = true;
+            botBoyHW.intakeLeft.setPower(-1.0);
+            botBoyHW.intakeRight.setPower(1.0);
+        }
+
+        if(gamepad1.square && cdCheck(useMap1.square, 500) && intakeIsMoving){
+            toggleMap1.square = toggle(toggleMap1.square);
+            useMap1.square = runtime.milliseconds();
+            intakeIsMoving = false;
+            botBoyHW.intakeLeft.setPower(0.0);
+            botBoyHW.intakeRight.setPower(0.0);
+        }
+        /*
+
+        if(gamepad1.right_stick_x > 0 && cdCheck(useMap1.right_stick_x_pos, 700)){
+            toggleMap1.right_stick_x_pos = toggle(toggleMap1.right_stick_x_pos);
+            useMap1.right_stick_x_pos = runtime.milliseconds();
+        }
+         */
+    }
+
+    public boolean cdCheck(double key, int cdTime){
+        return runtime.milliseconds() - key > cdTime;
+    }
+
+    public boolean toggle(boolean variable){
+        if(variable == true){
+            variable = false;
+        }
+        else if(variable == false){
+            variable = true;
+        }
+        return variable;
     }
 
     /*

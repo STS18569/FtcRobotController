@@ -60,7 +60,7 @@ public class STS_BotBoyDriverControlledInit extends OpMode{
     boolean             intakeIsMoving = false;
 
     double              armLidOffset = 0.0;
-    double              ARM_LID_SPEED = 0.01;
+    double              ARM_LID_SPEED = 0.001;
 
     final double        WHEEL_SPEED_MULTIPLIER = 1.0;
     // final double        LATERAL_ADJUSTMENT     = 0.99;
