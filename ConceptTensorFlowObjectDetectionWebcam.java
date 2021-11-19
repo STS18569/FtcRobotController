@@ -54,9 +54,11 @@ import java.util.List;
 @TeleOp(name = "Concept: TensorFlow Object Detection Webcam", group = "Concept")
 //@Disabled
 public class ConceptTensorFlowObjectDetectionWebcam extends LinearOpMode {
-    private static final String TFOD_MODEL_ASSET = "UltimateGoal.tflite";
-    private static final String LABEL_FIRST_ELEMENT = "Quad";
-    private static final String LABEL_SECOND_ELEMENT = "Single";
+    private static final String TFOD_MODEL_ASSET = "STS_Model.tflite";
+    private static final String LABEL_FIRST_ELEMENT = "Ball";
+    private static final String LABEL_SECOND_ELEMENT = "Box";
+    private static final String LABEL_THIRD_ELEMENT = "Duck";
+    private static final String LABEL_FOURTH_ELEMENT = "TempSE";
 
     /*
      * IMPORTANT: You need to obtain your own license key to use Vuforia. The string below with which
@@ -184,6 +186,6 @@ public class ConceptTensorFlowObjectDetectionWebcam extends LinearOpMode {
         TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
         tfodParameters.minResultConfidence = 0.6f;
         tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
-        tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_FIRST_ELEMENT, LABEL_SECOND_ELEMENT);
+        tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_FIRST_ELEMENT, LABEL_SECOND_ELEMENT, LABEL_THIRD_ELEMENT, LABEL_FOURTH_ELEMENT);
     }
 }

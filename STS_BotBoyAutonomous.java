@@ -54,11 +54,13 @@ import java.util.List;
 @Autonomous(name = "Manatee: Autonomous", group = "UltimateGoal")
 // @Disabled
 public class STS_BotBoyAutonomous extends STS_BotBoyAutonomousInit {
-    private static final String TFOD_MODEL_ASSET = "UltimateGoal.tflite";
-    private static final String LABEL_FIRST_ELEMENT = "Quad";
-    private static final String LABEL_SECOND_ELEMENT = "Single";
+    private static final String TFOD_MODEL_ASSET = "STS_Model.tflite"; //Available on Keep
+    private static final String LABEL_FIRST_ELEMENT = "Ball";
+    private static final String LABEL_SECOND_ELEMENT = "Box";
+    private static final String LABEL_THIRD_ELEMENT = "Duck";
+    private static final String LABEL_FOURTH_ELEMENT = "TempSE";
     private static final double SCAN_FOR_ELEMENT_TIMEOUT = 3.0;
-    
+
     private ElapsedTime scanForElementTime = new ElapsedTime();
     private boolean foundElement = false;
     private boolean autonomousIsActive = true;
@@ -237,6 +239,6 @@ public class STS_BotBoyAutonomous extends STS_BotBoyAutonomousInit {
         TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
         tfodParameters.minResultConfidence = 0.6f;
         tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
-        tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_FIRST_ELEMENT, LABEL_SECOND_ELEMENT);
+        tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_FIRST_ELEMENT, LABEL_SECOND_ELEMENT, LABEL_THIRD_ELEMENT, LABEL_FOURTH_ELEMENT);
     }
 }
