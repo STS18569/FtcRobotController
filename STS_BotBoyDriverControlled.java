@@ -90,6 +90,7 @@ public class STS_BotBoyDriverControlled extends STS_BotBoyDriverControlledInit {
         super.loop();
 
         updateKeys();
+        /*
         if (gamepad1.left_bumper && !armIsMovingForward) {
             botBoyHW.arm.setPower(0.5);
             armIsMovingForward = true;
@@ -105,14 +106,25 @@ public class STS_BotBoyDriverControlled extends STS_BotBoyDriverControlledInit {
             botBoyHW.arm.setPower(0);
             armIsMovingBackward = false;
         }
+ */
+
+        if (gamepad1.right_bumper) {
+            botBoyHW.angularArmDrive(0.3, 180, 2.0);
+        }
+
+        if (gamepad1.left_bumper) {
+            botBoyHW.angularArmDrive(0.3, 90, 2.0);
+        }
+
 
         if (gamepad1.triangle) {
-            armLidOffset += ARM_LID_SPEED;
+            armLidOffset -= ARM_LID_SPEED;
         }
 
         if (gamepad1.cross) {
-            armLidOffset -= ARM_LID_SPEED;
+            armLidOffset += ARM_LID_SPEED;
         }
+
 
         armLidOffset = Range.clip(armLidOffset, (-1.0 - botBoyHW.ARM_LID_MID_SERVO), (1.0 - botBoyHW.ARM_LID_MID_SERVO));
         botBoyHW.armLid.setPosition(botBoyHW.ARM_LID_MID_SERVO + armLidOffset);

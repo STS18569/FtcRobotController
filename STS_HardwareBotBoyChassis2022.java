@@ -81,6 +81,9 @@ public class STS_HardwareBotBoyChassis2022 extends STS_HardwareBotBoyChassis
         carousel.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
+        //Set zero power behavior
+        arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
         // Define and initialize ALL installed servos.
         armLid = hwMap.get(Servo.class, "arm_lid");
         intakeLeft = hwMap.get(CRServo.class, "intake_left");

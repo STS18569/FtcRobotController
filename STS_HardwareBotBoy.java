@@ -64,7 +64,6 @@ public class STS_HardwareBotBoy
     public DcMotor  rightBackDrive      = null;
     public DcMotor  carousel            = null;
     public DcMotor  arm                 = null;
-    //public DcMotor wobbleArm = null;
 
     public Servo    armLid              = null;
     public CRServo  intakeLeft          = null;
@@ -75,6 +74,9 @@ public class STS_HardwareBotBoy
     /* local OpMode members. */
     HardwareMap hwMap           =  null;
     private ElapsedTime period  = new ElapsedTime();
+    private ElapsedTime runtime = new ElapsedTime();
+    //Needs to be changed depending on gear ratio (every 20 is 560 (ex: 20:1 is 560))
+    private final double ticksPerDegree = 1680/360;
 
     /* Constructor */
     public STS_HardwareBotBoy() {
@@ -84,6 +86,41 @@ public class STS_HardwareBotBoy
     public void init(HardwareMap ahwMap) {
         // Save reference to Hardware map
         hwMap = ahwMap;
+    }
+    public void angularArmDrive(double speed,
+                                double degrees,
+                                double timeoutS) {
+        int newArmTarget;
+
+        // Determine new target position, and pass to motor controller
+        newArmTarget = (int)(degrees * -ticksPerDegree);
+        arm.setTargetPosition(newArmTarget);
+
+        // Turn On RUN_TO_POSITION
+        arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+
+        // reset the timeout time and start motion.
+        runtime.reset();
+        arm.setPower(Math.abs(speed));
+
+        // keep looping while we are still active, and there is time left, and both motors are running.
+        // Note: We use (isBusy() && isBusy()) in the loop test, which means that when EITHER motor hits
+        // its target position, the motion will stop.  This is "safer" in the event that the robot will
+        // always end the motion as soon as possible.
+        // However, if you require that BOTH motors have finished their moves before the robot continues
+        // onto the next step, use (isBusy() || isBusy()) in the loop test.
+        while ((runtime.seconds() < timeoutS) &&
+                (arm.isBusy())) {
+        }
+
+        // Stop all motion;
+        arm.setPower(0);
+
+        // Turn off RUN_TO_POSITION
+        arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        //  sleep(250);   // optional pause after each move
     }
  }
 

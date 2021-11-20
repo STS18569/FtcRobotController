@@ -31,6 +31,8 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 
 /**
@@ -62,8 +64,7 @@ public class STS_BotBoyDriverControlledInit extends OpMode{
     double              armLidOffset = 0.0;
     double              ARM_LID_SPEED = 0.001;
 
-    final double        WHEEL_SPEED_MULTIPLIER = 1.0;
-    // final double        LATERAL_ADJUSTMENT     = 0.99;
+    final double        WHEEL_SPEED_MULTIPLIER = 0.8;
 
     public final void sleep(long milliseconds) {
         try {
@@ -83,6 +84,10 @@ public class STS_BotBoyDriverControlledInit extends OpMode{
          */
         botBoyHW = new STS_HardwareBotBoyChassis2022(); // use the class created to define a STS_HardwareManatee's hardware
         botBoyHW.init(hardwareMap);
+
+        botBoyHW.arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        botBoyHW.arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         // Send telemetry message to signify robot waiting;
         telemetry.addData("BREAKING:", "BatBoy Initialized");    //
@@ -115,8 +120,10 @@ public class STS_BotBoyDriverControlledInit extends OpMode{
 
         telemetry.addData("leftDrive.Power", "%.2f", botBoyHW.leftDrive.getPower());
         telemetry.addData("rightDrive.Power", "%.2f", botBoyHW.rightDrive.getPower());
-    }
 
+
+
+    }
     /*
      * Code to run ONCE after the driver hits STOP
      */
