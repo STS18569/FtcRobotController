@@ -90,7 +90,7 @@ public class STS_BotBoyDriverControlled extends STS_BotBoyDriverControlledInit {
         super.loop();
 
         updateKeys();
-        /*
+
         if (gamepad1.left_bumper && !armIsMovingForward) {
             botBoyHW.arm.setPower(0.5);
             armIsMovingForward = true;
@@ -106,16 +106,25 @@ public class STS_BotBoyDriverControlled extends STS_BotBoyDriverControlledInit {
             botBoyHW.arm.setPower(0);
             armIsMovingBackward = false;
         }
+ 
+/*
+        if (gamepad1.dpad_down) {
+            botBoyHW.angularArmDrive(STS_HardwareBotBoy.ArmPosition.REST, 0.4, 2.0);
+        }
+        if (gamepad1.dpad_left) {
+            botBoyHW.angularArmDrive(STS_HardwareBotBoy.ArmPosition.MIDDLE, 0.4, 2.0);
+        }
+        if (gamepad1.dpad_up) {
+            botBoyHW.angularArmDrive(STS_HardwareBotBoy.ArmPosition.TOP, 0.4, 2.0);
+        }
+        if (gamepad1.dpad_right) {
+            botBoyHW.angularArmDrive(STS_HardwareBotBoy.ArmPosition.BOTTOM, 0.4, 2.0);
+        }
+        if ((gamepad1.left_stick_y != 0 || gamepad1.right_stick_y != 0) && (botBoyHW.arm.getCurrentPosition() == 0)) {
+            botBoyHW.angularArmDrive(STS_HardwareBotBoy.ArmPosition.RAISED, 0.4, 2.0);
+        }
+
  */
-
-        if (gamepad1.right_bumper) {
-            botBoyHW.angularArmDrive(0.3, 180, 2.0);
-        }
-
-        if (gamepad1.left_bumper) {
-            botBoyHW.angularArmDrive(0.3, 90, 2.0);
-        }
-
 
         if (gamepad1.triangle) {
             armLidOffset -= ARM_LID_SPEED;
@@ -133,6 +142,7 @@ public class STS_BotBoyDriverControlled extends STS_BotBoyDriverControlledInit {
         telemetry.addData("lid position", "%.2f", botBoyHW.armLid.getPosition());
         telemetry.addData("circle (carousel)", toggleMap1.circle + " " + (runtime.milliseconds() - useMap1.circle));
         telemetry.addData("square (intake)", toggleMap1.square + " " + (runtime.milliseconds() - useMap1.square));
+        telemetry.addData("arm position",  "Running at %7d", botBoyHW.arm.getCurrentPosition());
         telemetry.update();
 
 

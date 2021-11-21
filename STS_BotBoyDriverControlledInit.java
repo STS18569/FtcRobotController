@@ -64,7 +64,7 @@ public class STS_BotBoyDriverControlledInit extends OpMode{
     double              armLidOffset = 0.0;
     double              ARM_LID_SPEED = 0.001;
 
-    final double        WHEEL_SPEED_MULTIPLIER = 0.8;
+    final double        WHEEL_SPEED_MULTIPLIER = 1.0;
 
     public final void sleep(long milliseconds) {
         try {

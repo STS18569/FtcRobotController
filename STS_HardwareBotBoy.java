@@ -71,6 +71,8 @@ public class STS_HardwareBotBoy
 
     public static final double ARM_LID_MID_SERVO =  0.5;
 
+    static enum ArmPosition {REST, RAISED, TOP, MIDDLE, BOTTOM}
+
     /* local OpMode members. */
     HardwareMap hwMap           =  null;
     private ElapsedTime period  = new ElapsedTime();
@@ -87,29 +89,49 @@ public class STS_HardwareBotBoy
         // Save reference to Hardware map
         hwMap = ahwMap;
     }
-    public void angularArmDrive(double speed,
-                                double degrees,
-                                double timeoutS) {
-        int newArmTarget;
+
+    public void angularArmDrive(ArmPosition position, double speed, double timeoutS) {
+
+        int armDegrees = 0;
+
+        switch(position) {
+            case REST:
+                armDegrees = 0;
+                break;
+            case RAISED:
+                armDegrees = 30;
+                break;
+            case TOP:
+                armDegrees = 200;
+                break;
+            case MIDDLE:
+                armDegrees = 220;
+                break;
+            case BOTTOM:
+                armDegrees = 270;
+                break;
+            default:
+        }
 
         // Determine new target position, and pass to motor controller
-        newArmTarget = (int)(degrees * -ticksPerDegree);
+        int newArmTarget = (int) (armDegrees * -ticksPerDegree);
         arm.setTargetPosition(newArmTarget);
 
         // Turn On RUN_TO_POSITION
         arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-
         // reset the timeout time and start motion.
         runtime.reset();
         arm.setPower(Math.abs(speed));
-
+/*
         // keep looping while we are still active, and there is time left, and both motors are running.
         // Note: We use (isBusy() && isBusy()) in the loop test, which means that when EITHER motor hits
         // its target position, the motion will stop.  This is "safer" in the event that the robot will
         // always end the motion as soon as possible.
         // However, if you require that BOTH motors have finished their moves before the robot continues
         // onto the next step, use (isBusy() || isBusy()) in the loop test.
+
+ */
         while ((runtime.seconds() < timeoutS) &&
                 (arm.isBusy())) {
         }
