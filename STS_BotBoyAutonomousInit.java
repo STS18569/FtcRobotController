@@ -77,7 +77,7 @@ public class STS_BotBoyAutonomousInit extends LinearOpMode {
     static final double     WHEEL_BASE              = 11.375;
     static final double     FUDGE_FACTOR            = 0.89;
     static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION * FUDGE_FACTOR) /
-                                                      (WHEEL_DIAMETER_INCHES * 3.1415);
+            (WHEEL_DIAMETER_INCHES * 3.1415);
     static final double     DRIVE_SPEED             = 0.2;
     static final double     LATERAL_ADJUSTMENT      = 1.0;
     static final double     TURN_SPEED              = 0.65;
@@ -92,6 +92,7 @@ public class STS_BotBoyAutonomousInit extends LinearOpMode {
          */
         botBoyHW.init(hardwareMap);
 
+        /*
         botBoyHW.leftFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         botBoyHW.leftBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         botBoyHW.rightFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -109,9 +110,11 @@ public class STS_BotBoyAutonomousInit extends LinearOpMode {
                 botBoyHW.rightFrontDrive.getCurrentPosition(),
                 botBoyHW.rightBackDrive.getCurrentPosition());
 
+         */
+
 
         waitForStart();
-        testMotors();
+        // testMotors();
         //testServos();
     }
 
@@ -230,7 +233,7 @@ public class STS_BotBoyAutonomousInit extends LinearOpMode {
             // telemetry.addData("speed == ", speed);
             // telemetry.addData("timeoutS == ", timeoutS);
             while (opModeIsActive() &&
-                   (runtime.seconds() < timeoutS) &&
+                    (runtime.seconds() < timeoutS) &&
                     ((botBoyHW.leftFrontDrive.isBusy() || botBoyHW.rightFrontDrive.isBusy()))) {
 
                 // Display it for the driver.
@@ -242,9 +245,9 @@ public class STS_BotBoyAutonomousInit extends LinearOpMode {
                 telemetry.addData("timeoutS",  timeoutS);
                  */
                 telemetry.addData("Path1 (target)",  "Running to %7d :%7d :%7d :%7d", newLeftFrontTarget,  newLeftBackTarget,
-                                                                                                      newRightFrontTarget,  newRightBackTarget);
+                        newRightFrontTarget,  newRightBackTarget);
                 telemetry.addData("Path2 (position)",  "Running at %7d :%7d :%7d :%7d", botBoyHW.leftFrontDrive.getCurrentPosition(), botBoyHW.leftBackDrive.getCurrentPosition(),
-                                                                                                        botBoyHW.rightFrontDrive.getCurrentPosition(), botBoyHW.rightBackDrive.getCurrentPosition());
+                        botBoyHW.rightFrontDrive.getCurrentPosition(), botBoyHW.rightBackDrive.getCurrentPosition());
                 // telemetry.addData("EncoderDrive", "time(%3d) : %3f", timeoutS, runtime.seconds());
                 telemetry.addData("EncoderDrive: time: ", runtime.seconds());
                 telemetry.update();
