@@ -49,9 +49,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  */
 
 
-@TeleOp(name="Narwhal: Driver Controlled", group="Freight Frenzy")
+@TeleOp(name="Narwhal: Driver Controlled", group="FreightFrenzy")
 // @Disabled
-public class STS_BotBoyDriverControlled extends STS_BotBoyDriverControlledInit {
+public class PPE_NarwhalDriverControlled extends PPE_NarwhalDriverControlledInit {
     private ElapsedTime runtime = new ElapsedTime();
     /*
     Insert useMap1.a = runtime.milliseconds(); after every use of gamepad1.a to reset the cooldown.
@@ -92,18 +92,18 @@ public class STS_BotBoyDriverControlled extends STS_BotBoyDriverControlledInit {
         updateKeys();
 
         if (gamepad1.left_bumper && !armIsMovingForward) {
-            botBoyHW.arm.setPower(0.5);
+            narwhalHW.arm.setPower(0.5);
             armIsMovingForward = true;
         } else if (!gamepad1.left_bumper && armIsMovingForward) {
-            botBoyHW.arm.setPower(0);
+            narwhalHW.arm.setPower(0);
             armIsMovingForward = false;
         }
 
         if (gamepad1.right_bumper && !armIsMovingBackward) {
-            botBoyHW.arm.setPower(-0.5);
+            narwhalHW.arm.setPower(-0.5);
             armIsMovingBackward = true;
         } else if (!gamepad1.right_bumper && armIsMovingBackward) {
-            botBoyHW.arm.setPower(0);
+            narwhalHW.arm.setPower(0);
             armIsMovingBackward = false;
         }
 
@@ -135,14 +135,14 @@ public class STS_BotBoyDriverControlled extends STS_BotBoyDriverControlledInit {
         }
 
 
-        armLidOffset = Range.clip(armLidOffset, (-1.0 - botBoyHW.ARM_LID_MID_SERVO), (1.0 - botBoyHW.ARM_LID_MID_SERVO));
-        botBoyHW.armLid.setPosition(botBoyHW.ARM_LID_MID_SERVO + armLidOffset);
+        armLidOffset = Range.clip(armLidOffset, (-1.0 - narwhalHW.ARM_LID_MID_SERVO), (1.0 - narwhalHW.ARM_LID_MID_SERVO));
+        narwhalHW.armLid.setPosition(narwhalHW.ARM_LID_MID_SERVO + armLidOffset);
 
         // Send telemetry message to signify robot running;
-        telemetry.addData("lid position", "%.2f", botBoyHW.armLid.getPosition());
+        telemetry.addData("lid position", "%.2f", narwhalHW.armLid.getPosition());
         telemetry.addData("circle (carousel)", toggleMap1.circle + " " + (runtime.milliseconds() - useMap1.circle));
         telemetry.addData("square (intake)", toggleMap1.square + " " + (runtime.milliseconds() - useMap1.square));
-        telemetry.addData("arm position",  "Running at %7d", botBoyHW.arm.getCurrentPosition());
+        telemetry.addData("arm position",  "Running at %7d", narwhalHW.arm.getCurrentPosition());
         telemetry.update();
 
 
@@ -153,30 +153,30 @@ public class STS_BotBoyDriverControlled extends STS_BotBoyDriverControlledInit {
             toggleMap1.circle = toggle(toggleMap1.circle);
             useMap1.circle = runtime.milliseconds();
             carouselIsMoving = true;
-            botBoyHW.carousel.setPower(1.0);
+            narwhalHW.carousel.setPower(1.0);
         }
 
         if(gamepad1.circle && cdCheck(useMap1.circle, 500) && carouselIsMoving){
             toggleMap1.circle = toggle(toggleMap1.circle);
             useMap1.circle = runtime.milliseconds();
             carouselIsMoving = false;
-            botBoyHW.carousel.setPower(0.0);
+            narwhalHW.carousel.setPower(0.0);
         }
 
         if(gamepad1.square && cdCheck(useMap1.square, 500) && !intakeIsMoving){
             toggleMap1.square = toggle(toggleMap1.square);
             useMap1.square = runtime.milliseconds();
             intakeIsMoving = true;
-            botBoyHW.intakeLeft.setPower(-1.0);
-            botBoyHW.intakeRight.setPower(1.0);
+            narwhalHW.intakeLeft.setPower(-1.0);
+            narwhalHW.intakeRight.setPower(1.0);
         }
 
         if(gamepad1.square && cdCheck(useMap1.square, 500) && intakeIsMoving){
             toggleMap1.square = toggle(toggleMap1.square);
             useMap1.square = runtime.milliseconds();
             intakeIsMoving = false;
-            botBoyHW.intakeLeft.setPower(0.0);
-            botBoyHW.intakeRight.setPower(0.0);
+            narwhalHW.intakeLeft.setPower(0.0);
+            narwhalHW.intakeRight.setPower(0.0);
         }
         /*
 

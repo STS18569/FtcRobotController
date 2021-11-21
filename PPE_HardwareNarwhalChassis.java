@@ -31,7 +31,6 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 /**
@@ -50,13 +49,13 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Servo channel:  Servo to open left claw:  "left_hand"
  * Servo channel:  Servo to open right claw: "right_hand"
  */
-public class STS_HardwareBotBoyChassis extends STS_HardwareBotBoy
+public class PPE_HardwareNarwhalChassis extends PPE_HardwareNarwhal
 {
     /* local OpMode members. */
     private ElapsedTime period  = new ElapsedTime();
 
     /* Constructor */
-    public STS_HardwareBotBoyChassis(){
+    public PPE_HardwareNarwhalChassis(){
 
     }
 

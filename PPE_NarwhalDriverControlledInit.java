@@ -32,7 +32,6 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 
 /**
@@ -50,11 +49,11 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="BotBoy: Driver Controlled Init", group="`Freight Frenzy`")
+@TeleOp(name="Narwhal: Driver Controlled Init", group="FreightFrenzy")
 // @Disabled
-public class STS_BotBoyDriverControlledInit extends OpMode{
+public class PPE_NarwhalDriverControlledInit extends OpMode{
     /* Declare OpMode members. */
-    public STS_HardwareBotBoy botBoyHW;
+    public PPE_HardwareNarwhal narwhalHW;
 
     boolean             carouselIsMoving = false;
     boolean             armIsMovingForward = false;
@@ -82,12 +81,12 @@ public class STS_BotBoyDriverControlledInit extends OpMode{
         /* Initialize the hardware variables.
          * The init() method of the hardware class does all the work here
          */
-        botBoyHW = new STS_HardwareBotBoyChassis2022(); // use the class created to define a STS_HardwareManatee's hardware
-        botBoyHW.init(hardwareMap);
+        narwhalHW = new PPE_HardwareNarwhalChassis2022(); // use the class created to define a STS_HardwareManatee's hardware
+        narwhalHW.init(hardwareMap);
 
-        botBoyHW.arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        narwhalHW.arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        botBoyHW.arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        narwhalHW.arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         // Send telemetry message to signify robot waiting;
         telemetry.addData("BREAKING:", "BatBoy Initialized");    //
@@ -115,11 +114,11 @@ public class STS_BotBoyDriverControlledInit extends OpMode{
         double left = gamepad1.left_stick_y;
         double right = gamepad1.right_stick_y;
 
-        botBoyHW.leftDrive.setPower(WHEEL_SPEED_MULTIPLIER * left);
-        botBoyHW.rightDrive.setPower(WHEEL_SPEED_MULTIPLIER * right);
+        narwhalHW.leftDrive.setPower(WHEEL_SPEED_MULTIPLIER * left);
+        narwhalHW.rightDrive.setPower(WHEEL_SPEED_MULTIPLIER * right);
 
-        telemetry.addData("leftDrive.Power", "%.2f", botBoyHW.leftDrive.getPower());
-        telemetry.addData("rightDrive.Power", "%.2f", botBoyHW.rightDrive.getPower());
+        telemetry.addData("leftDrive.Power", "%.2f", narwhalHW.leftDrive.getPower());
+        telemetry.addData("rightDrive.Power", "%.2f", narwhalHW.rightDrive.getPower());
 
 
 

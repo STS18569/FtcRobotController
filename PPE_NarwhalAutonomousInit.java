@@ -29,7 +29,6 @@
 
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -61,12 +60,12 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-//@Autonomous(name="Manatee: Autonomous Init and Test", group="UltimateGoal")
+//@Autonomous(name="Narwhal: Autonomous Init", group="FreightFrenzy")
 //@Disabled
-public abstract class STS_BotBoyAutonomousInit extends LinearOpMode {
+public abstract class PPE_NarwhalAutonomousInit extends LinearOpMode {
 
     /* Declare OpMode members. */
-    STS_HardwareBotBoy botBoyHW = new STS_HardwareBotBoyChassis2022();   // Use a Pushbot's hardware
+    PPE_HardwareNarwhal narwhalHW = new PPE_HardwareNarwhalChassis2022();   // Use a Pushbot's hardware
     private ElapsedTime     runtime = new ElapsedTime();
 
     static final double     COUNTS_PER_MOTOR_REV    = 28.0;    // eg: TETRIX Motor Encoder
@@ -87,18 +86,18 @@ public abstract class STS_BotBoyAutonomousInit extends LinearOpMode {
          * Initialize the drive system variables.
          * The init() method of the hardware class does all the work here
          */
-        botBoyHW.init(hardwareMap);
+        narwhalHW.init(hardwareMap);
 
-        botBoyHW.leftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        botBoyHW.rightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        narwhalHW.leftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        narwhalHW.rightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        botBoyHW.leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        botBoyHW.rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        narwhalHW.leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        narwhalHW.rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         // Send telemetry message to indicate successful Encoder reset
         telemetry.addData("Path0",  "Starting at %7d :%7d",
-                botBoyHW.leftDrive.getCurrentPosition(),
-                botBoyHW.rightDrive.getCurrentPosition());
+                narwhalHW.leftDrive.getCurrentPosition(),
+                narwhalHW.rightDrive.getCurrentPosition());
 
 
         waitForStart();
@@ -143,24 +142,24 @@ public abstract class STS_BotBoyAutonomousInit extends LinearOpMode {
         if (opModeIsActive()) {
             // Determine new target position, and pass to motor controller
 
-                    newLeftTarget = botBoyHW.leftDrive.getCurrentPosition() + (int)(-leftInches * COUNTS_PER_INCH);
-                    newRightTarget = botBoyHW.rightDrive.getCurrentPosition() + (int)(-rightInches * COUNTS_PER_INCH);
+                    newLeftTarget = narwhalHW.leftDrive.getCurrentPosition() + (int)(-leftInches * COUNTS_PER_INCH);
+                    newRightTarget = narwhalHW.rightDrive.getCurrentPosition() + (int)(-rightInches * COUNTS_PER_INCH);
                     // code block
             }
 
-            botBoyHW.leftDrive.setTargetPosition(newLeftTarget);
-            botBoyHW.rightDrive.setTargetPosition(newRightTarget);
+            narwhalHW.leftDrive.setTargetPosition(newLeftTarget);
+            narwhalHW.rightDrive.setTargetPosition(newRightTarget);
 
 
             // Turn On RUN_TO_POSITION
-            botBoyHW.leftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            botBoyHW.rightDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            narwhalHW.leftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            narwhalHW.rightDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
 
             // reset the timeout time and start motion.
             runtime.reset();
-            botBoyHW.leftDrive.setPower(Math.abs(speed));
-            botBoyHW.rightDrive.setPower(Math.abs(speed));
+            narwhalHW.leftDrive.setPower(Math.abs(speed));
+            narwhalHW.rightDrive.setPower(Math.abs(speed));
 
             // keep looping while we are still active, and there is time left, and both motors are running.
             // Note: We use (isBusy() && isBusy()) in the loop test, which means that when EITHER motor hits
@@ -172,7 +171,7 @@ public abstract class STS_BotBoyAutonomousInit extends LinearOpMode {
             // telemetry.addData("timeoutS == ", timeoutS);
             while (opModeIsActive() &&
                    (runtime.seconds() < timeoutS) &&
-                    ((botBoyHW.leftDrive.isBusy() || botBoyHW.rightDrive.isBusy()))) {
+                    ((narwhalHW.leftDrive.isBusy() || narwhalHW.rightDrive.isBusy()))) {
 
                 // Display it for the driver.
                 /*
@@ -183,18 +182,18 @@ public abstract class STS_BotBoyAutonomousInit extends LinearOpMode {
                 telemetry.addData("timeoutS",  timeoutS);
                  */
                 telemetry.addData("Path1 (target)",  "Running to %7d :%7d", newLeftTarget,  newRightTarget);
-                telemetry.addData("Path2 (position)",  "Running at %7d :%7d", botBoyHW.leftDrive.getCurrentPosition(), botBoyHW.rightDrive.getCurrentPosition());
+                telemetry.addData("Path2 (position)",  "Running at %7d :%7d", narwhalHW.leftDrive.getCurrentPosition(), narwhalHW.rightDrive.getCurrentPosition());
                 // telemetry.addData("EncoderDrive", "time(%3d) : %3f", timeoutS, runtime.seconds());
                 telemetry.addData("EncoderDrive: time: ", runtime.seconds());
                 telemetry.update();
             }
 
             // Stop all motion;
-            botBoyHW.leftDrive.setPower(0);
-            botBoyHW.rightDrive.setPower(0);
+            narwhalHW.leftDrive.setPower(0);
+            narwhalHW.rightDrive.setPower(0);
 
             // Turn off RUN_TO_POSITION
-            botBoyHW.leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            botBoyHW.rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            narwhalHW.leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            narwhalHW.rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
 }

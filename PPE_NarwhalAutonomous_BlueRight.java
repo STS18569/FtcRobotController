@@ -30,9 +30,6 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 /**
  * This file illustrates the concept of driving a path based on encoder counts.
@@ -61,13 +58,13 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Manatee: Blue Right Autonomous", group="UltimateGoal")
+@Autonomous(name="Narwhal: Blue Right Autonomous", group="FreightFrenzy")
 //@Disabled
-public class STS_BotBoyAutonomous_BlueRight extends STS_BotBoyAutonomousInit {
+public class PPE_NarwhalAutonomous_BlueRight extends PPE_NarwhalAutonomousInit {
 
     @Override
     public void runAutonomousMode() {
-        //Drives foward and changes directions
+        //Drives forward and changes directions
         encoderDrive(DRIVE_SPEED,0,9,  9, 2.0);
         sleep(200);
         encoderDrive(TURN_SPEED,-72,0,  0, 4.0);
@@ -76,10 +73,10 @@ public class STS_BotBoyAutonomous_BlueRight extends STS_BotBoyAutonomousInit {
         encoderDrive(DRIVE_SPEED,0,-33,  -33, 2.0);
         encoderDrive(DRIVE_SPEED, 0, -1,-1,2.0);
         //Turns carousel
-        botBoyHW.carousel.setPower(1);
+        narwhalHW.carousel.setPower(1);
         sleep(4000);
-        botBoyHW.carousel.setPower(0);
-        //Foward into alliance warehouse
+        narwhalHW.carousel.setPower(0);
+        //Forward into alliance warehouse
         encoderDrive(TURN_SPEED,-15,0,  0, 4.0);
         encoderDrive(DRIVE_SPEED, 0, 0, 3, 1.0);
         encoderDrive(DRIVE_SPEED, 0, 108,108,12.0);

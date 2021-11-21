@@ -53,7 +53,7 @@ import java.util.List;
  */
 @TeleOp(name = "Concept: TensorFlow Object Detection", group = "Concept")
 //@Disabled
-public class STS_ConceptTensorFlowObjectDetection extends LinearOpMode {
+public class PPE_ConceptTensorFlowObjectDetection extends LinearOpMode {
     private static final String TFOD_MODEL_ASSET = "STS_Model.tflite";
     private static final String LABEL_FIRST_ELEMENT = "Ball";
     private static final String LABEL_SECOND_ELEMENT = "Box";

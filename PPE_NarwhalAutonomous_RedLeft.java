@@ -58,20 +58,20 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Manatee: Red Left Autonomous", group="UltimateGoal")
+@Autonomous(name="Narwhal: Red Left Autonomous", group="FreightFrenzy")
 //@Disabled
-public class STS_BotBoyAutonomous_RedLeft extends STS_BotBoyAutonomousInit {
+public class PPE_NarwhalAutonomous_RedLeft extends PPE_NarwhalAutonomousInit {
 
     @Override
     public void runAutonomousMode() {
-        //this dont work lmfao, not testing
+        //this doesnt work lmfao, not testing
         encoderDrive(DRIVE_SPEED,0,3,  3, 2.0);
         sleep(200);
         encoderDrive(TURN_SPEED,-90,0,  0, 2.0);
         sleep(200);
         encoderDrive(DRIVE_SPEED,0,16,  16, 2.0);
 
-        botBoyHW.angularArmDrive(STS_HardwareBotBoy.ArmPosition.RAISED, 0.4, 4.0);
-        botBoyHW.armLid.setPosition(-1.0);
+        narwhalHW.angularArmDrive(PPE_HardwareNarwhal.ArmPosition.RAISED, 0.4, 4.0);
+        narwhalHW.armLid.setPosition(-1.0);
     }
 }

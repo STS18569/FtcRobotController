@@ -51,13 +51,13 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Servo channel:  Servo to open left claw:  "left_hand"
  * Servo channel:  Servo to open right claw: "right_hand"
  */
-public class STS_HardwareBotBoyChassis2022 extends STS_HardwareBotBoyChassis
+public class PPE_HardwareNarwhalChassis2022 extends PPE_HardwareNarwhalChassis
 {
      /* local OpMode members. */
     private ElapsedTime period  = new ElapsedTime();
 
     /* Constructor */
-    public STS_HardwareBotBoyChassis2022(){
+    public PPE_HardwareNarwhalChassis2022(){
 
     }
 

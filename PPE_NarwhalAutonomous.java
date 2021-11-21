@@ -51,9 +51,9 @@ import java.util.List;
  * IMPORTANT: In order to use this OpMode, you need to obtain your own Vuforia license key as
  * is explained below.
  */
-@Autonomous(name = "Narwhal: Autonomous", group = "UltimateGoal")
+@Autonomous(name = "Narwhal: Autonomous", group = "FreightFrenzy")
 // @Disabled
-public class STS_BotBoyAutonomous extends STS_BotBoyAutonomousInit {
+public class PPE_NarwhalAutonomous extends PPE_NarwhalAutonomousInit {
     private static final String TFOD_MODEL_ASSET = "STS_Model.tflite"; //Available on Keep
     private static final String LABEL_FIRST_ELEMENT = "Ball";
     private static final String LABEL_SECOND_ELEMENT = "Box";
