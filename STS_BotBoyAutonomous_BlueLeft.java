@@ -64,8 +64,14 @@ public class STS_BotBoyAutonomous_BlueLeft extends STS_BotBoyAutonomousInit {
 
     @Override
     public void runAutonomousMode() {
-        encoderDrive(DRIVE_SPEED,0,48,  48, 10.0);
-        sleep(2000);
-        encoderDrive(TURN_SPEED,90,0,  0, 10.0);
+        //this dont work lmfao
+        encoderDrive(DRIVE_SPEED,0,3,  3, 2.0);
+        sleep(200);
+        encoderDrive(TURN_SPEED,-90,0,  0, 2.0);
+        sleep(200);
+        encoderDrive(DRIVE_SPEED,0,16,  16, 2.0);
+
+        botBoyHW.angularArmDrive(STS_HardwareBotBoy.ArmPosition.RAISED, 0.4, 4.0);
+        botBoyHW.armLid.setPosition(-1.0);
     }
 }

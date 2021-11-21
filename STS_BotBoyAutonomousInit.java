@@ -77,7 +77,7 @@ public abstract class STS_BotBoyAutonomousInit extends LinearOpMode {
     static final double     COUNTS_PER_INCH         = 22.48;
     static final double     DRIVE_SPEED             = 0.3;
     static final double     LATERAL_ADJUSTMENT      = 1.0;
-    static final double     TURN_SPEED              = 0.06;
+    static final double     TURN_SPEED              = 0.09;
     static final double     REAL_TURN_SPEED         = 0.35;
     static final double     TURN_FUDGE_FACTOR       = 0.75;
 

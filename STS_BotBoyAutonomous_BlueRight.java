@@ -67,8 +67,24 @@ public class STS_BotBoyAutonomous_BlueRight extends STS_BotBoyAutonomousInit {
 
     @Override
     public void runAutonomousMode() {
-        encoderDrive(DRIVE_SPEED,0,48,  48, 10.0);
-        sleep(2000);
-        encoderDrive(TURN_SPEED,90,0,  0, 10.0);
+        //Drives foward and changes directions
+        encoderDrive(DRIVE_SPEED,0,9,  9, 2.0);
+        sleep(200);
+        encoderDrive(TURN_SPEED,-72,0,  0, 4.0);
+        sleep(200);
+        //Backs up to carousel
+        encoderDrive(DRIVE_SPEED,0,-33,  -33, 2.0);
+        encoderDrive(DRIVE_SPEED, 0, -1,-1,2.0);
+        //Turns carousel
+        botBoyHW.carousel.setPower(1);
+        sleep(4000);
+        botBoyHW.carousel.setPower(0);
+        //Foward into alliance warehouse
+        encoderDrive(TURN_SPEED,-15,0,  0, 4.0);
+        encoderDrive(DRIVE_SPEED, 0, 0, 3, 1.0);
+        encoderDrive(DRIVE_SPEED, 0, 108,108,12.0);
+
+
+
     }
 }

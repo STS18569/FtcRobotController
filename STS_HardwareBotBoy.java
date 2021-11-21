@@ -69,9 +69,9 @@ public class STS_HardwareBotBoy
     public CRServo  intakeLeft          = null;
     public CRServo  intakeRight         = null;
 
-    public static final double ARM_LID_MID_SERVO =  0.5;
+    public static final double ARM_LID_MID_SERVO =  1;
 
-    static enum ArmPosition {REST, RAISED, TOP, MIDDLE, BOTTOM}
+    static enum ArmPosition {REST, RAISED, TOP, MIDDLE, BOTTOM, FRONT}
 
     /* local OpMode members. */
     HardwareMap hwMap           =  null;
@@ -109,6 +109,9 @@ public class STS_HardwareBotBoy
                 break;
             case BOTTOM:
                 armDegrees = 270;
+                break;
+            case FRONT:
+                armDegrees = 45;
                 break;
             default:
         }
