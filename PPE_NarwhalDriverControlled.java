@@ -49,7 +49,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  */
 
 
-@TeleOp(name="BotBoy: Driver Controlled", group="Freight Frenzy")
+@TeleOp(name="Narwhal: Driver Controlled", group="Freight Frenzy")
 // @Disabled
 public class STS_BotBoyDriverControlled extends STS_BotBoyDriverControlledInit {
     private ElapsedTime runtime = new ElapsedTime();
