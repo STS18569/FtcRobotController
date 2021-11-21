@@ -61,26 +61,23 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Manatee: Autonomous Init and Test", group="UltimateGoal")
+//@Autonomous(name="Manatee: Autonomous Init and Test", group="UltimateGoal")
 //@Disabled
-public class STS_BotBoyAutonomousInit extends LinearOpMode {
+public abstract class STS_BotBoyAutonomousInit extends LinearOpMode {
 
     /* Declare OpMode members. */
     STS_HardwareBotBoy botBoyHW = new STS_HardwareBotBoyChassis2022();   // Use a Pushbot's hardware
     private ElapsedTime     runtime = new ElapsedTime();
 
-    static enum             DriveMode {LAT_LEFT, LAT_RIGHT, LINEAR};
-
     static final double     COUNTS_PER_MOTOR_REV    = 28.0;    // eg: TETRIX Motor Encoder
     static final double     DRIVE_GEAR_REDUCTION    = 4.0;     // This is < 1.0 if geared UP
-    static final double     WHEEL_DIAMETER_INCHES   = 4.0;     // For figuring circumference
-    static final double     WHEEL_BASE              = 11.375;
+    static final double     WHEEL_DIAMETER_INCHES   = 3.5;     // For figuring circumference
+    static final double     WHEEL_BASE              = 10.8;
     static final double     FUDGE_FACTOR            = 0.89;
-    static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION * FUDGE_FACTOR) /
-            (WHEEL_DIAMETER_INCHES * 3.1415);
-    static final double     DRIVE_SPEED             = 0.2;
+    static final double     COUNTS_PER_INCH         = 22.48;
+    static final double     DRIVE_SPEED             = 0.3;
     static final double     LATERAL_ADJUSTMENT      = 1.0;
-    static final double     TURN_SPEED              = 0.65;
+    static final double     TURN_SPEED              = 0.06;
     static final double     REAL_TURN_SPEED         = 0.35;
     static final double     TURN_FUDGE_FACTOR       = 0.75;
 
@@ -92,58 +89,24 @@ public class STS_BotBoyAutonomousInit extends LinearOpMode {
          */
         botBoyHW.init(hardwareMap);
 
-        /*
-        botBoyHW.leftFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        botBoyHW.leftBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        botBoyHW.rightFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        botBoyHW.rightBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        botBoyHW.leftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        botBoyHW.rightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        botBoyHW.leftBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        botBoyHW.rightFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        botBoyHW.rightBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        botBoyHW.leftFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        botBoyHW.leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        botBoyHW.rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         // Send telemetry message to indicate successful Encoder reset
-        telemetry.addData("Path0",  "Starting at %7d :%7d :%7d :%7d",
-                botBoyHW.leftFrontDrive.getCurrentPosition(),
-                botBoyHW.leftBackDrive.getCurrentPosition(),
-                botBoyHW.rightFrontDrive.getCurrentPosition(),
-                botBoyHW.rightBackDrive.getCurrentPosition());
-
-         */
+        telemetry.addData("Path0",  "Starting at %7d :%7d",
+                botBoyHW.leftDrive.getCurrentPosition(),
+                botBoyHW.rightDrive.getCurrentPosition());
 
 
         waitForStart();
-        // testMotors();
-        //testServos();
+
+        runAutonomousMode();
     }
 
-    public void testMotors() {
-        /*
-        encoderDrive(DRIVE_SPEED,  0,   4.712,  0, 5.0);  //Forward 12 inches with 5 sec timeout
-        encoderDrive(DRIVE_SPEED,  0,   4.24,  4.24, 5.0);  //Turns 45 degrees to the left with 5 Sec timeout
-        encoderDrive(DRIVE_SPEED,  0,   0,  9.425, 5.0);  //Forward 24 inches with 5 sec timeout
-        encoderDrive(DRIVE_SPEED,  0,   4.24,  4.24, 5.0);  //Turns 45 degrees to the right with 5 sec timeout
-        encoderDrive(DRIVE_SPEED,  0,   0,  4.712, 5.0);  //Forward 24 inches with 5 sec timeout
-         */
-
-        encoderDrive(DriveMode.LINEAR, DRIVE_SPEED,  0,   72,  72, 10.0);
-        /*sleep(3000);
-        encoderDrive(DriveMode.LAT_LEFT, DRIVE_SPEED,  0,   10,  10, 10.0);
-        sleep(000);
-        encoderDrive(DriveMode.LAT_RIGHT, DRIVE_SPEED,  0,   10,  10, 10.0);
-        sleep(3000);
-        if (!STS_HardwareManatee.CHASSIS_ONLY) {
-            manatee.wobbleArm.setPosition(-0.4);
-            sleep(5000);
-            manatee.wobbleClaw.setPosition(0.8);
-        }
-         */
-    }
-
-    public void testServos() {
-
-    }
+    public abstract void runAutonomousMode();
 
     /*
      *  Method to perform a relative move, based on encoder counts.
@@ -154,18 +117,18 @@ public class STS_BotBoyAutonomousInit extends LinearOpMode {
      *  3) Driver stops the opmode running.
      */
 
-    public void encoderDrive(DriveMode mode, double speed, double degree,
+    public void encoderDrive(double speed, double degree,
                              double leftInches, double rightInches,
                              double timeoutS) {
 
         if (degree < 0) {
             leftInches = degree*((WHEEL_BASE * Math.PI)/360);
-            rightInches = -(TURN_FUDGE_FACTOR *(degree*((WHEEL_BASE * Math.PI)/360)));
+            rightInches = -((degree*((WHEEL_BASE * Math.PI)/360)));
         }
 
         else if (degree > 0) {
             rightInches = degree*((WHEEL_BASE * Math.PI)/360);
-            leftInches = -(TURN_FUDGE_FACTOR *(degree*((WHEEL_BASE * Math.PI)/360)));
+            leftInches = -((degree*((WHEEL_BASE * Math.PI)/360)));
         }
 
         else if (degree == 0) {
@@ -173,56 +136,31 @@ public class STS_BotBoyAutonomousInit extends LinearOpMode {
             rightInches = rightInches;
         }
 
-        int newLeftFrontTarget = 0;
-        int newLeftBackTarget = 0;
-        int newRightFrontTarget = 0;
-        int newRightBackTarget = 0;
-
+        int newLeftTarget = 0;
+        int newRightTarget = 0;
 
         // Ensure that the opmode is still active
         if (opModeIsActive()) {
             // Determine new target position, and pass to motor controller
-            switch(mode) {
-                case LINEAR:
-                    newLeftFrontTarget = botBoyHW.leftFrontDrive.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
-                    newLeftBackTarget = botBoyHW.leftBackDrive.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
-                    newRightFrontTarget = botBoyHW.rightFrontDrive.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
-                    newRightBackTarget = botBoyHW.rightBackDrive.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
-                    break;
-                case LAT_LEFT:
-                    newLeftFrontTarget = botBoyHW.leftFrontDrive.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
-                    newLeftBackTarget = botBoyHW.leftBackDrive.getCurrentPosition() + (int)(-rightInches * COUNTS_PER_INCH);
-                    newRightFrontTarget = botBoyHW.rightFrontDrive.getCurrentPosition() + (int)(-rightInches * COUNTS_PER_INCH);
-                    newRightBackTarget = botBoyHW.rightBackDrive.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
-                    break;
-                case LAT_RIGHT:
-                    newLeftFrontTarget = botBoyHW.leftFrontDrive.getCurrentPosition() + (int)(-leftInches * COUNTS_PER_INCH);
-                    newLeftBackTarget = botBoyHW.leftBackDrive.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
-                    newRightFrontTarget = botBoyHW.rightFrontDrive.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
-                    newRightBackTarget = botBoyHW.rightBackDrive.getCurrentPosition() + (int)(-leftInches * COUNTS_PER_INCH);
-                    break;
-                default:
+
+                    newLeftTarget = botBoyHW.leftDrive.getCurrentPosition() + (int)(-leftInches * COUNTS_PER_INCH);
+                    newRightTarget = botBoyHW.rightDrive.getCurrentPosition() + (int)(-rightInches * COUNTS_PER_INCH);
                     // code block
             }
 
-            botBoyHW.leftFrontDrive.setTargetPosition(newLeftFrontTarget);
-            botBoyHW.leftBackDrive.setTargetPosition(newLeftBackTarget);
-            botBoyHW.rightFrontDrive.setTargetPosition(newRightFrontTarget);
-            botBoyHW.rightBackDrive.setTargetPosition(newRightBackTarget);
+            botBoyHW.leftDrive.setTargetPosition(newLeftTarget);
+            botBoyHW.rightDrive.setTargetPosition(newRightTarget);
+
 
             // Turn On RUN_TO_POSITION
-            botBoyHW.leftFrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            botBoyHW.leftBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            botBoyHW.rightFrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            botBoyHW.rightBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            botBoyHW.leftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            botBoyHW.rightDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
 
             // reset the timeout time and start motion.
             runtime.reset();
-            botBoyHW.leftFrontDrive.setPower(Math.abs(speed));
-            botBoyHW.leftBackDrive.setPower(Math.abs(speed));
-            //sleep(0100);
-            botBoyHW.rightFrontDrive.setPower(Math.abs(speed));
-            botBoyHW.rightBackDrive.setPower(Math.abs(speed));
+            botBoyHW.leftDrive.setPower(Math.abs(speed));
+            botBoyHW.rightDrive.setPower(Math.abs(speed));
 
             // keep looping while we are still active, and there is time left, and both motors are running.
             // Note: We use (isBusy() && isBusy()) in the loop test, which means that when EITHER motor hits
@@ -233,8 +171,8 @@ public class STS_BotBoyAutonomousInit extends LinearOpMode {
             // telemetry.addData("speed == ", speed);
             // telemetry.addData("timeoutS == ", timeoutS);
             while (opModeIsActive() &&
-                    (runtime.seconds() < timeoutS) &&
-                    ((botBoyHW.leftFrontDrive.isBusy() || botBoyHW.rightFrontDrive.isBusy()))) {
+                   (runtime.seconds() < timeoutS) &&
+                    ((botBoyHW.leftDrive.isBusy() || botBoyHW.rightDrive.isBusy()))) {
 
                 // Display it for the driver.
                 /*
@@ -244,26 +182,19 @@ public class STS_BotBoyAutonomousInit extends LinearOpMode {
                 telemetry.addData("rightInches",  rightInches);
                 telemetry.addData("timeoutS",  timeoutS);
                  */
-                telemetry.addData("Path1 (target)",  "Running to %7d :%7d :%7d :%7d", newLeftFrontTarget,  newLeftBackTarget,
-                        newRightFrontTarget,  newRightBackTarget);
-                telemetry.addData("Path2 (position)",  "Running at %7d :%7d :%7d :%7d", botBoyHW.leftFrontDrive.getCurrentPosition(), botBoyHW.leftBackDrive.getCurrentPosition(),
-                        botBoyHW.rightFrontDrive.getCurrentPosition(), botBoyHW.rightBackDrive.getCurrentPosition());
+                telemetry.addData("Path1 (target)",  "Running to %7d :%7d", newLeftTarget,  newRightTarget);
+                telemetry.addData("Path2 (position)",  "Running at %7d :%7d", botBoyHW.leftDrive.getCurrentPosition(), botBoyHW.rightDrive.getCurrentPosition());
                 // telemetry.addData("EncoderDrive", "time(%3d) : %3f", timeoutS, runtime.seconds());
                 telemetry.addData("EncoderDrive: time: ", runtime.seconds());
                 telemetry.update();
             }
 
             // Stop all motion;
-            botBoyHW.leftFrontDrive.setPower(0);
-            botBoyHW.leftBackDrive.setPower(0);
-            botBoyHW.rightFrontDrive.setPower(0);
-            botBoyHW.rightBackDrive.setPower(0);
+            botBoyHW.leftDrive.setPower(0);
+            botBoyHW.rightDrive.setPower(0);
 
             // Turn off RUN_TO_POSITION
-            botBoyHW.leftFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            botBoyHW.leftBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            botBoyHW.rightFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            botBoyHW.rightBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            botBoyHW.leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            botBoyHW.rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
-    }
 }

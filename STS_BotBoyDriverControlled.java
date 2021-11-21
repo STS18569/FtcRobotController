@@ -106,7 +106,7 @@ public class STS_BotBoyDriverControlled extends STS_BotBoyDriverControlledInit {
             botBoyHW.arm.setPower(0);
             armIsMovingBackward = false;
         }
- 
+
 /*
         if (gamepad1.dpad_down) {
             botBoyHW.angularArmDrive(STS_HardwareBotBoy.ArmPosition.REST, 0.4, 2.0);

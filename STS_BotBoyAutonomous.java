@@ -54,14 +54,12 @@ import java.util.List;
 @Autonomous(name = "Manatee: Autonomous", group = "UltimateGoal")
 // @Disabled
 public class STS_BotBoyAutonomous extends STS_BotBoyAutonomousInit {
-    private static final String TFOD_MODEL_ASSET = "STS_Model.tflite";
-    private static final String[] LABELS = {
-            "Ball",
-            "Box",
-            "Duck",
-            "TempSE"
-    };
-    private static final double SCAN_FOR_ELEMENT_TIMEOUT = 10.0;
+    private static final String TFOD_MODEL_ASSET = "STS_Model.tflite"; //Available on Keep
+    private static final String LABEL_FIRST_ELEMENT = "Ball";
+    private static final String LABEL_SECOND_ELEMENT = "Box";
+    private static final String LABEL_THIRD_ELEMENT = "Duck";
+    private static final String LABEL_FOURTH_ELEMENT = "TempSE";
+    private static final double SCAN_FOR_ELEMENT_TIMEOUT = 3.0;
 
     private ElapsedTime scanForElementTime = new ElapsedTime();
     private boolean foundElement = false;
@@ -94,8 +92,8 @@ public class STS_BotBoyAutonomous extends STS_BotBoyAutonomousInit {
      */
     private TFObjectDetector tfod;
 
-    // @Override
-    public void runOpMode() {
+    @Override
+    public void runAutonomousMode() {
         super.runOpMode();
 
         initVuforia();
@@ -145,41 +143,15 @@ public class STS_BotBoyAutonomous extends STS_BotBoyAutonomousInit {
                                     recognition.getRight(), recognition.getBottom());
 
                             switch (recognition.getLabel()) {
-                                case "Ball":
+                                case LABEL_FIRST_ELEMENT:
                                     telemetry.addLine("foundElement == LABEL_FIRST_ELEMENT");
-                                    //telemetry.update();
-                                    // sleep(250);
-                                    //encoderDrive(DriveMode.LINEAR, DRIVE_SPEED,  0,   100,  100, 10);
-                                    //encoderDrive(DriveMode.LINEAR, DRIVE_SPEED,  0,   -20,  -20, 10);
-                                    foundElement = true;
-                                    autonomousIsActive = false;
+                                    telemetry.update();
+
                                     break;
-                                case "Box":
+                                case LABEL_SECOND_ELEMENT:
                                     telemetry.addLine("foundElement == LABEL_SECOND_ELEMENT");
-                                    // telemetry.update();
-                                    // sleep(250);
-                                    /*
-                                    encoderDrive(DriveMode.LINEAR, DRIVE_SPEED,  0,   98,  98, 10);
-                                    encoderDrive(DriveMode.LINEAR, DRIVE_SPEED,  -90,   0,  0, 10);
-                                    encoderDrive(DriveMode.LINEAR, DRIVE_SPEED,  0,   -44,  -44, 10);
-                                    encoderDrive(DriveMode.LINEAR, DRIVE_SPEED,  0,   30,  30, 10);
-                                    encoderDrive(DriveMode.LINEAR, DRIVE_SPEED,  90,   0,  0, 10);
-                                    encoderDrive(DriveMode.LINEAR, DRIVE_SPEED,  0,   30,  30, 10);
-                                    */
-                                    foundElement = true;
-                                    autonomousIsActive = false;
-                                    break;
-                                case "Duck":
-                                    telemetry.addLine("foundElement == LABEL_THIRD_ELEMENT");
-                                    //telemetry.update();
-                                    // sleep(250);
-                                    foundElement = true;
-                                    autonomousIsActive = false;
-                                    break;
-                                case "TempSE":
-                                    telemetry.addLine("foundElement == LABEL_FOURTH_ELEMENT");
-                                    //telemetry.update();
-                                    //sleep(250);
+                                    telemetry.update();
+
                                     foundElement = true;
                                     autonomousIsActive = false;
                                     break;
@@ -189,36 +161,24 @@ public class STS_BotBoyAutonomous extends STS_BotBoyAutonomousInit {
                                     telemetry.addData("# Object Detected", updatedRecognitions.size());
                                     break;
                             }
+                            tfod.shutdown();
 
+                            telemetry.update();
                             // retInt = 1;
                         }
                     }  //if (updatedRecognitions != null)
                     else {
-                        telemetry.addData("SCANNING FOR Shipping Elements: time: ", scanForElementTime.seconds());
-                        //telemetry.update();
+                        telemetry.addData("SCANNING FOR RINGS: time: ", scanForElementTime.seconds());
+                        telemetry.update();
                     }
                 }  // while (scanForElementTime.seconds() < SCAN_FOR_ELEMENT_TIMEOUT)
-                tfod.shutdown();
-
-                telemetry.update();
-                sleep(250);
 
                 if (!foundElement) {
                     // telemetry.addData("STS_ManateeAutonomousInit.DRIVE_SPEED == ", STS_ManateeAutonomousInit.DRIVE_SPEED);
                     telemetry.addLine("foundElement == LABEL_ZERO_ELEMENT");
                     telemetry.update();
-                    sleep(250);
-                    /*
-                    encoderDrive(DriveMode.LINEAR, DRIVE_SPEED,  0,   99,  99, 10);
-                    encoderDrive(DriveMode.LINEAR, REAL_TURN_SPEED,  90,   0,  0, 10);
-                    encoderDrive(DriveMode.LINEAR, DRIVE_SPEED,  0,   38,  38, 10);
-                    encoderDrive(DriveMode.LINEAR, DRIVE_SPEED,  0,   -30,  -30, 10);
-                    encoderDrive(DriveMode.LINEAR, REAL_TURN_SPEED,  90,   0,  0, 10);
-                    encoderDrive(DriveMode.LINEAR, DRIVE_SPEED,  0,   26,  26, 10);
-                    */
                     autonomousIsActive = false;
                 }
-                sleep(2500);
 
                 telemetry.addLine("Done with finding elements.");
                 telemetry.update();
@@ -261,9 +221,7 @@ public class STS_BotBoyAutonomous extends STS_BotBoyAutonomousInit {
                 "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
         tfodParameters.minResultConfidence = 0.6f;
-        tfodParameters.isModelTensorFlow2 = true;
-        tfodParameters.inputSize = 320;
         tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
-        tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABELS);
+        tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_FIRST_ELEMENT, LABEL_SECOND_ELEMENT, LABEL_THIRD_ELEMENT, LABEL_FOURTH_ELEMENT);
     }
 }

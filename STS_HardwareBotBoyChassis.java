@@ -75,6 +75,10 @@ public class STS_HardwareBotBoyChassis extends STS_HardwareBotBoy
         leftDrive.setPower(0);
         rightDrive.setPower(0);
 
+        //Set zero power behavior
+        leftDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
         leftDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
