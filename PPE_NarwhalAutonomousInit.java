@@ -66,19 +66,19 @@ public abstract class PPE_NarwhalAutonomousInit extends LinearOpMode {
 
     /* Declare OpMode members. */
     PPE_HardwareNarwhal narwhalHW = new PPE_HardwareNarwhalChassis2022();   // Use a Pushbot's hardware
-    private ElapsedTime     runtime = new ElapsedTime();
+    private ElapsedTime runtime = new ElapsedTime();
 
-    static final double     COUNTS_PER_MOTOR_REV    = 28.0;    // eg: TETRIX Motor Encoder
-    static final double     DRIVE_GEAR_REDUCTION    = 4.0;     // This is < 1.0 if geared UP
-    static final double     WHEEL_DIAMETER_INCHES   = 3.5;     // For figuring circumference
-    static final double     WHEEL_BASE              = 10.8;
-    static final double     FUDGE_FACTOR            = 0.89;
-    static final double     COUNTS_PER_INCH         = 22.48;
-    static final double     DRIVE_SPEED             = 0.3;
-    static final double     LATERAL_ADJUSTMENT      = 1.0;
-    static final double     TURN_SPEED              = 0.09;
-    static final double     REAL_TURN_SPEED         = 0.35;
-    static final double     TURN_FUDGE_FACTOR       = 0.75;
+    static final double COUNTS_PER_MOTOR_REV = 28.0;    // eg: TETRIX Motor Encoder
+    static final double DRIVE_GEAR_REDUCTION = 4.0;     // This is < 1.0 if geared UP
+    static final double WHEEL_DIAMETER_INCHES = 3.5;     // For figuring circumference
+    static final double WHEEL_BASE = 10.8;
+    static final double FUDGE_FACTOR = 0.89;
+    static final double COUNTS_PER_INCH = 22.48;
+    static final double DRIVE_SPEED = 0.3;
+    static final double LATERAL_ADJUSTMENT = 1.0;
+    static final double TURN_SPEED = 0.09;
+    static final double REAL_TURN_SPEED = 0.35;
+    static final double TURN_FUDGE_FACTOR = 0.75;
 
     @Override
     public void runOpMode() {
@@ -95,7 +95,7 @@ public abstract class PPE_NarwhalAutonomousInit extends LinearOpMode {
         narwhalHW.rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         // Send telemetry message to indicate successful Encoder reset
-        telemetry.addData("Path0",  "Starting at %7d :%7d",
+        telemetry.addData("Path0", "Starting at %7d :%7d",
                 narwhalHW.leftDrive.getCurrentPosition(),
                 narwhalHW.rightDrive.getCurrentPosition());
 
@@ -116,21 +116,17 @@ public abstract class PPE_NarwhalAutonomousInit extends LinearOpMode {
      *  3) Driver stops the opmode running.
      */
 
+    //TODO: ENCODERDRIVE HIGHLY UNRELIABLE, OFTEN OVERSHOT OR UNDERSHOT TURN
     public void encoderDrive(double speed, double degree,
                              double leftInches, double rightInches,
                              double timeoutS) {
-
         if (degree < 0) {
-            leftInches = degree*((WHEEL_BASE * Math.PI)/360);
-            rightInches = -((degree*((WHEEL_BASE * Math.PI)/360)));
-        }
-
-        else if (degree > 0) {
-            rightInches = degree*((WHEEL_BASE * Math.PI)/360);
-            leftInches = -((degree*((WHEEL_BASE * Math.PI)/360)));
-        }
-
-        else if (degree == 0) {
+            leftInches = -(degree * ((WHEEL_BASE * Math.PI) / 360));
+            rightInches = ((degree * ((WHEEL_BASE * Math.PI) / 360)));
+        } else if (degree > 0) {
+            leftInches = -((degree * ((WHEEL_BASE * Math.PI) / 360)));
+            rightInches = degree * ((WHEEL_BASE * Math.PI) / 360);
+        } else if (degree == 0) {
             leftInches = leftInches;
             rightInches = rightInches;
         }
@@ -142,19 +138,16 @@ public abstract class PPE_NarwhalAutonomousInit extends LinearOpMode {
         if (opModeIsActive()) {
             // Determine new target position, and pass to motor controller
 
-                    newLeftTarget = narwhalHW.leftDrive.getCurrentPosition() + (int)(-leftInches * COUNTS_PER_INCH);
-                    newRightTarget = narwhalHW.rightDrive.getCurrentPosition() + (int)(-rightInches * COUNTS_PER_INCH);
-                    // code block
-            }
+            newLeftTarget = narwhalHW.leftDrive.getCurrentPosition() + (int) (-leftInches * COUNTS_PER_INCH);
+            newRightTarget = narwhalHW.rightDrive.getCurrentPosition() + (int) (-rightInches * COUNTS_PER_INCH);
+            // code block
 
             narwhalHW.leftDrive.setTargetPosition(newLeftTarget);
             narwhalHW.rightDrive.setTargetPosition(newRightTarget);
 
-
             // Turn On RUN_TO_POSITION
             narwhalHW.leftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             narwhalHW.rightDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
 
             // reset the timeout time and start motion.
             runtime.reset();
@@ -170,7 +163,7 @@ public abstract class PPE_NarwhalAutonomousInit extends LinearOpMode {
             // telemetry.addData("speed == ", speed);
             // telemetry.addData("timeoutS == ", timeoutS);
             while (opModeIsActive() &&
-                   (runtime.seconds() < timeoutS) &&
+                    (runtime.seconds() < timeoutS) &&
                     ((narwhalHW.leftDrive.isBusy() || narwhalHW.rightDrive.isBusy()))) {
 
                 // Display it for the driver.
@@ -181,8 +174,8 @@ public abstract class PPE_NarwhalAutonomousInit extends LinearOpMode {
                 telemetry.addData("rightInches",  rightInches);
                 telemetry.addData("timeoutS",  timeoutS);
                  */
-                telemetry.addData("Path1 (target)",  "Running to %7d :%7d", newLeftTarget,  newRightTarget);
-                telemetry.addData("Path2 (position)",  "Running at %7d :%7d", narwhalHW.leftDrive.getCurrentPosition(), narwhalHW.rightDrive.getCurrentPosition());
+                telemetry.addData("Path1 (target)", "Running to %7d :%7d", newLeftTarget, newRightTarget);
+                telemetry.addData("Path2 (position)", "Running at %7d :%7d", narwhalHW.leftDrive.getCurrentPosition(), narwhalHW.rightDrive.getCurrentPosition());
                 // telemetry.addData("EncoderDrive", "time(%3d) : %3f", timeoutS, runtime.seconds());
                 telemetry.addData("EncoderDrive: time: ", runtime.seconds());
                 telemetry.update();
@@ -196,4 +189,5 @@ public abstract class PPE_NarwhalAutonomousInit extends LinearOpMode {
             narwhalHW.leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             narwhalHW.rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
+    }
 }

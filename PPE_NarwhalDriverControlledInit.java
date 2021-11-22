@@ -61,7 +61,7 @@ public class PPE_NarwhalDriverControlledInit extends OpMode{
     boolean             intakeIsMoving = false;
 
     double              armLidOffset = 0.0;
-    double              ARM_LID_SPEED = 0.001;
+    double              ARM_LID_SPEED = 0.0025;
 
     final double        WHEEL_SPEED_MULTIPLIER = 1.0;
 
@@ -117,6 +117,8 @@ public class PPE_NarwhalDriverControlledInit extends OpMode{
         narwhalHW.leftDrive.setPower(WHEEL_SPEED_MULTIPLIER * left);
         narwhalHW.rightDrive.setPower(WHEEL_SPEED_MULTIPLIER * right);
 
+
+        telemetry.addData("leftstick", "%.7f", gamepad1.left_stick_y);
         telemetry.addData("leftDrive.Power", "%.2f", narwhalHW.leftDrive.getPower());
         telemetry.addData("rightDrive.Power", "%.2f", narwhalHW.rightDrive.getPower());
 

@@ -64,14 +64,28 @@ public class PPE_NarwhalAutonomous_BlueLeft extends PPE_NarwhalAutonomousInit {
 
     @Override
     public void runAutonomousMode() {
-        //this doesnt work lmfao
+
+        //Drives into warehouse
+        //***NEVER TESTED***
         encoderDrive(DRIVE_SPEED,0,3,  3, 2.0);
         sleep(200);
-        encoderDrive(TURN_SPEED,-90,0,  0, 2.0);
+
+        //TODO: ADD CAPABILITY TO SCORE WITH CUSTOM SHIPPING ELEMENT AND USE OF TFLITE
+
+        encoderDrive(TURN_SPEED,110,0,  0, 2.0);
         sleep(200);
         encoderDrive(DRIVE_SPEED,0,16,  16, 2.0);
 
+
+        /*
         narwhalHW.angularArmDrive(PPE_HardwareNarwhal.ArmPosition.RAISED, 0.4, 4.0);
         narwhalHW.armLid.setPosition(-1.0);
+         */
+
+
+//actual code
+
+
+
     }
 }

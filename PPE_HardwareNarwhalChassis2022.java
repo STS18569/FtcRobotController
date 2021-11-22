@@ -31,6 +31,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -69,8 +70,8 @@ public class PPE_HardwareNarwhalChassis2022 extends PPE_HardwareNarwhalChassis
         // Define and Initialize Motors
         carousel = hwMap.get(DcMotor.class, "carousel");
         arm = hwMap.get(DcMotor.class, "arm");
-        carousel.setDirection(DcMotor.Direction.REVERSE);
-        arm.setDirection(DcMotor.Direction.REVERSE);
+        carousel.setDirection(DcMotor.Direction.FORWARD);
+        arm.setDirection(DcMotor.Direction.FORWARD);
 
         // Set all motors to zero power
         carousel.setPower(0);

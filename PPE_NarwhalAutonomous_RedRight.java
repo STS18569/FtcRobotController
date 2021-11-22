@@ -64,21 +64,20 @@ public class PPE_NarwhalAutonomous_RedRight extends PPE_NarwhalAutonomousInit {
 
     @Override
     public void runAutonomousMode() {
-        //NEVER TESTED
-        encoderDrive(DRIVE_SPEED,0,9,  9, 2.0);
-        sleep(200);
-        encoderDrive(TURN_SPEED,72,0,  0, 4.0);
-        sleep(200);
-        //Backs up to carousel
-        encoderDrive(DRIVE_SPEED,0,-33,  -33, 2.0);
-        encoderDrive(DRIVE_SPEED, 0, -1,-1,2.0);
-        //Turns carousel
-        narwhalHW.carousel.setPower(1);
-        sleep(4000);
-        narwhalHW.carousel.setPower(0);
-        //Forward into alliance warehouse
-        encoderDrive(TURN_SPEED,15,0,  0, 4.0);
-        encoderDrive(DRIVE_SPEED, 0, 0, 3, 1.0);
-        encoderDrive(DRIVE_SPEED, 0, 108,108,12.0);
+
+        //PLAN: DRIVE INTO WAREHOUSE FOR (10 Points)
+        //***NEVER TESTED***
+        encoderDrive(DRIVE_SPEED,0,10,  10, 2.0);
+        encoderDrive(DRIVE_SPEED, -110, 0,0,2.0);
+
+        //TODO: ADD CAPABILITY TO SCORE WITH CUSTOM SHIPPING ELEMENT AND USE OF TFLITE
+        /*
+        narwhalHW.angularArmDrive(PPE_HardwareNarwhal.ArmPosition.TOP, 0.4, 4.0);
+        narwhalHW.armLid.setPosition(-1.0);
+
+         */
+
+
+
     }
 }

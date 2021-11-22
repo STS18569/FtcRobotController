@@ -153,7 +153,7 @@ public class PPE_NarwhalDriverControlled extends PPE_NarwhalDriverControlledInit
             toggleMap1.circle = toggle(toggleMap1.circle);
             useMap1.circle = runtime.milliseconds();
             carouselIsMoving = true;
-            narwhalHW.carousel.setPower(1.0);
+            narwhalHW.carousel.setPower(0.8);
         }
 
         if(gamepad1.circle && cdCheck(useMap1.circle, 500) && carouselIsMoving){
@@ -163,6 +163,20 @@ public class PPE_NarwhalDriverControlled extends PPE_NarwhalDriverControlledInit
             narwhalHW.carousel.setPower(0.0);
         }
 
+        if(gamepad1.square && cdCheck(useMap1.square, 500) && !carouselIsMoving){
+            toggleMap1.square = toggle(toggleMap1.square);
+            useMap1.square = runtime.milliseconds();
+            carouselIsMoving = true;
+            narwhalHW.carousel.setPower(-0.8);
+        }
+
+        if(gamepad1.square && cdCheck(useMap1.square, 500) && carouselIsMoving){
+            toggleMap1.square = toggle(toggleMap1.square);
+            useMap1.square = runtime.milliseconds();
+            carouselIsMoving = false;
+            narwhalHW.carousel.setPower(0.0);
+        }
+        /*
         if(gamepad1.square && cdCheck(useMap1.square, 500) && !intakeIsMoving){
             toggleMap1.square = toggle(toggleMap1.square);
             useMap1.square = runtime.milliseconds();
@@ -178,6 +192,8 @@ public class PPE_NarwhalDriverControlled extends PPE_NarwhalDriverControlledInit
             narwhalHW.intakeLeft.setPower(0.0);
             narwhalHW.intakeRight.setPower(0.0);
         }
+
+         */
         /*
 
         if(gamepad1.right_stick_x > 0 && cdCheck(useMap1.right_stick_x_pos, 700)){
