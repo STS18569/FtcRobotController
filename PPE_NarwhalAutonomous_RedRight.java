@@ -67,8 +67,8 @@ public class PPE_NarwhalAutonomous_RedRight extends PPE_NarwhalAutonomousInit {
 
         //PLAN: DRIVE INTO WAREHOUSE FOR (10 Points)
         //***NEVER TESTED***
-        encoderDrive(DRIVE_SPEED,0,10,  10, 2.0);
-        encoderDrive(DRIVE_SPEED, -110, 0,0,2.0);
+        encoderDriveOmni(DRIVE_SPEED,0,10,  10, 2.0);
+        encoderDriveOmni(DRIVE_SPEED, -110, 0,0,2.0);
 
         //TODO: ADD CAPABILITY TO SCORE WITH CUSTOM SHIPPING ELEMENT AND USE OF TFLITE
         /*

@@ -81,7 +81,7 @@ public class PPE_NarwhalDriverControlledInit extends OpMode{
         /* Initialize the hardware variables.
          * The init() method of the hardware class does all the work here
          */
-        narwhalHW = new PPE_HardwareNarwhalChassis2022(); // use the class created to define a STS_HardwareManatee's hardware
+        narwhalHW = new PPE_HardwareNarwhalExternals2022(); // use the class created to define a STS_HardwareManatee's hardware
         narwhalHW.init(hardwareMap);
 
         narwhalHW.arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -113,17 +113,48 @@ public class PPE_NarwhalDriverControlledInit extends OpMode{
     public void loop() {
         double left = gamepad1.left_stick_y;
         double right = gamepad1.right_stick_y;
+        double rotationLeft = gamepad1.right_stick_x;
+        double rotationRight = - gamepad1.right_stick_x;
+
+
+        double r = (Math.hypot(gamepad1.left_stick_x, gamepad1.left_stick_y)) * (-1);
+        double robotAngle = Math.atan2(gamepad1.left_stick_y, gamepad1.left_stick_x) - Math.PI / 4.0;
+        double rightX = gamepad1.right_stick_x;
+        final double v1 = r * Math.cos(robotAngle) + rightX;
+        final double v2 = r * Math.sin(robotAngle) - rightX;
+        final double v3 = r * Math.sin(robotAngle) + rightX;
+        final double v4 = r * Math.cos(robotAngle) - rightX;
+
+
+        if ((rotationLeft != 0) || (rotationRight != 0)) {
+            if (rotationLeft != 0) {
+                telemetry.addLine("ROTATION LEFT MODE");
+                narwhalHW.leftFrontDrive.setPower(WHEEL_SPEED_MULTIPLIER * rotationLeft);
+                narwhalHW.rightFrontDrive.setPower(WHEEL_SPEED_MULTIPLIER * -rotationLeft);
+                narwhalHW.leftBackDrive.setPower(WHEEL_SPEED_MULTIPLIER * rotationLeft);
+                narwhalHW.rightBackDrive.setPower(WHEEL_SPEED_MULTIPLIER * -rotationLeft);
+            }
+            else {
+                telemetry.addLine("ROTATION RIGHT MODE");
+                narwhalHW.leftFrontDrive.setPower(WHEEL_SPEED_MULTIPLIER * -rotationRight);
+                narwhalHW.rightFrontDrive.setPower(WHEEL_SPEED_MULTIPLIER * rotationRight);
+                narwhalHW.leftBackDrive.setPower(WHEEL_SPEED_MULTIPLIER * -rotationRight);
+                narwhalHW.rightBackDrive.setPower(WHEEL_SPEED_MULTIPLIER * rotationRight);
+            }
+        }
+        else {
+            telemetry.addLine("LATERAL MODE");
+            narwhalHW.leftFrontDrive.setPower(WHEEL_SPEED_MULTIPLIER * v1);
+            narwhalHW.rightFrontDrive.setPower(WHEEL_SPEED_MULTIPLIER * v2);
+            narwhalHW.leftBackDrive.setPower(WHEEL_SPEED_MULTIPLIER * v3);
+            narwhalHW.rightBackDrive.setPower(WHEEL_SPEED_MULTIPLIER * v4);
+        }
 
         narwhalHW.leftDrive.setPower(WHEEL_SPEED_MULTIPLIER * left);
         narwhalHW.rightDrive.setPower(WHEEL_SPEED_MULTIPLIER * right);
 
-
-        telemetry.addData("leftstick", "%.7f", gamepad1.left_stick_y);
         telemetry.addData("leftDrive.Power", "%.2f", narwhalHW.leftDrive.getPower());
         telemetry.addData("rightDrive.Power", "%.2f", narwhalHW.rightDrive.getPower());
-
-
-
     }
     /*
      * Code to run ONCE after the driver hits STOP

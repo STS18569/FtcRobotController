@@ -67,14 +67,14 @@ public class PPE_NarwhalAutonomous_BlueLeft extends PPE_NarwhalAutonomousInit {
 
         //Drives into warehouse
         //***NEVER TESTED***
-        encoderDrive(DRIVE_SPEED,0,3,  3, 2.0);
+        encoderDriveOmni(DRIVE_SPEED,0,3,  3, 2.0);
         sleep(200);
 
         //TODO: ADD CAPABILITY TO SCORE WITH CUSTOM SHIPPING ELEMENT AND USE OF TFLITE
 
-        encoderDrive(TURN_SPEED,110,0,  0, 2.0);
+        encoderDriveOmni(TURN_SPEED,110,0,  0, 2.0);
         sleep(200);
-        encoderDrive(DRIVE_SPEED,0,16,  16, 2.0);
+        encoderDriveOmni(DRIVE_SPEED,0,16,  16, 2.0);
 
 
         /*

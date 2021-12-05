@@ -177,29 +177,11 @@ public class PPE_NarwhalDriverControlled extends PPE_NarwhalDriverControlledInit
             narwhalHW.carousel.setPower(0.0);
         }
         /*
-        if(gamepad1.square && cdCheck(useMap1.square, 500) && !intakeIsMoving){
-            toggleMap1.square = toggle(toggleMap1.square);
-            useMap1.square = runtime.milliseconds();
-            intakeIsMoving = true;
-            narwhalHW.intakeLeft.setPower(-1.0);
-            narwhalHW.intakeRight.setPower(1.0);
-        }
-
-        if(gamepad1.square && cdCheck(useMap1.square, 500) && intakeIsMoving){
-            toggleMap1.square = toggle(toggleMap1.square);
-            useMap1.square = runtime.milliseconds();
-            intakeIsMoving = false;
-            narwhalHW.intakeLeft.setPower(0.0);
-            narwhalHW.intakeRight.setPower(0.0);
-        }
-
-         */
-        /*
-
         if(gamepad1.right_stick_x > 0 && cdCheck(useMap1.right_stick_x_pos, 700)){
             toggleMap1.right_stick_x_pos = toggle(toggleMap1.right_stick_x_pos);
             useMap1.right_stick_x_pos = runtime.milliseconds();
         }
+
          */
     }
 

@@ -65,20 +65,20 @@ public class PPE_NarwhalAutonomous_RedLeft extends PPE_NarwhalAutonomousInit {
     @Override
     public void runAutonomousMode() {
         //Leaves starting position
-        encoderDrive(DRIVE_SPEED,0,10,  10, 2.0);
+        encoderDriveOmni(DRIVE_SPEED,0,10,  10, 2.0);
         sleep(200);
         //TODO: ENCODERDRIVE HIGHLY UNRELIABLE, OFTEN OVERSHOT OR UNDERSHOT TURN
         //TODO: ADD CAPABILITY TO SCORE WITH CUSTOM SHIPPING ELEMENT AND USE OF TFLITE
-        encoderDrive(TURN_SPEED,-80,0,  0, 4.0);
+        encoderDriveOmni(TURN_SPEED,-80,0,  0, 4.0);
         sleep(200);
 
         //Backs up to carousel
-        encoderDrive(DRIVE_SPEED,0,-33,  -33, 2.0);
-        encoderDrive(DRIVE_SPEED, 0, -1,-1,2.0);
+        encoderDriveOmni(DRIVE_SPEED,0,-33,  -33, 2.0);
+        encoderDriveOmni(DRIVE_SPEED, 0, -1,-1,2.0);
 
         //Turns to face Alliance Unit
-        encoderDrive(TURN_SPEED,90,0,  0, 4.0);
-        encoderDrive(DRIVE_SPEED,0,-8,  -8, 2.0);
+        encoderDriveOmni(TURN_SPEED,90,0,  0, 4.0);
+        encoderDriveOmni(DRIVE_SPEED,0,-8,  -8, 2.0);
 
         //Spins Carousel
         narwhalHW.carousel.setPower(-0.5);
@@ -86,7 +86,7 @@ public class PPE_NarwhalAutonomous_RedLeft extends PPE_NarwhalAutonomousInit {
         narwhalHW.carousel.setPower(0);
 
         //Drives into unt
-        encoderDrive(DRIVE_SPEED,0,14,  14, 4.0);
+        encoderDriveOmni(DRIVE_SPEED,0,14,  14, 4.0);
         //encoderDrive(TURN_SPEED,15,0,  0, 4.0);
         //encoderDrive(DRIVE_SPEED, 0, 0, 3, 1.0);
         //encoderDrive(DRIVE_SPEED, 0, 108,108,12.0);

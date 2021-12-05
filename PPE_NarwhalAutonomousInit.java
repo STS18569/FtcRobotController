@@ -65,8 +65,10 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public abstract class PPE_NarwhalAutonomousInit extends LinearOpMode {
 
     /* Declare OpMode members. */
-    PPE_HardwareNarwhal narwhalHW = new PPE_HardwareNarwhalChassis2022();   // Use a Pushbot's hardware
+    PPE_HardwareNarwhal narwhalHW = new PPE_HardwareNarwhalExternals2022();   // Use a Pushbot's hardware
     private ElapsedTime runtime = new ElapsedTime();
+
+    static enum             DriveMode {LAT_LEFT, LAT_RIGHT, LINEAR};
 
     static final double COUNTS_PER_MOTOR_REV = 28.0;    // eg: TETRIX Motor Encoder
     static final double DRIVE_GEAR_REDUCTION = 4.0;     // This is < 1.0 if geared UP
@@ -117,9 +119,9 @@ public abstract class PPE_NarwhalAutonomousInit extends LinearOpMode {
      */
 
     //TODO: ENCODERDRIVE HIGHLY UNRELIABLE, OFTEN OVERSHOT OR UNDERSHOT TURN
-    public void encoderDrive(double speed, double degree,
-                             double leftInches, double rightInches,
-                             double timeoutS) {
+    public void encoderDriveOmni(double speed, double degree,
+                                 double leftInches, double rightInches,
+                                 double timeoutS) {
         if (degree < 0) {
             leftInches = -(degree * ((WHEEL_BASE * Math.PI) / 360));
             rightInches = ((degree * ((WHEEL_BASE * Math.PI) / 360)));
@@ -188,6 +190,119 @@ public abstract class PPE_NarwhalAutonomousInit extends LinearOpMode {
             // Turn off RUN_TO_POSITION
             narwhalHW.leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             narwhalHW.rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        }
+    }
+
+    public void encoderDriveMecanum(DriveMode mode, double speed, double degree,
+                             double leftInches, double rightInches,
+                             double timeoutS) {
+
+        if (degree < 0) {
+            leftInches = degree*((WHEEL_BASE * Math.PI)/360);
+            rightInches = -(TURN_FUDGE_FACTOR *(degree*((WHEEL_BASE * Math.PI)/360)));
+        }
+
+        else if (degree > 0) {
+            rightInches = degree*((WHEEL_BASE * Math.PI)/360);
+            leftInches = -(TURN_FUDGE_FACTOR *(degree*((WHEEL_BASE * Math.PI)/360)));
+        }
+
+        else if (degree == 0) {
+            leftInches = leftInches;
+            rightInches = rightInches;
+        }
+
+        int newLeftFrontTarget = 0;
+        int newLeftBackTarget = 0;
+        int newRightFrontTarget = 0;
+        int newRightBackTarget = 0;
+
+
+        // Ensure that the opmode is still active
+        if (opModeIsActive()) {
+            // Determine new target position, and pass to motor controller
+            switch(mode) {
+                case LINEAR:
+                    newLeftFrontTarget = narwhalHW.leftFrontDrive.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
+                    newLeftBackTarget = narwhalHW.leftBackDrive.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
+                    newRightFrontTarget = narwhalHW.rightFrontDrive.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
+                    newRightBackTarget = narwhalHW.rightBackDrive.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
+                    break;
+                case LAT_LEFT:
+                    newLeftFrontTarget = narwhalHW.leftFrontDrive.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
+                    newLeftBackTarget = narwhalHW.leftBackDrive.getCurrentPosition() + (int)(-rightInches * COUNTS_PER_INCH);
+                    newRightFrontTarget = narwhalHW.rightFrontDrive.getCurrentPosition() + (int)(-rightInches * COUNTS_PER_INCH);
+                    newRightBackTarget = narwhalHW.rightBackDrive.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
+                    break;
+                case LAT_RIGHT:
+                    newLeftFrontTarget = narwhalHW.leftFrontDrive.getCurrentPosition() + (int)(-leftInches * COUNTS_PER_INCH);
+                    newLeftBackTarget = narwhalHW.leftBackDrive.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
+                    newRightFrontTarget = narwhalHW.rightFrontDrive.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
+                    newRightBackTarget = narwhalHW.rightBackDrive.getCurrentPosition() + (int)(-leftInches * COUNTS_PER_INCH);
+                    break;
+                default:
+                    // code block
+            }
+
+            narwhalHW.leftFrontDrive.setTargetPosition(newLeftFrontTarget);
+            narwhalHW.leftBackDrive.setTargetPosition(newLeftBackTarget);
+            narwhalHW.rightFrontDrive.setTargetPosition(newRightFrontTarget);
+            narwhalHW.rightBackDrive.setTargetPosition(newRightBackTarget);
+
+            // Turn On RUN_TO_POSITION
+            narwhalHW.leftFrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            narwhalHW.leftBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            narwhalHW.rightFrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            narwhalHW.rightBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+            // reset the timeout time and start motion.
+            runtime.reset();
+            narwhalHW.leftFrontDrive.setPower(Math.abs(speed));
+            narwhalHW.leftBackDrive.setPower(Math.abs(speed));
+            //sleep(0100);
+            narwhalHW.rightFrontDrive.setPower(Math.abs(speed));
+            narwhalHW.rightBackDrive.setPower(Math.abs(speed));
+
+            // keep looping while we are still active, and there is time left, and both motors are running.
+            // Note: We use (isBusy() && isBusy()) in the loop test, which means that when EITHER motor hits
+            // its target position, the motion will stop.  This is "safer" in the event that the robot will
+            // always end the motion as soon as possible.
+            // However, if you require that BOTH motors have finished their moves before the robot continues
+            // onto the next step, use (isBusy() || isBusy()) in the loop test.
+            // telemetry.addData("speed == ", speed);
+            // telemetry.addData("timeoutS == ", timeoutS);
+            while (opModeIsActive() &&
+                    (runtime.seconds() < timeoutS) &&
+                    ((narwhalHW.leftFrontDrive.isBusy() || narwhalHW.rightFrontDrive.isBusy()))) {
+
+                // Display it for the driver.
+                /*
+                telemetry.addData("speed",  speed);
+                telemetry.addData("degree",  degree);
+                telemetry.addData("leftInches",  leftInches);
+                telemetry.addData("rightInches",  rightInches);
+                telemetry.addData("timeoutS",  timeoutS);
+                 */
+                telemetry.addData("Path1 (target)",  "Running to %7d :%7d :%7d :%7d", newLeftFrontTarget,  newLeftBackTarget,
+                        newRightFrontTarget,  newRightBackTarget);
+                telemetry.addData("Path2 (position)",  "Running at %7d :%7d :%7d :%7d", narwhalHW.leftFrontDrive.getCurrentPosition(), narwhalHW.leftBackDrive.getCurrentPosition(),
+                        narwhalHW.rightFrontDrive.getCurrentPosition(), narwhalHW.rightBackDrive.getCurrentPosition());
+                // telemetry.addData("EncoderDrive", "time(%3d) : %3f", timeoutS, runtime.seconds());
+                telemetry.addData("EncoderDrive: time: ", runtime.seconds());
+                telemetry.update();
+            }
+
+            // Stop all motion;
+            narwhalHW.leftFrontDrive.setPower(0);
+            narwhalHW.leftBackDrive.setPower(0);
+            narwhalHW.rightFrontDrive.setPower(0);
+            narwhalHW.rightBackDrive.setPower(0);
+
+            // Turn off RUN_TO_POSITION
+            narwhalHW.leftFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            narwhalHW.leftBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            narwhalHW.rightFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            narwhalHW.rightBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
     }
 }
