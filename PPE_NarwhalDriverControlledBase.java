@@ -31,7 +31,6 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
 
 
 /**
@@ -53,17 +52,17 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 // @Disabled
 public class PPE_NarwhalDriverControlledInit extends OpMode{
     /* Declare OpMode members. */
-    public PPE_HardwareNarwhal narwhalHW;
+    public PPE_HardwareNarwhalWheel narwhalHWWheel;
+    public PPE_HardwareNarwhalExternals2022 narwhalHWEx2022; // jjh Added 1/15/22
 
-    boolean             carouselIsMoving = false;
-    boolean             armIsMovingForward = false;
-    boolean             armIsMovingBackward = false;
-    boolean             intakeIsMoving = false;
+    boolean carouselIsMoving = false;
+    boolean armIsMovingForward = false;
+    boolean armIsMovingBackward = false;
+    boolean intakeIsMoving = false;
 
-    double              armLidOffset = 0.0;
-    double              ARM_LID_SPEED = 0.0025;
+    double  armLidOffset = 0.0;
 
-    final double        WHEEL_SPEED_MULTIPLIER = 1.0;
+    double  ARM_LID_SPEED = 0.0025;
 
     public final void sleep(long milliseconds) {
         try {
@@ -79,17 +78,22 @@ public class PPE_NarwhalDriverControlledInit extends OpMode{
     @Override
     public void init() {
         /* Initialize the hardware variables.
-         * The init() method of the hardware class does all the work here
+         * The init() method of the hardware classes do all the work here
          */
-        narwhalHW = new PPE_HardwareNarwhalExternals2022(); // use the class created to define a STS_HardwareManatee's hardware
-        narwhalHW.init(hardwareMap);
 
-        narwhalHW.arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        // use one of the classes created to define a STS_HardwareManatee's hardware
+        // narwhalHWWheel = new PPE_HardwareNarwhalMecanum(PPE_HardwareNarwhalWheel.driverMode.DRIVER_CONTROLLED, telemetry);
+        narwhalHWWheel = new PPE_HardwareNarwhalOmni(PPE_HardwareNarwhalWheel.driverMode.DRIVER_CONTROLLED, telemetry);
+        narwhalHWWheel.init(hardwareMap);
+        telemetry.addData("BREAKING:", "Narwhal Wheel Initialized");
+        telemetry.update();
+        sleep(1000);
 
-        narwhalHW.arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-        // Send telemetry message to signify robot waiting;
-        telemetry.addData("BREAKING:", "BatBoy Initialized");    //
+        narwhalHWEx2022 = new PPE_HardwareNarwhalExternals2022(); // use the class created to define a STS_HardwareManatee's hardware
+        narwhalHWEx2022.init(hardwareMap);
+        telemetry.addData("BREAKING:", "Narwhal Externals Initialized");
+        telemetry.update();
+        sleep(1000);
     }
 
     /*
@@ -111,51 +115,9 @@ public class PPE_NarwhalDriverControlledInit extends OpMode{
      */
     @Override
     public void loop() {
-        double left = gamepad1.left_stick_y;
-        double right = gamepad1.right_stick_y;
-        double rotationLeft = gamepad1.right_stick_x;
-        double rotationRight = - gamepad1.right_stick_x;
-
-
-        double r = (Math.hypot(gamepad1.left_stick_x, gamepad1.left_stick_y)) * (-1);
-        double robotAngle = Math.atan2(gamepad1.left_stick_y, gamepad1.left_stick_x) - Math.PI / 4.0;
-        double rightX = gamepad1.right_stick_x;
-        final double v1 = r * Math.cos(robotAngle) + rightX;
-        final double v2 = r * Math.sin(robotAngle) - rightX;
-        final double v3 = r * Math.sin(robotAngle) + rightX;
-        final double v4 = r * Math.cos(robotAngle) - rightX;
-
-
-        if ((rotationLeft != 0) || (rotationRight != 0)) {
-            if (rotationLeft != 0) {
-                telemetry.addLine("ROTATION LEFT MODE");
-                narwhalHW.leftFrontDrive.setPower(WHEEL_SPEED_MULTIPLIER * rotationLeft);
-                narwhalHW.rightFrontDrive.setPower(WHEEL_SPEED_MULTIPLIER * -rotationLeft);
-                narwhalHW.leftBackDrive.setPower(WHEEL_SPEED_MULTIPLIER * rotationLeft);
-                narwhalHW.rightBackDrive.setPower(WHEEL_SPEED_MULTIPLIER * -rotationLeft);
-            }
-            else {
-                telemetry.addLine("ROTATION RIGHT MODE");
-                narwhalHW.leftFrontDrive.setPower(WHEEL_SPEED_MULTIPLIER * -rotationRight);
-                narwhalHW.rightFrontDrive.setPower(WHEEL_SPEED_MULTIPLIER * rotationRight);
-                narwhalHW.leftBackDrive.setPower(WHEEL_SPEED_MULTIPLIER * -rotationRight);
-                narwhalHW.rightBackDrive.setPower(WHEEL_SPEED_MULTIPLIER * rotationRight);
-            }
-        }
-        else {
-            telemetry.addLine("LATERAL MODE");
-            narwhalHW.leftFrontDrive.setPower(WHEEL_SPEED_MULTIPLIER * v1);
-            narwhalHW.rightFrontDrive.setPower(WHEEL_SPEED_MULTIPLIER * v2);
-            narwhalHW.leftBackDrive.setPower(WHEEL_SPEED_MULTIPLIER * v3);
-            narwhalHW.rightBackDrive.setPower(WHEEL_SPEED_MULTIPLIER * v4);
-        }
-
-        narwhalHW.leftDrive.setPower(WHEEL_SPEED_MULTIPLIER * left);
-        narwhalHW.rightDrive.setPower(WHEEL_SPEED_MULTIPLIER * right);
-
-        telemetry.addData("leftDrive.Power", "%.2f", narwhalHW.leftDrive.getPower());
-        telemetry.addData("rightDrive.Power", "%.2f", narwhalHW.rightDrive.getPower());
+        narwhalHWWheel.doLoop(gamepad1);
     }
+
     /*
      * Code to run ONCE after the driver hits STOP
      */
