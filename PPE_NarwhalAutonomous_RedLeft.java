@@ -60,10 +60,11 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 @Autonomous(name="Narwhal: Red Left Autonomous", group="FreightFrenzy")
 //@Disabled
-public class PPE_NarwhalAutonomous_RedLeft extends PPE_NarwhalAutonomousInit {
+public class PPE_NarwhalAutonomous_RedLeft extends PPE_NarwhalAutonomousBase {
 
     @Override
     public void runAutonomousMode() {
+        /*
         //Leaves starting position
         encoderDriveOmni(DRIVE_SPEED,0,10,  10, 2.0);
         sleep(200);
@@ -90,5 +91,7 @@ public class PPE_NarwhalAutonomous_RedLeft extends PPE_NarwhalAutonomousInit {
         //encoderDrive(TURN_SPEED,15,0,  0, 4.0);
         //encoderDrive(DRIVE_SPEED, 0, 0, 3, 1.0);
         //encoderDrive(DRIVE_SPEED, 0, 108,108,12.0);
+
+         */
     }
 }

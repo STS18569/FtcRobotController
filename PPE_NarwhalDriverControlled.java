@@ -51,15 +51,18 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 @TeleOp(name="Narwhal: Driver Controlled", group="FreightFrenzy")
 // @Disabled
-public class PPE_NarwhalDriverControlled extends PPE_NarwhalDriverControlledInit {
+public class PPE_NarwhalDriverControlled extends PPE_NarwhalDriverControlledBase {
     private ElapsedTime runtime = new ElapsedTime();
+
     /*
     Insert useMap1.a = runtime.milliseconds(); after every use of gamepad1.a to reset the cooldown.
     Use toggleMap1.a to access whether gamepad1.a is toggled or not.
     cdCheck(useMap1.a, 1000) returns true or false based on whether gamepad1.a has been used in the last 1000 milliseconds.
     */
+
     toggleMap toggleMap1 = new toggleMap();
     useMap useMap1 = new useMap();
+
     /*
      * Code to run ONCE when the driver hits INIT
      */
@@ -91,61 +94,63 @@ public class PPE_NarwhalDriverControlled extends PPE_NarwhalDriverControlledInit
 
         updateKeys();
 
-        if (gamepad1.left_bumper && !armIsMovingForward) {
-            narwhalHW.arm.setPower(0.5);
-            armIsMovingForward = true;
-        } else if (!gamepad1.left_bumper && armIsMovingForward) {
-            narwhalHW.arm.setPower(0);
-            armIsMovingForward = false;
+        if (gamepad1.left_bumper && !armSwivelIsMovingCounterClockwise) {
+            narwhalHWEx2022.armSwivel.setPower(-0.5);
+            armSwivelIsMovingCounterClockwise = true;
+        } else if (!gamepad1.left_bumper && armSwivelIsMovingCounterClockwise) {
+            narwhalHWEx2022.armSwivel.setPower(0);
+            armSwivelIsMovingCounterClockwise = false;
         }
 
-        if (gamepad1.right_bumper && !armIsMovingBackward) {
-            narwhalHW.arm.setPower(-0.5);
-            armIsMovingBackward = true;
-        } else if (!gamepad1.right_bumper && armIsMovingBackward) {
-            narwhalHW.arm.setPower(0);
-            armIsMovingBackward = false;
+        if (gamepad1.right_bumper && !armSwivelIsMovingClockwise) {
+            narwhalHWEx2022.armSwivel.setPower(0.5);
+            armSwivelIsMovingClockwise = true;
+        } else if (!gamepad1.right_bumper && armSwivelIsMovingClockwise) {
+            narwhalHWEx2022.armSwivel.setPower(0);
+            armSwivelIsMovingClockwise = false;
+        }
+
+        if ((gamepad1.left_trigger > 0) && !armIsMovingUp) {
+            narwhalHWEx2022.arm.setPower(0.5);
+            armIsMovingUp = true;
+        } else if (!(gamepad1.left_trigger > 0) && armIsMovingUp) {
+            narwhalHWEx2022.arm.setPower(0);
+            armIsMovingUp = false;
+        }
+
+        if ((gamepad1.right_trigger > 0) && !armIsMovingDown) {
+            narwhalHWEx2022.arm.setPower(-0.5);
+            armIsMovingDown = true;
+        } else if (!(gamepad1.right_trigger > 0) && armIsMovingDown) {
+            narwhalHWEx2022.arm.setPower(0);
+            armIsMovingDown = false;
         }
 
 /*
         if (gamepad1.dpad_down) {
-            botBoyHW.angularArmDrive(STS_HardwareBotBoy.ArmPosition.REST, 0.4, 2.0);
+            narwhalHWEx2022.angularArmDrive(STS_HardwareBotBoy.ArmPosition.REST, 0.4, 2.0);
         }
         if (gamepad1.dpad_left) {
-            botBoyHW.angularArmDrive(STS_HardwareBotBoy.ArmPosition.MIDDLE, 0.4, 2.0);
+            narwhalHWEx2022.angularArmDrive(STS_HardwareBotBoy.ArmPosition.MIDDLE, 0.4, 2.0);
         }
         if (gamepad1.dpad_up) {
-            botBoyHW.angularArmDrive(STS_HardwareBotBoy.ArmPosition.TOP, 0.4, 2.0);
+            narwhalHWEx2022.angularArmDrive(STS_HardwareBotBoy.ArmPosition.TOP, 0.4, 2.0);
         }
         if (gamepad1.dpad_right) {
-            botBoyHW.angularArmDrive(STS_HardwareBotBoy.ArmPosition.BOTTOM, 0.4, 2.0);
+            narwhalHWEx2022.angularArmDrive(STS_HardwareBotBoy.ArmPosition.BOTTOM, 0.4, 2.0);
         }
-        if ((gamepad1.left_stick_y != 0 || gamepad1.right_stick_y != 0) && (botBoyHW.arm.getCurrentPosition() == 0)) {
-            botBoyHW.angularArmDrive(STS_HardwareBotBoy.ArmPosition.RAISED, 0.4, 2.0);
+        if ((gamepad1.left_stick_y != 0 || gamepad1.right_stick_y != 0) && (narwhalHWEx2022.arm.getCurrentPosition() == 0)) {
+            narwhalHWEx2022.angularArmDrive(STS_HardwareBotBoy.ArmPosition.RAISED, 0.4, 2.0);
         }
-
  */
 
-        if (gamepad1.triangle) {
-            armLidOffset -= ARM_LID_SPEED;
-        }
-
-        if (gamepad1.cross) {
-            armLidOffset += ARM_LID_SPEED;
-        }
-
-
-        armLidOffset = Range.clip(armLidOffset, (-1.0 - narwhalHW.ARM_LID_MID_SERVO), (1.0 - narwhalHW.ARM_LID_MID_SERVO));
-        narwhalHW.armLid.setPosition(narwhalHW.ARM_LID_MID_SERVO + armLidOffset);
-
         // Send telemetry message to signify robot running;
-        telemetry.addData("lid position", "%.2f", narwhalHW.armLid.getPosition());
+        telemetry.addData("cross (flapper)", toggleMap1.cross + " " + (runtime.milliseconds() - useMap1.cross));
         telemetry.addData("circle (carousel)", toggleMap1.circle + " " + (runtime.milliseconds() - useMap1.circle));
         telemetry.addData("square (intake)", toggleMap1.square + " " + (runtime.milliseconds() - useMap1.square));
-        telemetry.addData("arm position",  "Running at %7d", narwhalHW.arm.getCurrentPosition());
+        telemetry.addData("swivel position",  "Running at %7d", narwhalHWEx2022.armSwivel.getCurrentPosition());
+        telemetry.addData("arm position",  "Running at %7d", narwhalHWEx2022.arm.getCurrentPosition());
         telemetry.update();
-
-
     }
 
     public void updateKeys() {      // This section is for buttons that use toggle rather than hold
@@ -153,28 +158,56 @@ public class PPE_NarwhalDriverControlled extends PPE_NarwhalDriverControlledInit
             toggleMap1.circle = toggle(toggleMap1.circle);
             useMap1.circle = runtime.milliseconds();
             carouselIsMoving = true;
-            narwhalHW.carousel.setPower(0.8);
+            narwhalHWEx2022.carousel.setPower(0.8);
         }
 
         if(gamepad1.circle && cdCheck(useMap1.circle, 500) && carouselIsMoving){
             toggleMap1.circle = toggle(toggleMap1.circle);
             useMap1.circle = runtime.milliseconds();
             carouselIsMoving = false;
-            narwhalHW.carousel.setPower(0.0);
+            narwhalHWEx2022.carousel.setPower(0.0);
         }
 
         if(gamepad1.square && cdCheck(useMap1.square, 500) && !carouselIsMoving){
             toggleMap1.square = toggle(toggleMap1.square);
             useMap1.square = runtime.milliseconds();
             carouselIsMoving = true;
-            narwhalHW.carousel.setPower(-0.8);
+            narwhalHWEx2022.carousel.setPower(-0.8);
         }
 
         if(gamepad1.square && cdCheck(useMap1.square, 500) && carouselIsMoving){
             toggleMap1.square = toggle(toggleMap1.square);
             useMap1.square = runtime.milliseconds();
             carouselIsMoving = false;
-            narwhalHW.carousel.setPower(0.0);
+            narwhalHWEx2022.carousel.setPower(0.0);
+        }
+
+        if(gamepad1.triangle && cdCheck(useMap1.triangle, 500) && !flapperIsMoving){
+            toggleMap1.triangle = toggle(toggleMap1.triangle);
+            useMap1.triangle = runtime.milliseconds();
+            flapperIsMoving = true;
+            narwhalHWEx2022.flapper.setPower(1.0);
+        }
+
+        if(gamepad1.triangle && cdCheck(useMap1.triangle, 500) && flapperIsMoving){
+            toggleMap1.triangle = toggle(toggleMap1.triangle);
+            useMap1.triangle = runtime.milliseconds();
+            flapperIsMoving = false;
+            narwhalHWEx2022.flapper.setPower(0.0);
+        }
+
+        if(gamepad1.cross && cdCheck(useMap1.cross, 500) && !flapperIsMoving){
+            toggleMap1.cross = toggle(toggleMap1.cross);
+            useMap1.cross = runtime.milliseconds();
+            flapperIsMoving = true;
+            narwhalHWEx2022.flapper.setPower(-1.0);
+        }
+
+        if(gamepad1.cross && cdCheck(useMap1.cross, 500) && flapperIsMoving){
+            toggleMap1.cross = toggle(toggleMap1.cross);
+            useMap1.cross = runtime.milliseconds();
+            flapperIsMoving = false;
+            narwhalHWEx2022.flapper.setPower(0.0);
         }
         /*
         if(gamepad1.right_stick_x > 0 && cdCheck(useMap1.right_stick_x_pos, 700)){

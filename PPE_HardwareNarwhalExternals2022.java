@@ -51,44 +51,112 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Servo channel:  Servo to open left claw:  "left_hand"
  * Servo channel:  Servo to open right claw: "right_hand"
  */
-public class PPE_HardwareNarwhalExternals2022 extends PPE_HardwareNarwhal
+public class PPE_HardwareNarwhalExternals2022
 {
-     /* local OpMode members. */
-    private ElapsedTime period  = new ElapsedTime();
+    private HardwareMap hwMap           =  null;
+
+    public DcMotor  carousel            = null;
+    public DcMotor  armSwivel           = null;
+    public DcMotor  arm                 = null;
+
+    public CRServo  flapper             = null;
+
+    private static enum ArmPosition {REST, RAISED, TOP, MIDDLE, BOTTOM}
+
+    //Needs to be changed depending on gear ratio (every 20 is 560 (ex: 20:1 is 560))
+    private static final double TICKS_PER_DEGREE = 1680./360.;
+
+
+    /* local OpMode members. */
+    private ElapsedTime period = new ElapsedTime();
+    private ElapsedTime runtime = new ElapsedTime();
 
     /* Constructor */
-    public PPE_HardwareNarwhalExternals2022(){
+    public PPE_HardwareNarwhalExternals2022() {
 
     }
 
     /* Initialize standard Hardware interfaces */
     public void init(HardwareMap ahwMap) {
-        // Save reference to Hardware map
-        super.init(ahwMap);
+        hwMap = ahwMap;
 
         // Define and Initialize Motors
         carousel = hwMap.get(DcMotor.class, "carousel");
+        armSwivel = hwMap.get(DcMotor.class, "arm_swivel");
         arm = hwMap.get(DcMotor.class, "arm");
         carousel.setDirection(DcMotor.Direction.FORWARD);
+        armSwivel.setDirection(DcMotor.Direction.FORWARD);
         arm.setDirection(DcMotor.Direction.FORWARD);
 
         // Set all motors to zero power
         carousel.setPower(0);
+        armSwivel.setPower(0);
         arm.setPower(0);
 
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
         carousel.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        armSwivel.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
-        //Set zero power behavior
         arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         // Define and initialize ALL installed servos.
-        armLid = hwMap.get(Servo.class, "arm_lid");
-        intakeLeft = hwMap.get(CRServo.class, "intake_left");
-        intakeRight = hwMap.get(CRServo.class, "intake_right");
-        armLid.setPosition(ARM_LID_MID_SERVO);
+        flapper = hwMap.get(CRServo.class, "flapper");
+
+    }
+
+    public void angularArmDrive(ArmPosition position, double speed, double timeoutS) {
+        int armDegrees = 0;
+
+        switch(position) {
+            case REST:
+                armDegrees = 0;
+                break;
+            case RAISED:
+                armDegrees = 30;
+                break;
+            case TOP:
+                armDegrees = 200;
+                break;
+            case MIDDLE:
+                armDegrees = 220;
+                break;
+            case BOTTOM:
+                armDegrees = 270;
+                break;
+            default:
+        }
+
+        // Determine new target position, and pass to motor controller
+        int newArmTarget = (int) (armDegrees * -TICKS_PER_DEGREE);
+        arm.setTargetPosition(newArmTarget);
+
+        // Turn On RUN_TO_POSITION
+        arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        // reset the timeout time and start motion.
+        runtime.reset();
+        arm.setPower(Math.abs(speed));
+/*
+        // keep looping while we are still active, and there is time left, and both motors are running.
+        // Note: We use (isBusy() && isBusy()) in the loop test, which means that when EITHER motor hits
+        // its target position, the motion will stop.  This is "safer" in the event that the robot will
+        // always end the motion as soon as possible.
+        // However, if you require that BOTH motors have finished their moves before the robot continues
+        // onto the next step, use (isBusy() || isBusy()) in the loop test.
+
+ */
+        while ((runtime.seconds() < timeoutS) &&
+                (arm.isBusy())) {
+        }
+
+        // Stop all motion;
+        arm.setPower(0);
+
+        // Turn off RUN_TO_POSITION
+        arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        // sleep(250);   // optional pause after each move
     }
  }
 

@@ -60,24 +60,20 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 @Autonomous(name="Narwhal: Red Right Autonomous", group="FreightFrenzy")
 //@Disabled
-public class PPE_NarwhalAutonomous_RedRight extends PPE_NarwhalAutonomousInit {
+public class PPE_NarwhalAutonomous_RedRight extends PPE_NarwhalAutonomousBase {
 
     @Override
     public void runAutonomousMode() {
 
         //PLAN: DRIVE INTO WAREHOUSE FOR (10 Points)
         //***NEVER TESTED***
-        encoderDriveOmni(DRIVE_SPEED,0,10,  10, 2.0);
-        encoderDriveOmni(DRIVE_SPEED, -110, 0,0,2.0);
+        narwhalHWWheel.encoderDrive(DRIVE_SPEED,0,10,  10, 2.0, PPE_HardwareNarwhalChassis.DriveMode.LINEAR,this);
+        narwhalHWWheel.encoderDrive(DRIVE_SPEED, -110, 0,0,2.0, PPE_HardwareNarwhalChassis.DriveMode.LINEAR,this);
 
         //TODO: ADD CAPABILITY TO SCORE WITH CUSTOM SHIPPING ELEMENT AND USE OF TFLITE
         /*
         narwhalHW.angularArmDrive(PPE_HardwareNarwhal.ArmPosition.TOP, 0.4, 4.0);
         narwhalHW.armLid.setPosition(-1.0);
-
          */
-
-
-
     }
 }

@@ -53,7 +53,7 @@ import java.util.List;
  */
 @Autonomous(name = "Narwhal: Autonomous", group = "FreightFrenzy")
 // @Disabled
-public class PPE_NarwhalAutonomous extends PPE_NarwhalAutonomousInit {
+public class PPE_NarwhalAutonomous extends PPE_NarwhalAutonomousBase {
     private static final String TFOD_MODEL_ASSET = "STS_Model.tflite"; //Available on Keep
     private static final String LABEL_FIRST_ELEMENT = "Ball";
     private static final String LABEL_SECOND_ELEMENT = "Box";

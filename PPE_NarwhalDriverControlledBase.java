@@ -50,19 +50,17 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 @TeleOp(name="Narwhal: Driver Controlled Init", group="FreightFrenzy")
 // @Disabled
-public class PPE_NarwhalDriverControlledInit extends OpMode{
+public class PPE_NarwhalDriverControlledBase extends OpMode{
     /* Declare OpMode members. */
-    public PPE_HardwareNarwhalWheel narwhalHWWheel;
+    public PPE_HardwareNarwhalChassis narwhalHWWheel;
     public PPE_HardwareNarwhalExternals2022 narwhalHWEx2022; // jjh Added 1/15/22
 
     boolean carouselIsMoving = false;
-    boolean armIsMovingForward = false;
-    boolean armIsMovingBackward = false;
-    boolean intakeIsMoving = false;
-
-    double  armLidOffset = 0.0;
-
-    double  ARM_LID_SPEED = 0.0025;
+    boolean armSwivelIsMovingClockwise = false;
+    boolean armSwivelIsMovingCounterClockwise = false;
+    boolean armIsMovingUp = false;
+    boolean armIsMovingDown = false;
+    boolean flapperIsMoving = false;
 
     public final void sleep(long milliseconds) {
         try {
@@ -82,8 +80,8 @@ public class PPE_NarwhalDriverControlledInit extends OpMode{
          */
 
         // use one of the classes created to define a STS_HardwareManatee's hardware
-        // narwhalHWWheel = new PPE_HardwareNarwhalMecanum(PPE_HardwareNarwhalWheel.driverMode.DRIVER_CONTROLLED, telemetry);
-        narwhalHWWheel = new PPE_HardwareNarwhalOmni(PPE_HardwareNarwhalWheel.driverMode.DRIVER_CONTROLLED, telemetry);
+        narwhalHWWheel = new PPE_HardwareNarwhalMecanum(PPE_HardwareNarwhalChassis.driverMode.DRIVER_CONTROLLED, telemetry);
+        //narwhalHWWheel = new PPE_HardwareNarwhalOmni(PPE_HardwareNarwhalChassis.driverMode.DRIVER_CONTROLLED, telemetry);
         narwhalHWWheel.init(hardwareMap);
         telemetry.addData("BREAKING:", "Narwhal Wheel Initialized");
         telemetry.update();
@@ -94,6 +92,8 @@ public class PPE_NarwhalDriverControlledInit extends OpMode{
         telemetry.addData("BREAKING:", "Narwhal Externals Initialized");
         telemetry.update();
         sleep(1000);
+
+
     }
 
     /*

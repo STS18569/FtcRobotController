@@ -60,10 +60,10 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 //@Autonomous(name="Narwhal: Autonomous Init", group="FreightFrenzy")
 //@Disabled
-public abstract class PPE_NarwhalAutonomousInit extends LinearOpMode
+public abstract class PPE_NarwhalAutonomousBase extends LinearOpMode
 {
     /* Declare OpMode members. */
-    protected PPE_HardwareNarwhalWheel narwhalHWWheel;
+    protected PPE_HardwareNarwhalChassis narwhalHWWheel;
     protected PPE_HardwareNarwhalExternals2022 narwhalHWEx2022; // jjh Added 1/15/22
 
     static enum DriveMode {LAT_LEFT, LAT_RIGHT, LINEAR};
@@ -83,7 +83,7 @@ public abstract class PPE_NarwhalAutonomousInit extends LinearOpMode
          * Initialize the drive system variables.
          * The init() method of the hardware class does all the work here
          */
-        narwhalHWWheel = new PPE_HardwareNarwhalMecanum(PPE_HardwareNarwhalWheel.driverMode.AUTONOMOUS, telemetry);
+        narwhalHWWheel = new PPE_HardwareNarwhalMecanum(PPE_HardwareNarwhalChassis.driverMode.AUTONOMOUS, telemetry);
         // narwhalHWWheel = new PPE_HardwareNarwhalOmni(PPE_HardwareNarwhalWheel.driverMode.AUTONOMOUS, telemetry);
 
         narwhalHWWheel.init(hardwareMap);
