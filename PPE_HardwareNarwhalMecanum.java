@@ -67,7 +67,9 @@ import java.util.concurrent.TimeUnit;
  */
 public class PPE_HardwareNarwhalMecanum extends PPE_HardwareNarwhalChassis
 {
-    static final double TURN_FUDGE_FACTOR = 0.75;
+    static final double TURN_FUDGE_FACTOR = 5;
+    static final int LINEAR_FUDGE_FACTOR = 8;
+
 
     public DcMotor  leftFrontDrive      = null;
     public DcMotor  leftBackDrive       = null;
@@ -161,11 +163,11 @@ public class PPE_HardwareNarwhalMecanum extends PPE_HardwareNarwhalChassis
         super.encoderDrive(speed, degree, leftInches, rightInches, timeoutS, mode, curLinearOpMode);
 
         if (degree < 0) {
-            leftInches = degree*((WHEEL_BASE * Math.PI)/360);
+            leftInches = TURN_FUDGE_FACTOR * (degree*((WHEEL_BASE * Math.PI)/360));
             rightInches = -(TURN_FUDGE_FACTOR *(degree*((WHEEL_BASE * Math.PI)/360)));
         }
         else if (degree > 0) {
-            rightInches = degree*((WHEEL_BASE * Math.PI)/360);
+            rightInches = TURN_FUDGE_FACTOR * (degree*((WHEEL_BASE * Math.PI)/360));
             leftInches = -(TURN_FUDGE_FACTOR *(degree*((WHEEL_BASE * Math.PI)/360)));
         }
         else if (degree == 0) {
@@ -185,17 +187,17 @@ public class PPE_HardwareNarwhalMecanum extends PPE_HardwareNarwhalChassis
                 newRightFrontTarget = rightFrontDrive.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
                 newRightBackTarget = rightBackDrive.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
                 break;
-            case LAT_LEFT:
-                newLeftFrontTarget = leftFrontDrive.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
-                newLeftBackTarget = leftBackDrive.getCurrentPosition() + (int)(-rightInches * COUNTS_PER_INCH);
-                newRightFrontTarget = rightFrontDrive.getCurrentPosition() + (int)(-rightInches * COUNTS_PER_INCH);
-                newRightBackTarget = rightBackDrive.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
-                break;
             case LAT_RIGHT:
-                newLeftFrontTarget = leftFrontDrive.getCurrentPosition() + (int)(-leftInches * COUNTS_PER_INCH);
-                newLeftBackTarget = leftBackDrive.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
-                newRightFrontTarget = rightFrontDrive.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
-                newRightBackTarget = rightBackDrive.getCurrentPosition() + (int)(-leftInches * COUNTS_PER_INCH);
+                newLeftFrontTarget = leftFrontDrive.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH) + LINEAR_FUDGE_FACTOR;
+                newLeftBackTarget = leftBackDrive.getCurrentPosition() + (int)(-rightInches * COUNTS_PER_INCH) - LINEAR_FUDGE_FACTOR;
+                newRightFrontTarget = rightFrontDrive.getCurrentPosition() + (int)(-rightInches * COUNTS_PER_INCH) - LINEAR_FUDGE_FACTOR;
+                newRightBackTarget = rightBackDrive.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH) + LINEAR_FUDGE_FACTOR;
+                break;
+            case LAT_LEFT:
+                newLeftFrontTarget = leftFrontDrive.getCurrentPosition() + (int)(-leftInches * COUNTS_PER_INCH) - LINEAR_FUDGE_FACTOR;
+                newLeftBackTarget = leftBackDrive.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH) + LINEAR_FUDGE_FACTOR;
+                newRightFrontTarget = rightFrontDrive.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH) + LINEAR_FUDGE_FACTOR;
+                newRightBackTarget = rightBackDrive.getCurrentPosition() + (int)(-leftInches * COUNTS_PER_INCH) - LINEAR_FUDGE_FACTOR;
                 break;
             default:
                 // code block
@@ -211,13 +213,13 @@ public class PPE_HardwareNarwhalMecanum extends PPE_HardwareNarwhalChassis
                     newRightFrontTarget = rightFrontDrive.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
                     newRightBackTarget = rightBackDrive.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
                     break;
-                case LAT_LEFT:
+                case LAT_RIGHT:
                     newLeftFrontTarget = leftFrontDrive.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
                     newLeftBackTarget = leftBackDrive.getCurrentPosition() + (int)(-rightInches * COUNTS_PER_INCH);
                     newRightFrontTarget = rightFrontDrive.getCurrentPosition() + (int)(-rightInches * COUNTS_PER_INCH);
                     newRightBackTarget = rightBackDrive.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
                     break;
-                case LAT_RIGHT:
+                case LAT_LEFT:
                     newLeftFrontTarget = leftFrontDrive.getCurrentPosition() + (int)(-leftInches * COUNTS_PER_INCH);
                     newLeftBackTarget = leftBackDrive.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
                     newRightFrontTarget = rightFrontDrive.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);

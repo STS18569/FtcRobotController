@@ -30,6 +30,17 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.util.ElapsedTime;
+
+
+import org.firstinspires.ftc.robotcore.external.ClassFactory;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
+import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
+import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
+
+import java.util.*;
 
 /**
  * This file illustrates the concept of driving a path based on encoder counts.
@@ -72,10 +83,30 @@ public abstract class PPE_NarwhalAutonomousBase extends LinearOpMode
     static final double DRIVE_GEAR_REDUCTION = 4.0;     // This is < 1.0 if geared UP
     static final double WHEEL_DIAMETER_INCHES = 3.5;     // For figuring circumference
     static final double FUDGE_FACTOR = 0.89;
-    static final double DRIVE_SPEED = 0.3;
+    static final double DRIVE_SPEED = 1;
     static final double LATERAL_ADJUSTMENT = 1.0;
-    static final double TURN_SPEED = 0.09;
+    static final double TURN_SPEED = 0.8;
     static final double REAL_TURN_SPEED = 0.35;
+
+    static final String TFOD_MODEL_ASSET = "STS_Model.tflite";
+    static final String[] LABELS = {
+            "Box",
+            "Ball",
+            "Duck",
+            "TempSE"
+    };
+
+    static final String VUFORIA_KEY =
+            "AdnLowb/////AAABmZNRoOYqak4+lc8AgsQ5vBMOIRDeD+0zoGNlSa//jZJWI6XfuWDNNrQY6PRX55edReDvHQXYkMdN+8nKqohfB8rn2AbVxq4LUeoe67LM4u5NVBGGS5teWMKQbXtqtRBgOkHRCgghllRNAfCOxKNdTT13e6fGNo8tgwQTwKiWHkNylKCBtlaS6ImDNRHQQ1Y1FBu7gr6qWlbvydsPZhnu1VDLMgUxNmK4HaYr/8Xm1865QBaPW9ePFPjHBuHm3h4k0M3Cj19QY2qbLJisNvH+uhkZF3PRxmGJiaeKxM8CkiDCj1JVvYhmjK/enFYGES7eVv4SYvmdizpJNtBrovFelExh25BKICZrdtWPkVm3zXDI";
+    protected VuforiaLocalizer vuforia;
+    protected TFObjectDetector tfod;
+
+
+    static final double SCAN_FOR_ELEMENT_TIMEOUT = 3.0;
+
+    protected ElapsedTime scanForElementTime = new ElapsedTime();
+    protected boolean foundElement = false;
+    protected boolean autonomousIsActive = true;
 
     @Override
     public void runOpMode() {
@@ -88,6 +119,9 @@ public abstract class PPE_NarwhalAutonomousBase extends LinearOpMode
 
         narwhalHWWheel.init(hardwareMap);
 
+        narwhalHWEx2022 = new PPE_HardwareNarwhalExternals2022(); // use the class created to define a STS_HardwareManatee's hardware
+        narwhalHWEx2022.init(hardwareMap);
+
         // Send telemetry message to indicate successful Encoder reset
 
         waitForStart();
@@ -96,6 +130,38 @@ public abstract class PPE_NarwhalAutonomousBase extends LinearOpMode
     }
 
     public abstract void runAutonomousMode();
+
+    public void initVuforia() {
+        /*
+         * Configure Vuforia by creating a Parameter object, and passing it to the Vuforia engine.
+         */
+        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
+
+        parameters.vuforiaLicenseKey = VUFORIA_KEY;
+        parameters.cameraName = hardwareMap.get(WebcamName.class, "Webcam 1");
+
+        //  Instantiate the Vuforia engine
+        vuforia = ClassFactory.getInstance().createVuforia(parameters);
+
+        // Loading trackables is not necessary for the TensorFlow Object Detection engine.
+    }
+
+    public void initTfod() {
+        int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
+                "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
+        tfodParameters.minResultConfidence = 0.8f;
+        tfodParameters.isModelTensorFlow2 = true;
+        tfodParameters.inputSize = 320;
+        tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
+        tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABELS);
+    }
+
+
+
+
+
+
 
     /*
      *  Method to perform a relative move, based on encoder counts.

@@ -31,32 +31,9 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-/**
- * This file illustrates the concept of driving a path based on encoder counts.
- * It uses the common Pushbot hardware class to define the drive on the robot.
- * The code is structured as a LinearOpMode
- *
- * The code REQUIRES that you DO have encoders on the wheels,
- *   otherwise you would use: PushbotAutoDriveByTime;
- *
- *  This code ALSO requires that the drive Motors have been configured such that a positive
- *  power command moves them forwards, and causes the encoders to count UP.
- *
- *   The desired path in this example is:
- *   - Drive forward for 48 inches
- *   - Spin right for 12 Inches
- *   - Drive Backwards for 24 inches
- *   - Stop and close the claw.
- *
- *  The code is written using a method called: encoderDrive(speed, leftInches, rightInches, timeoutS)
- *  that performs the actual movement.
- *  This methods assumes that each movement is relative to the last stopping place.
- *  There are other ways to perform encoder based moves, but this method is probably the simplest.
- *  This code uses the RUN_TO_POSITION mode to enable the Motor controllers to generate the run profile
- *
- * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
- * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
- */
+import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
+
+import java.util.List;
 
 @Autonomous(name="Narwhal: Blue Left Autonomous", group="UFreightFrenzy")
 //@Disabled
@@ -64,31 +41,102 @@ public class PPE_NarwhalAutonomous_BlueLeft extends PPE_NarwhalAutonomousBase {
 
     @Override
     public void runAutonomousMode() {
-
-        sleep(10);
-        /*
-        //Drives into warehouse
-        //***NEVER TESTED***
-        encoderDriveOmni(DRIVE_SPEED,0,3,  3, 2.0);
-        sleep(200);
-
-        //TODO: ADD CAPABILITY TO SCORE WITH CUSTOM SHIPPING ELEMENT AND USE OF TFLITE
-
-        encoderDriveOmni(TURN_SPEED,110,0,  0, 2.0);
-        sleep(200);
-        encoderDriveOmni(DRIVE_SPEED,0,16,  16, 2.0);
+        super.runOpMode();
 
 
-        /*
-        narwhalHW.angularArmDrive(PPE_HardwareNarwhal.ArmPosition.RAISED, 0.4, 4.0);
-        narwhalHW.armLid.setPosition(-1.0);
-         */
+        if (tfod != null) {
+            tfod.activate();
+
+            // The TensorFlow software will scale the input images from the camera to a lower resolution.
+            // This can result in lower detection accuracy at longer distances (> 55cm or 22").
+            // If your target is at distance greater than 50 cm (20") you can adjust the magnification value
+            // to artificially zoom in to the center of image.  For best results, the "aspectRatio" argument
+            // should be set to the value of the images used to create the TensorFlow Object Detection model
+            // (typically 16/9).
+            tfod.setZoom(1.0, 16.0/9.0);
+            tfod.setClippingMargins(1500,500,1500,500);
+        }
+
+
+        /** Commit all init information to the Driver Station */
+        telemetry.update();
+
+        /** Wait for the game to begin */
+        waitForStart();
+
+        while (opModeIsActive() && autonomousIsActive) {
+            if (tfod != null) {
+                // getUpdatedRecognitions() will return null if no new information is available since
+                // the last time that call was made.
+                scanForElementTime.reset();
+                while (scanForElementTime.seconds() < SCAN_FOR_ELEMENT_TIMEOUT) {
+                    String objectLocation = "";
+                    List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
+                    if (updatedRecognitions != null) {
+                        // telemetry.addData("# Object Detected", updatedRecognitions.size());
+
+                        // step through the list of recognitions and display boundary info
+                        int i = 0;
+                        for (Recognition recognition : updatedRecognitions) {
+                            telemetry.addData(String.format("label (%d)", i), recognition.getLabel());
+                            telemetry.addData(String.format("  left,top (%d)", i), "%.03f , %.03f",
+                                    recognition.getLeft(), recognition.getTop());
+                            telemetry.addData(String.format("  right,bottom (%d)", i), "%.03f , %.03f",
+                                    recognition.getRight(), recognition.getBottom());
+
+                            //Set of Conditionals that identifies the location of the starting element
+                            if (recognition.getLeft() > 5 && recognition.getLeft() < 132){
+                                objectLocation = "left";
+                            } else if(recognition.getLeft() > 224 && recognition.getLeft() < 360){
+                                objectLocation = "middle";
+                            } else if(recognition.getLeft() > 440 && recognition.getLeft() < 523){
+                                objectLocation = "right";
+                            }
+
+                            telemetry.addLine(objectLocation);
+                            telemetry.update();
+
+                            if (recognition.getLabel() == "TempSE")
+                                break;
+
+                            // retInt = 1;
+                        }
+                    }  //if (updatedRecognitions != null)
+                    else {
+                        telemetry.addData("SCANNING FOR Shipping Element: time: ", scanForElementTime.seconds());
+                        telemetry.update();
+                    }
+
+                    if (objectLocation != "")
+                        break;
+
+                }  // while (scanForElementTime.seconds() < SCAN_FOR_ELEMENT_TIMEOUT)
 
 
 
-//actual code
+                telemetry.addLine("Done with finding elements.");
+                telemetry.update();
+                sleep(2000);
+            }
+            else {
+                telemetry.addData("tfod != null", "ERROR!!!");
+                telemetry.update();
+                sleep(5000);
+            } // if (tfod != null)
+
+            if (tfod != null) {
+                tfod.shutdown();
+            }
+        }
+
+
+
+
+        initVuforia();
+        initTfod();
 
 
 
     }
+
 }

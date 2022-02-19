@@ -31,32 +31,10 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-/**
- * This file illustrates the concept of driving a path based on encoder counts.
- * It uses the common Pushbot hardware class to define the drive on the robot.
- * The code is structured as a LinearOpMode
- *
- * The code REQUIRES that you DO have encoders on the wheels,
- *   otherwise you would use: PushbotAutoDriveByTime;
- *
- *  This code ALSO requires that the drive Motors have been configured such that a positive
- *  power command moves them forwards, and causes the encoders to count UP.
- *
- *   The desired path in this example is:
- *   - Drive forward for 48 inches
- *   - Spin right for 12 Inches
- *   - Drive Backwards for 24 inches
- *   - Stop and close the claw.
- *
- *  The code is written using a method called: encoderDrive(speed, leftInches, rightInches, timeoutS)
- *  that performs the actual movement.
- *  This methods assumes that each movement is relative to the last stopping place.
- *  There are other ways to perform encoder based moves, but this method is probably the simplest.
- *  This code uses the RUN_TO_POSITION mode to enable the Motor controllers to generate the run profile
- *
- * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
- * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
- */
+import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
+
+import java.util.List;
+
 
 @Autonomous(name="Narwhal: Blue Right Autonomous", group="FreightFrenzy")
 //@Disabled
@@ -64,6 +42,131 @@ public class PPE_NarwhalAutonomous_BlueRight extends PPE_NarwhalAutonomousBase {
 
     @Override
     public void runAutonomousMode() {
+
+        initVuforia();
+        initTfod();
+        String objectLocation = "";
+
+
+
+
+        if (tfod != null) {
+            tfod.activate();
+
+            // The TensorFlow software will scale the input images from the camera to a lower resolution.
+            // This can result in lower detection accuracy at longer distances (> 55cm or 22").
+            // If your target is at distance greater than 50 cm (20") you can adjust the magnification value
+            // to artificially zoom in to the center of image.  For best results, the "aspectRatio" argument
+            // should be set to the value of the images used to create the TensorFlow Object Detection model
+            // (typically 16/9).
+            tfod.setZoom(1.0, 16.0/9.0);
+            tfod.setClippingMargins(1500,500,1500,500);
+        }
+
+        telemetry.addData(">", "Press Play to start op mode");
+        telemetry.update();
+        waitForStart();
+
+        while (opModeIsActive() && autonomousIsActive) {
+            if (tfod != null) {
+                // getUpdatedRecognitions() will return null if no new information is available since
+                // the last time that call was made.
+                scanForElementTime.reset();
+
+                while (scanForElementTime.seconds() < SCAN_FOR_ELEMENT_TIMEOUT) {
+                    List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
+                    if (updatedRecognitions != null) {
+                        telemetry.addData("# Object Detected", updatedRecognitions.size());
+                        // step through the list of recognitions and display boundary info.
+                        int i = 0;
+
+                        for (Recognition recognition : updatedRecognitions) {
+                            telemetry.addData(String.format("label (%d)", i), recognition.getLabel());
+                            telemetry.addData(String.format("  left,top (%d)", i), "%.03f , %.03f",
+                                    recognition.getLeft(), recognition.getTop());
+                            telemetry.addData(String.format("  right,bottom (%d)", i), "%.03f , %.03f",
+                                    recognition.getRight(), recognition.getBottom());
+                            telemetry.addData(String.format("  confidence (%d)", i), "%.03f",
+                                    recognition.getConfidence());
+                            i++;
+
+                            //Set of Conditionals that identifies the location of the starting element
+                            if (recognition.getLeft() > 5 && recognition.getLeft() < 132){
+                                objectLocation = "left";
+                                break;
+                            } else if(recognition.getLeft() > 224 && recognition.getLeft() < 360){
+                                objectLocation = "middle";
+                                break;
+                            } else if(recognition.getLeft() > 440 && recognition.getLeft() < 523){
+                                objectLocation = "right";
+                                break;
+                            }
+                            telemetry.addLine(objectLocation);
+                        }
+                        telemetry.update();
+
+                        //Left range: (5, 93) (132, 212)
+                        //Middle range:(224, 306), (360, 442)
+                        //Right range: (440, 526), (523, 618)
+
+
+                    }  //if (updatedRecognitions != null)
+                    else {
+                        telemetry.addData("SCANNING FOR RINGS: time: ", scanForElementTime.seconds());
+                        telemetry.update();
+                    }
+
+                    if (objectLocation != ""){
+                        break;
+                    }
+                }  // while (scanForElementTime.seconds() < SCAN_FOR_ELEMENT_TIMEOUT)
+
+                if (!foundElement) {
+                    // telemetry.addData("STS_ManateeAutonomousInit.DRIVE_SPEED == ", STS_ManateeAutonomousInit.DRIVE_SPEED);
+                    telemetry.addLine("foundElement == LABEL_ZERO_ELEMENT");
+                    telemetry.update();
+                    autonomousIsActive = false;
+                }
+
+                telemetry.addLine("Done with finding elements.");
+                telemetry.update();
+                sleep(2000);
+            }
+            else {
+                telemetry.addData("tfod != null", "ERROR!!!");
+                telemetry.update();
+                sleep(5000);
+            } // if (tfod != null)
+
+            if (tfod != null) {
+                tfod.shutdown();
+            }
+        }
+
+        telemetry.addLine(objectLocation);
+        telemetry.update();
+
+        //narwhalHWWheel.encoderDrive(DRIVE_SPEED, 0, 23, 23, 3.0,PPE_HardwareNarwhalChassis.DriveMode.LAT_RIGHT, this );
+        //narwhalHWEx2022.carousel.setPower(0.2);
+        //sleep(3000);
+        //narwhalHWEx2022.carousel.setPower(0);
+        //narwhalHWWheel.encoderDrive(DRIVE_SPEED,0,38,  38, 2.0, PPE_HardwareNarwhalChassis.DriveMode.LINEAR,this);
+        //narwhalHWWheel.encoderDrive(DRIVE_SPEED, 0, 5, 5, 3.0,PPE_HardwareNarwhalChassis.DriveMode.LAT_RIGHT, this );
+
+        switch (objectLocation){
+            case "left":
+                narwhalHWWheel.encoderDrive(DRIVE_SPEED, 0, 10, 10, 3.0,PPE_HardwareNarwhalChassis.DriveMode.LAT_LEFT, this );
+                break;
+            case "middle":
+                narwhalHWWheel.encoderDrive(DRIVE_SPEED, 0, 10, 10, 3.0,PPE_HardwareNarwhalChassis.DriveMode.LINEAR, this );
+                break;
+            case "right":
+                narwhalHWWheel.encoderDrive(DRIVE_SPEED, 0, 10, 10, 3.0,PPE_HardwareNarwhalChassis.DriveMode.LAT_RIGHT, this );
+                break;
+            default:
+                break;
+        }
+
         /*
         //Drives forward and changes directions
         encoderDriveOmni(DRIVE_SPEED,0,9.3,  9.3, 2.0);

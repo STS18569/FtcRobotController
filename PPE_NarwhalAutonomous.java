@@ -59,7 +59,7 @@ public class PPE_NarwhalAutonomous extends PPE_NarwhalAutonomousBase {
     private static final String LABEL_SECOND_ELEMENT = "Box";
     private static final String LABEL_THIRD_ELEMENT = "Duck";
     private static final String LABEL_FOURTH_ELEMENT = "TempSE";
-    private static final double SCAN_FOR_ELEMENT_TIMEOUT = 3.0;
+    private static final double SCAN_FOR_ELEMENT_TIMEOUT = 10.0;
 
     private ElapsedTime scanForElementTime = new ElapsedTime();
     private boolean foundElement = false;
@@ -199,7 +199,7 @@ public class PPE_NarwhalAutonomous extends PPE_NarwhalAutonomousBase {
     /**
      * Initialize the Vuforia localization engine.
      */
-    private void initVuforia() {
+    public void initVuforia() {
         /*
          * Configure Vuforia by creating a Parameter object, and passing it to the Vuforia engine.
          */
@@ -216,7 +216,7 @@ public class PPE_NarwhalAutonomous extends PPE_NarwhalAutonomousBase {
     /**
      * Initialize the TensorFlow Object Detection engine.
      */
-    private void initTfod() {
+    public void initTfod() {
         int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
                 "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);

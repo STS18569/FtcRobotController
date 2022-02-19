@@ -67,8 +67,13 @@ public class PPE_NarwhalAutonomous_RedRight extends PPE_NarwhalAutonomousBase {
 
         //PLAN: DRIVE INTO WAREHOUSE FOR (10 Points)
         //***NEVER TESTED***
-        narwhalHWWheel.encoderDrive(DRIVE_SPEED,0,10,  10, 2.0, PPE_HardwareNarwhalChassis.DriveMode.LINEAR,this);
-        narwhalHWWheel.encoderDrive(DRIVE_SPEED, -110, 0,0,2.0, PPE_HardwareNarwhalChassis.DriveMode.LINEAR,this);
+        //narwhalHWWheel.encoderDrive(DRIVE_SPEED,0,10,  10, 2.0, PPE_HardwareNarwhalChassis.DriveMode.LINEAR,this);
+        //narwhalHWWheel.encoderDrive(TURN_SPEED, -90, 0,0,2.0, PPE_HardwareNarwhalChassis.DriveMode.LINEAR,this);
+
+        narwhalHWWheel.encoderDrive(DRIVE_SPEED, 0, 10, 10, 3.0,PPE_HardwareNarwhalChassis.DriveMode.LAT_RIGHT, this );
+
+
+        //narwhalHWWheel.encoderDrive(DRIVE_SPEED, 0, 10, 10, 2.0,PPE_HardwareNarwhalChassis.DriveMode.LAT_LEFT, this );
 
         //TODO: ADD CAPABILITY TO SCORE WITH CUSTOM SHIPPING ELEMENT AND USE OF TFLITE
         /*
