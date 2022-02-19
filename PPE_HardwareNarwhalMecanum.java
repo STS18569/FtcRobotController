@@ -67,9 +67,6 @@ import java.util.concurrent.TimeUnit;
  */
 public class PPE_HardwareNarwhalMecanum extends PPE_HardwareNarwhalChassis
 {
-    static final double TURN_FUDGE_FACTOR = 5;
-    static final int LINEAR_FUDGE_FACTOR = 8;
-
 
     public DcMotor  leftFrontDrive      = null;
     public DcMotor  leftBackDrive       = null;
@@ -163,12 +160,12 @@ public class PPE_HardwareNarwhalMecanum extends PPE_HardwareNarwhalChassis
         super.encoderDrive(speed, degree, leftInches, rightInches, timeoutS, mode, curLinearOpMode);
 
         if (degree < 0) {
-            leftInches = TURN_FUDGE_FACTOR * (degree*((WHEEL_BASE * Math.PI)/360));
-            rightInches = -(TURN_FUDGE_FACTOR *(degree*((WHEEL_BASE * Math.PI)/360)));
+            leftInches = (degree*((2 * WHEEL_BASE * Math.PI)/360));
+            rightInches = -((degree*((2 * WHEEL_BASE * Math.PI)/360)));
         }
         else if (degree > 0) {
-            rightInches = TURN_FUDGE_FACTOR * (degree*((WHEEL_BASE * Math.PI)/360));
-            leftInches = -(TURN_FUDGE_FACTOR *(degree*((WHEEL_BASE * Math.PI)/360)));
+            rightInches = (degree*((2 * WHEEL_BASE * Math.PI)/360));
+            leftInches = -((degree*((2 * WHEEL_BASE * Math.PI)/360)));
         }
         else if (degree == 0) {
             leftInches = leftInches;
@@ -188,16 +185,16 @@ public class PPE_HardwareNarwhalMecanum extends PPE_HardwareNarwhalChassis
                 newRightBackTarget = rightBackDrive.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
                 break;
             case LAT_RIGHT:
-                newLeftFrontTarget = leftFrontDrive.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH) + LINEAR_FUDGE_FACTOR;
-                newLeftBackTarget = leftBackDrive.getCurrentPosition() + (int)(-rightInches * COUNTS_PER_INCH) - LINEAR_FUDGE_FACTOR;
-                newRightFrontTarget = rightFrontDrive.getCurrentPosition() + (int)(-rightInches * COUNTS_PER_INCH) - LINEAR_FUDGE_FACTOR;
-                newRightBackTarget = rightBackDrive.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH) + LINEAR_FUDGE_FACTOR;
+                newLeftFrontTarget = leftFrontDrive.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
+                newLeftBackTarget = leftBackDrive.getCurrentPosition() + (int)(-rightInches * COUNTS_PER_INCH);
+                newRightFrontTarget = rightFrontDrive.getCurrentPosition() + (int)(-rightInches * COUNTS_PER_INCH);
+                newRightBackTarget = rightBackDrive.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
                 break;
             case LAT_LEFT:
-                newLeftFrontTarget = leftFrontDrive.getCurrentPosition() + (int)(-leftInches * COUNTS_PER_INCH) - LINEAR_FUDGE_FACTOR;
-                newLeftBackTarget = leftBackDrive.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH) + LINEAR_FUDGE_FACTOR;
-                newRightFrontTarget = rightFrontDrive.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH) + LINEAR_FUDGE_FACTOR;
-                newRightBackTarget = rightBackDrive.getCurrentPosition() + (int)(-leftInches * COUNTS_PER_INCH) - LINEAR_FUDGE_FACTOR;
+                newLeftFrontTarget = leftFrontDrive.getCurrentPosition() + (int)(-leftInches * COUNTS_PER_INCH);
+                newLeftBackTarget = leftBackDrive.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
+                newRightFrontTarget = rightFrontDrive.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
+                newRightBackTarget = rightBackDrive.getCurrentPosition() + (int)(-leftInches * COUNTS_PER_INCH);
                 break;
             default:
                 // code block
@@ -338,12 +335,18 @@ public class PPE_HardwareNarwhalMecanum extends PPE_HardwareNarwhalChassis
         newLeftBackTarget = leftBackDrive.getCurrentPosition() + (int) (leftInches * COUNTS_PER_INCH);
         newRightFrontTarget = rightFrontDrive.getCurrentPosition() + (int) (rightInches * COUNTS_PER_INCH);
         newRightBackTarget = rightBackDrive.getCurrentPosition() + (int) (rightInches * COUNTS_PER_INCH);
-        // Gets the current position of the encoders at the beginning of the EncoderDrive method
+
+                // Gets the current position of the encoders at the beginning of the EncoderDrive method
         /*
         rightPosition = rightDrive.getCurrentPosition();
         leftPosition = leftDrive.getCurrentPosition();
-
          */
+
+                leftFrontDrive.setTargetPosition(newLeftFrontTarget);
+                leftBackDrive.setTargetPosition(newLeftBackTarget);
+                rightFrontDrive.setTargetPosition(newRightFrontTarget);
+                rightBackDrive.setTargetPosition(newRightBackTarget);
+
 
         // Turn On RUN_TO_POSITION
         leftFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -353,10 +356,12 @@ public class PPE_HardwareNarwhalMecanum extends PPE_HardwareNarwhalChassis
 
         // reset the timeout time and start motion.
         runtime.reset();
-        leftFrontDrive.setPower(speed);
-        leftBackDrive.setPower(speed);
-        rightFrontDrive.setPower(speed);
-        rightBackDrive.setPower(speed);
+        leftPower = speed;
+        rightPower = speed;
+        leftFrontDrive.setPower(leftPower);
+        leftBackDrive.setPower(leftPower);
+        rightFrontDrive.setPower(rightPower);
+        rightBackDrive.setPower(rightPower);
         boolean Running = true;
             /*
             double LeftEncoderPositionAtFullSpeed;
@@ -377,13 +382,21 @@ public class PPE_HardwareNarwhalMecanum extends PPE_HardwareNarwhalChassis
 
         // This gets the absolute value of the encoder positions at full speed - the current speed, and while it's greater than 0, it will continues increasing the speed.
         // This allows the robot to accelerate over a set number of inches, which reduces wheel slippage and increases overall reliability
-        while (leftFrontDrive.isBusy() && leftBackDrive.isBusy() && rightFrontDrive.isBusy() && rightBackDrive.isBusy()
-                && Running && curLinearOpMode.opModeIsActive() && (runtime.seconds() < timeoutS)) {
-            //
-            if (((Math.abs(leftFrontDrive.getTargetPosition()) - Math.abs(leftFrontDrive.getCurrentPosition())) <= (4 * COUNTS_PER_INCH)) && ((Math.abs(leftFrontDrive.getPower()) > .05))) {
+        while ((leftFrontDrive.getTargetPosition() != leftFrontDrive.getCurrentPosition()) && (rightFrontDrive.getTargetPosition() != rightFrontDrive.getCurrentPosition()) &&
+                Running && curLinearOpMode.opModeIsActive() && (runtime.seconds() < timeoutS)) {
+
+            telemetry.addData("Working", "moving");
+            telemetry.update();
+
+            if (((Math.abs(leftFrontDrive.getTargetPosition()) - Math.abs(leftFrontDrive.getCurrentPosition())) <= (4 * COUNTS_PER_INCH)) && ((Math.abs(leftFrontDrive.getPower()) > .15))
+            && (leftFrontDrive.getTargetPosition() != leftFrontDrive.getCurrentPosition()) && (rightFrontDrive.getTargetPosition() != rightFrontDrive.getCurrentPosition())) {
                 // This allows the robot to accelerate over a set distance, rather than going full speed.  This reduces wheel slippage and increases reliability.
-                leftPower = (Range.clip(Math.abs((leftFrontDrive.getPower()) * 0.001), .15, speed));
-                rightPower = (Range.clip(Math.abs((rightBackDrive.getPower()) * 0.001), .15, speed));
+
+                telemetry.addData("Working", "slowing");
+                telemetry.update();
+
+                leftPower = (Range.clip(Math.abs((leftFrontDrive.getPower()) * 0.5), .15, speed));
+                rightPower = (Range.clip(Math.abs((rightBackDrive.getPower()) * 0.5), .15, speed));
 
                 leftFrontDrive.setPower(leftPower);
                 leftBackDrive.setPower(leftPower);
@@ -391,22 +404,25 @@ public class PPE_HardwareNarwhalMecanum extends PPE_HardwareNarwhalChassis
                 rightBackDrive.setPower(rightPower);
 
                 //telemetry.addData("In Accel loop CM", + Distance.getDistance(DistanceUnit.CM));
-                telemetry.addData("Current Power", "%7d", leftPower);
-                telemetry.addData("Path1 (target)",  "Running to %7d :%7d :%7d :%7d", newLeftFrontTarget,  newLeftBackTarget,
-                        newRightFrontTarget,  newRightBackTarget);
-                telemetry.addData("Path2 (position)",  "Running at %7d :%7d :%7d :%7d", leftFrontDrive.getCurrentPosition(), leftBackDrive.getCurrentPosition(),
+                telemetry.addData("Current Power", "%.2f", leftPower);
+                telemetry.addData("Path1 (target)", "Running to %7d :%7d :%7d :%7d", newLeftFrontTarget, newLeftBackTarget,
+                        newRightFrontTarget, newRightBackTarget);
+                telemetry.addData("Path2 (position)", "Running at %7d :%7d :%7d :%7d", leftFrontDrive.getCurrentPosition(), leftBackDrive.getCurrentPosition(),
                         rightFrontDrive.getCurrentPosition(), rightBackDrive.getCurrentPosition());
                 //telemetry.addData("Sections Complete:", +SectionsCompleted);
                 telemetry.update();
+            } else if ((leftFrontDrive.getTargetPosition() == leftFrontDrive.getCurrentPosition()) && (rightFrontDrive.getTargetPosition() == rightFrontDrive.getCurrentPosition())) {
+                Running = false;
+                /*
                 //This if statement might be kinda pointless... leaving it in for now
             } else if (((Math.abs(newLeftFrontTarget) - Math.abs(leftFrontDrive.getCurrentPosition()) < COUNTS_PER_INCH) || (Math.abs(newLeftFrontTarget) - Math.abs(leftBackDrive.getCurrentPosition()) > COUNTS_PER_INCH))
-            && ((Math.abs(newLeftBackTarget) - Math.abs(leftBackDrive.getCurrentPosition()) < COUNTS_PER_INCH) || (Math.abs(newLeftBackTarget) - Math.abs(leftBackDrive.getCurrentPosition()) > COUNTS_PER_INCH))
+                    && ((Math.abs(newLeftBackTarget) - Math.abs(leftBackDrive.getCurrentPosition()) < COUNTS_PER_INCH) || (Math.abs(newLeftBackTarget) - Math.abs(leftBackDrive.getCurrentPosition()) > COUNTS_PER_INCH))
                     && ((Math.abs(newRightFrontTarget) - Math.abs(rightFrontDrive.getCurrentPosition()) < COUNTS_PER_INCH) || (Math.abs(newRightFrontTarget) - Math.abs(rightFrontDrive.getCurrentPosition()) > COUNTS_PER_INCH))
                     && ((Math.abs(newRightBackTarget) - Math.abs(rightBackDrive.getCurrentPosition()) < COUNTS_PER_INCH) || (Math.abs(newRightBackTarget) - Math.abs(rightBackDrive.getCurrentPosition()) > COUNTS_PER_INCH))) {
                 Running = false;
-            }
+                 */
 
-            else {
+            } else {
 
                 // Multiplies the speed desired by the direction, which has a value of either 1, or -1, and allows for backwards driving with the ramp up function
                 leftFrontDrive.setPower(speed);
@@ -424,7 +440,6 @@ public class PPE_HardwareNarwhalMecanum extends PPE_HardwareNarwhalChassis
 
 
             }
-
 
             // Display information for the driver.
 
@@ -541,6 +556,9 @@ public class PPE_HardwareNarwhalMecanum extends PPE_HardwareNarwhalChassis
             break;
             default:
         }
+
+        telemetry.addData("Working", "end");
+        telemetry.update();
 
         // Stops all motion
         // Set to run without encoder, so it's not necessary to declare this every time after the method is used

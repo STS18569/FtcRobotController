@@ -43,12 +43,12 @@ public class PPE_HardwareNarwhalChassis
 {
     protected static final double WHEEL_SPEED_MULTIPLIER = 0.5;
     protected static final double WHEEL_TURN_SPEED_MULTIPLIER = 0.9;
-    protected static final double WHEEL_BASE = 10.8;
+    protected static final double WHEEL_BASE = 9;
     protected static final double COUNTS_PER_MOTOR_REV = 28.0;    // eg: TETRIX Motor Encoder
     protected static final double DRIVE_GEAR_REDUCTION = 20.0;     // This is < 1.0 if geared UP
     protected static final double WHEEL_DIAMETER_INCHES = 4.0;     // For figuring circumference
     protected static final double FUDGE_FACTOR = 1;
-    protected static final double COUNTS_PER_INCH = 40; //FUDGE_FACTOR * ((COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) / (WHEEL_DIAMETER_INCHES * 3.1415));
+    protected static final double COUNTS_PER_INCH = 35.22; //FUDGE_FACTOR * ((COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) / (WHEEL_DIAMETER_INCHES * 3.1415));
 
     protected static enum driverMode {AUTONOMOUS, DRIVER_CONTROLLED};
     protected static enum DriveMode {LAT_LEFT, LAT_RIGHT, LINEAR};

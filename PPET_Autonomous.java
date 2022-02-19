@@ -65,7 +65,7 @@ public class PPET_Autonomous extends PPE_NarwhalAutonomousBase {
     @Override
     public void runAutonomousMode() {
 
-        narwhalHWWheel.encoderDriveTest1(DRIVE_SPEED,0,24,  24, 5.0, PPE_HardwareNarwhalChassis.DriveMode.LINEAR,this);
+        narwhalHWWheel.encoderDrive(DRIVE_SPEED,90,24,  24, 5.0, PPE_HardwareNarwhalChassis.DriveMode.LINEAR,this);
 
     }
 }

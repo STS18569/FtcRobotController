@@ -83,7 +83,7 @@ public abstract class PPE_NarwhalAutonomousBase extends LinearOpMode
     static final double DRIVE_GEAR_REDUCTION = 4.0;     // This is < 1.0 if geared UP
     static final double WHEEL_DIAMETER_INCHES = 3.5;     // For figuring circumference
     static final double FUDGE_FACTOR = 0.89;
-    static final double DRIVE_SPEED = 1;
+    static final double DRIVE_SPEED = 0.5;
     static final double LATERAL_ADJUSTMENT = 1.0;
     static final double TURN_SPEED = 0.8;
     static final double REAL_TURN_SPEED = 0.35;
