@@ -154,6 +154,7 @@ public class PPE_HardwareNarwhalMecanum extends PPE_HardwareNarwhalChassis
         telemetry.update();
     }
 
+    //TODO: honestly I'll do RoadRunner/Odometry next year
     public void encoderDrive(double speed, double degree,
                              double leftInches, double rightInches,
                              double timeoutS, PPE_HardwareNarwhalChassis.DriveMode mode, LinearOpMode curLinearOpMode) {
@@ -288,7 +289,7 @@ public class PPE_HardwareNarwhalMecanum extends PPE_HardwareNarwhalChassis
         }
     }
 
-    //TODO: TESTING TIMEEEE
+    //TODO: update (Post-San Jose), I dont think this ever worked as intended; weird behavior
     public void encoderDriveTest1(double speed, double degree,
                                  double leftInches, double rightInches,
                                  double timeoutS, PPE_HardwareNarwhalChassis.DriveMode mode, LinearOpMode curLinearOpMode) {
@@ -389,7 +390,11 @@ public class PPE_HardwareNarwhalMecanum extends PPE_HardwareNarwhalChassis
             telemetry.update();
 
             if (((Math.abs(leftFrontDrive.getTargetPosition()) - Math.abs(leftFrontDrive.getCurrentPosition())) <= (4 * COUNTS_PER_INCH)) && ((Math.abs(leftFrontDrive.getPower()) > .15))
-            && (leftFrontDrive.getTargetPosition() != leftFrontDrive.getCurrentPosition()) && (rightFrontDrive.getTargetPosition() != rightFrontDrive.getCurrentPosition())) {
+            && (leftFrontDrive.getTargetPosition() != leftFrontDrive.getCurrentPosition()) && (rightFrontDrive.getTargetPosition() != rightFrontDrive.getCurrentPosition())
+            && !((Math.abs(newLeftFrontTarget) - Math.abs(leftFrontDrive.getCurrentPosition()) < -COUNTS_PER_INCH)) &&
+                    !((Math.abs(newLeftBackTarget) - Math.abs(leftBackDrive.getCurrentPosition()) < -COUNTS_PER_INCH)) &&
+                    !((Math.abs(newRightFrontTarget) - Math.abs(rightFrontDrive.getCurrentPosition()) < -COUNTS_PER_INCH)) &&
+                    !((Math.abs(newRightBackTarget) - Math.abs(rightBackDrive.getCurrentPosition()) < -COUNTS_PER_INCH))) {
                 // This allows the robot to accelerate over a set distance, rather than going full speed.  This reduces wheel slippage and increases reliability.
 
                 telemetry.addData("Working", "slowing");
@@ -411,16 +416,14 @@ public class PPE_HardwareNarwhalMecanum extends PPE_HardwareNarwhalChassis
                         rightFrontDrive.getCurrentPosition(), rightBackDrive.getCurrentPosition());
                 //telemetry.addData("Sections Complete:", +SectionsCompleted);
                 telemetry.update();
-            } else if ((leftFrontDrive.getTargetPosition() == leftFrontDrive.getCurrentPosition()) && (rightFrontDrive.getTargetPosition() == rightFrontDrive.getCurrentPosition())) {
+
+                //When to stop motion
+            } else if (((Math.abs(newLeftFrontTarget) - Math.abs(leftFrontDrive.getCurrentPosition()) < -COUNTS_PER_INCH))
+                    && ((Math.abs(newLeftBackTarget) - Math.abs(leftBackDrive.getCurrentPosition()) < -COUNTS_PER_INCH))
+                    && ((Math.abs(newRightFrontTarget) - Math.abs(rightFrontDrive.getCurrentPosition()) < -COUNTS_PER_INCH))
+                    && ((Math.abs(newRightBackTarget) - Math.abs(rightBackDrive.getCurrentPosition()) < -COUNTS_PER_INCH))) {
                 Running = false;
-                /*
-                //This if statement might be kinda pointless... leaving it in for now
-            } else if (((Math.abs(newLeftFrontTarget) - Math.abs(leftFrontDrive.getCurrentPosition()) < COUNTS_PER_INCH) || (Math.abs(newLeftFrontTarget) - Math.abs(leftBackDrive.getCurrentPosition()) > COUNTS_PER_INCH))
-                    && ((Math.abs(newLeftBackTarget) - Math.abs(leftBackDrive.getCurrentPosition()) < COUNTS_PER_INCH) || (Math.abs(newLeftBackTarget) - Math.abs(leftBackDrive.getCurrentPosition()) > COUNTS_PER_INCH))
-                    && ((Math.abs(newRightFrontTarget) - Math.abs(rightFrontDrive.getCurrentPosition()) < COUNTS_PER_INCH) || (Math.abs(newRightFrontTarget) - Math.abs(rightFrontDrive.getCurrentPosition()) > COUNTS_PER_INCH))
-                    && ((Math.abs(newRightBackTarget) - Math.abs(rightBackDrive.getCurrentPosition()) < COUNTS_PER_INCH) || (Math.abs(newRightBackTarget) - Math.abs(rightBackDrive.getCurrentPosition()) > COUNTS_PER_INCH))) {
-                Running = false;
-                 */
+
 
             } else {
 

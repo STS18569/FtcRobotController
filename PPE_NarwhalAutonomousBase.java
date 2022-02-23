@@ -88,7 +88,7 @@ public abstract class PPE_NarwhalAutonomousBase extends LinearOpMode
     static final double TURN_SPEED = 0.8;
     static final double REAL_TURN_SPEED = 0.35;
 
-    static final String TFOD_MODEL_ASSET = "STS_Model.tflite";
+    static final String TFOD_MODEL_ASSET = "STS_Model.tflite"; //Calls our custom TFlite object
     static final String[] LABELS = {
             "Box",
             "Ball",
@@ -102,7 +102,7 @@ public abstract class PPE_NarwhalAutonomousBase extends LinearOpMode
     protected TFObjectDetector tfod;
 
 
-    static final double SCAN_FOR_ELEMENT_TIMEOUT = 3.0;
+    static final double SCAN_FOR_ELEMENT_TIMEOUT = 1.0;
 
     protected ElapsedTime scanForElementTime = new ElapsedTime();
     protected boolean foundElement = false;
@@ -131,21 +131,16 @@ public abstract class PPE_NarwhalAutonomousBase extends LinearOpMode
 
     public abstract void runAutonomousMode();
 
+    //Vuforia Init method to use in child classes/auto
+    //Note: Must call initVuforia() and initTfod() to use vision
     public void initVuforia() {
-        /*
-         * Configure Vuforia by creating a Parameter object, and passing it to the Vuforia engine.
-         */
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
-
         parameters.vuforiaLicenseKey = VUFORIA_KEY;
         parameters.cameraName = hardwareMap.get(WebcamName.class, "Webcam 1");
-
-        //  Instantiate the Vuforia engine
         vuforia = ClassFactory.getInstance().createVuforia(parameters);
-
-        // Loading trackables is not necessary for the TensorFlow Object Detection engine.
     }
 
+    //TensorFlow Object Detection Initialization
     public void initTfod() {
         int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
                 "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
@@ -157,29 +152,4 @@ public abstract class PPE_NarwhalAutonomousBase extends LinearOpMode
         tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABELS);
     }
 
-
-
-
-
-
-
-    /*
-     *  Method to perform a relative move, based on encoder counts.
-     *  Encoders are not reset as the move is based on the current position.
-     *  Move will stop if any of three conditions occur:
-     *  1) Move gets to the desired position
-     *  2) Move runs out of time
-     *  3) Driver stops the opmode running.
-     */
-
-    //TODO: ENCODERDRIVE HIGHLY UNRELIABLE, OFTEN OVERSHOT OR UNDERSHOT TURN
-    /*
-    public void encoderDriveOmni(double speed, double degree,
-                                 double leftInches, double rightInches,
-                                 double timeoutS, LinearOpMode curLinearOpMode)
-
-    public void encoderDriveMecanum(double speed, double degree,
-                                    double leftInches, double rightInches,
-                                    double timeoutS, LinearOpMode curLinearOpMode)
-     */
 }

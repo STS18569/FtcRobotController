@@ -96,7 +96,7 @@ public class PPE_NarwhalDriverControlled extends PPE_NarwhalDriverControlledBase
         updateKeys();
 
         if (gamepad2.left_bumper && !armSwivelIsMovingCounterClockwise) {
-            narwhalHWEx2022.armSwivel.setPower(-0.4);
+            narwhalHWEx2022.armSwivel.setPower(-0.35);
             armSwivelIsMovingCounterClockwise = true;
         } else if (!gamepad2.left_bumper && armSwivelIsMovingCounterClockwise) {
             narwhalHWEx2022.armSwivel.setPower(0);
@@ -104,7 +104,7 @@ public class PPE_NarwhalDriverControlled extends PPE_NarwhalDriverControlledBase
         }
 
         if (gamepad2.right_bumper && !armSwivelIsMovingClockwise) {
-            narwhalHWEx2022.armSwivel.setPower(0.4);
+            narwhalHWEx2022.armSwivel.setPower(0.35);
             armSwivelIsMovingClockwise = true;
         } else if (!gamepad2.right_bumper && armSwivelIsMovingClockwise) {
             narwhalHWEx2022.armSwivel.setPower(0);
@@ -112,15 +112,17 @@ public class PPE_NarwhalDriverControlled extends PPE_NarwhalDriverControlledBase
         }
 
         if ((gamepad2.left_trigger > 0) && !armIsMovingUp) {
-            narwhalHWEx2022.arm.setPower(0.4);
+            narwhalHWEx2022.arm.setPower(0.2);
             armIsMovingUp = true;
         } else if (!(gamepad2.left_trigger > 0) && armIsMovingUp) {
             narwhalHWEx2022.arm.setPower(0);
             armIsMovingUp = false;
         }
 
+
+        //The motor is flipped so this goes upward
         if ((gamepad2.right_trigger > 0) && !armIsMovingDown) {
-            narwhalHWEx2022.arm.setPower(-0.25);
+            narwhalHWEx2022.arm.setPower(-0.3);
             armIsMovingDown = true;
         } else if (!(gamepad2.right_trigger > 0) && armIsMovingDown) {
             narwhalHWEx2022.arm.setPower(0);
@@ -159,7 +161,7 @@ public class PPE_NarwhalDriverControlled extends PPE_NarwhalDriverControlledBase
             toggleMap1.circle = toggle(toggleMap1.circle);
             useMap1.circle = runtime.milliseconds();
             carouselIsMoving = true;
-            narwhalHWEx2022.carousel.setPower(0.75);
+            narwhalHWEx2022.carousel.setPower(0.9);
         }
 
         if(gamepad2.circle && cdCheck(useMap1.circle, 500) && carouselIsMoving){
@@ -173,7 +175,7 @@ public class PPE_NarwhalDriverControlled extends PPE_NarwhalDriverControlledBase
             toggleMap1.square = toggle(toggleMap1.square);
             useMap1.square = runtime.milliseconds();
             carouselIsMoving = true;
-            narwhalHWEx2022.carousel.setPower(-0.75);
+            narwhalHWEx2022.carousel.setPower(-0.9);
         }
 
         if(gamepad2.square && cdCheck(useMap1.square, 500) && carouselIsMoving){

@@ -43,6 +43,19 @@ public class PPE_NarwhalAutonomous_BlueRight extends PPE_NarwhalAutonomousBase {
     @Override
     public void runAutonomousMode() {
 
+        //Base Auto
+        //Carousel(10) + Park (3 ~ 6)
+        narwhalHWWheel.encoderDrive(DRIVE_SPEED,0,7,  7, 2.0, PPE_HardwareNarwhalChassis.DriveMode.LAT_RIGHT,this);
+        narwhalHWWheel.encoderDrive(DRIVE_SPEED, 0, -30, -30, 3.0,PPE_HardwareNarwhalChassis.DriveMode.LINEAR, this );
+        narwhalHWEx2022.carousel.setPower(0.6);
+        sleep(5000);
+        narwhalHWEx2022.carousel.setPower(0);
+        narwhalHWWheel.encoderDrive(DRIVE_SPEED,0,28,  28, 3.0, PPE_HardwareNarwhalChassis.DriveMode.LAT_RIGHT,this);
+        narwhalHWWheel.encoderDrive(DRIVE_SPEED, 0, -5, -5, 3.0,PPE_HardwareNarwhalChassis.DriveMode.LINEAR, this );
+
+
+        /*
+        TODO: While Vision was tested and was working to be able to identify randomization, mechanical limitations prevented this from being used at all
         initVuforia();
         initTfod();
         String objectLocation = "";
@@ -146,13 +159,6 @@ public class PPE_NarwhalAutonomous_BlueRight extends PPE_NarwhalAutonomousBase {
         telemetry.addLine(objectLocation);
         telemetry.update();
 
-        //narwhalHWWheel.encoderDrive(DRIVE_SPEED, 0, 23, 23, 3.0,PPE_HardwareNarwhalChassis.DriveMode.LAT_RIGHT, this );
-        //narwhalHWEx2022.carousel.setPower(0.2);
-        //sleep(3000);
-        //narwhalHWEx2022.carousel.setPower(0);
-        //narwhalHWWheel.encoderDrive(DRIVE_SPEED,0,38,  38, 2.0, PPE_HardwareNarwhalChassis.DriveMode.LINEAR,this);
-        //narwhalHWWheel.encoderDrive(DRIVE_SPEED, 0, 5, 5, 3.0,PPE_HardwareNarwhalChassis.DriveMode.LAT_RIGHT, this );
-
         switch (objectLocation){
             case "left":
                 narwhalHWWheel.encoderDrive(DRIVE_SPEED, 0, 10, 10, 3.0,PPE_HardwareNarwhalChassis.DriveMode.LAT_LEFT, this );
@@ -164,44 +170,7 @@ public class PPE_NarwhalAutonomous_BlueRight extends PPE_NarwhalAutonomousBase {
                 narwhalHWWheel.encoderDrive(DRIVE_SPEED, 0, 10, 10, 3.0,PPE_HardwareNarwhalChassis.DriveMode.LAT_RIGHT, this );
                 break;
             default:
-                break;
-        }
 
-        /*
-        //Drives forward and changes directions
-        encoderDriveOmni(DRIVE_SPEED,0,9.3,  9.3, 2.0);
-        sleep(200);
-        //TODO: ENCODERDRIVE HIGHLY UNRELIABLE, OFTEN OVERSHOT OR UNDERSHOT TURN
-        encoderDriveOmni(TURN_SPEED,76  ,0,  0, 6.0);
-        sleep(200);
-
-        //Backs up to carousel
-        encoderDriveOmni(DRIVE_SPEED,0,-32,  -31, 3.0);
-        encoderDriveOmni(DRIVE_SPEED,0,-1,  -1, 3.0);
-
-        //Turns carousel (10 Points)
-        narwhalHW.carousel.setPower(0.5);
-        sleep(4000);
-        narwhalHW.carousel.setPower(0);
-
-        //TODO: ADD CAPABILITY TO SCORE WITH CUSTOM SHIPPING ELEMENT AND USE OF TFLITE
-
-        //Leaves Carousel to enter Shipping Unit
-        encoderDriveOmni(DRIVE_SPEED,0,4,  4, 2.0);
-        encoderDriveOmni(TURN_SPEED,-92,0,  0, 4.0);
-        encoderDriveOmni(DRIVE_SPEED,0,17,  17, 4.0);
-
-         */
-
-        //Forward into alliance warehouse
-        /*
-
-        encoderDrive(TURN_SPEED,-15,0,  0, 4.0);
-        encoderDrive(DRIVE_SPEED, 0, 0, 3, 1.0);
-        encoderDrive(DRIVE_SPEED, 0, 108,108,12.0);
-         */
-
-
-
+        */
     }
 }

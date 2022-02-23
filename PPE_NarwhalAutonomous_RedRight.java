@@ -65,20 +65,10 @@ public class PPE_NarwhalAutonomous_RedRight extends PPE_NarwhalAutonomousBase {
     @Override
     public void runAutonomousMode() {
 
-        //PLAN: DRIVE INTO WAREHOUSE FOR (10 Points)
-        //***NEVER TESTED***
-        //narwhalHWWheel.encoderDrive(DRIVE_SPEED,0,10,  10, 2.0, PPE_HardwareNarwhalChassis.DriveMode.LINEAR,this);
-        //narwhalHWWheel.encoderDrive(TURN_SPEED, -90, 0,0,2.0, PPE_HardwareNarwhalChassis.DriveMode.LINEAR,this);
+        //Base Auto
+        //Warehouse Parking (10)
+        narwhalHWWheel.encoderDrive(DRIVE_SPEED, 0, 50, 50, 5.0,PPE_HardwareNarwhalChassis.DriveMode.LINEAR, this );
 
-        narwhalHWWheel.encoderDrive(DRIVE_SPEED, 0, 10, 10, 3.0,PPE_HardwareNarwhalChassis.DriveMode.LAT_RIGHT, this );
-
-
-        //narwhalHWWheel.encoderDrive(DRIVE_SPEED, 0, 10, 10, 2.0,PPE_HardwareNarwhalChassis.DriveMode.LAT_LEFT, this );
-
-        //TODO: ADD CAPABILITY TO SCORE WITH CUSTOM SHIPPING ELEMENT AND USE OF TFLITE
-        /*
-        narwhalHW.angularArmDrive(PPE_HardwareNarwhal.ArmPosition.TOP, 0.4, 4.0);
-        narwhalHW.armLid.setPosition(-1.0);
-         */
+        //TODO: Add pre-load capability / vision
     }
 }
